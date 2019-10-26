@@ -3172,14 +3172,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -3282,6 +3274,23 @@ __webpack_require__.r(__webpack_exports__);
         console.log(response.data);
       });
     },
+    actualizarPersona: function actualizarPersona() {
+      var me = this;
+      var formData = new FormData();
+      formData.append('nombre', this.nombre);
+      formData.append('fechanac', this.fechanac);
+      formData.append('genero', this.genero);
+      formData.append('direccion', this.direccion);
+      formData.append('telefono', this.telefono);
+      formData.append('email', this.email);
+      formData.append('estatura', this.estatura);
+      formData.append('foto', this.foto);
+      axios.post("/jugador/actualizar", formData).then(function (response) {
+        me.cerrarModal();
+        me.listarPersona(1, "", "nombre");
+        console.log(response.data);
+      });
+    },
     listarPersona: function listarPersona(page, buscar, criterio) {
       var me = this;
       var url = "/jugador?page=" + page + "&buscar=" + buscar + "&criterio=" + criterio;
@@ -3322,7 +3331,7 @@ __webpack_require__.r(__webpack_exports__);
         console.log(error);
       });
     },
-    actualizarPersona: function actualizarPersona() {
+    actualizarPerson: function actualizarPerson() {
       if (this.validarPersona()) {
         return;
       }
@@ -43875,12 +43884,7 @@ var render = function() {
                                     }
                                   ],
                                   staticClass: "form-control",
-                                  attrs: {
-                                    type: "text",
-                                    "data-inputmask":
-                                      "'mask': ['9999-9999 []', '+099 99 99 9999[9]-9999']",
-                                    "data-mask": ""
-                                  },
+                                  attrs: { type: "text", "data-mask": "" },
                                   domProps: { value: _vm.telefono },
                                   on: {
                                     input: function($event) {
