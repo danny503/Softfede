@@ -73,7 +73,7 @@ Route::group(['middleware' => ['Administrador']], function () {
     
     Route::get('/jugador','JugadorController@index');
     Route::post('/jugador/registrar','JugadorController@store');
-    Route::put('/jugador/actualizar','JugadorController@update');
+    Route::post('/jugador/actualizar','JugadorController@update');
     
     Route::get('/cuerpotecnico','CuerpoTecnicoController@index');
     Route::post('/cuerpotecnico/registrar','CuerpoTecnicoController@store');

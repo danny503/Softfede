@@ -3172,6 +3172,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -3247,12 +3248,12 @@ __webpack_require__.r(__webpack_exports__);
       this.cargarImagen(file);
     },
     cargarImagen: function cargarImagen(file) {
-      var _this = this;
+      var _this2 = this;
 
       var reader = new FileReader();
 
       reader.onload = function (e) {
-        _this.imagenMiniatura = e.target.result;
+        _this2.imagenMiniatura = e.target.result;
       };
 
       reader.readAsDataURL(file);
@@ -3270,25 +3271,7 @@ __webpack_require__.r(__webpack_exports__);
       formData.append('foto', this.foto);
       axios.post("/jugador/registrar", formData).then(function (response) {
         me.cerrarModal();
-        me.listarPersona(1, "", "nombre");
-        console.log(response.data);
-      });
-    },
-    actualizarPersona: function actualizarPersona() {
-      var me = this;
-      var formData = new FormData();
-      formData.append('nombre', this.nombre);
-      formData.append('fechanac', this.fechanac);
-      formData.append('genero', this.genero);
-      formData.append('direccion', this.direccion);
-      formData.append('telefono', this.telefono);
-      formData.append('email', this.email);
-      formData.append('estatura', this.estatura);
-      formData.append('foto', this.foto);
-      axios.post("/jugador/actualizar", formData).then(function (response) {
-        me.cerrarModal();
-        me.listarPersona(1, "", "nombre");
-        console.log(response.data);
+        me.listarPersona(1, "", "nombre"); //console.log(response.data);  
       });
     },
     listarPersona: function listarPersona(page, buscar, criterio) {
@@ -3329,6 +3312,29 @@ __webpack_require__.r(__webpack_exports__);
         me.listarPersona(1, "", "nombre");
       })["catch"](function (error) {
         console.log(error);
+      });
+    },
+    everImagen: function everImagen() {
+      var _this = this;
+
+      _this.file = _this.$$refs.foto.file[0];
+      _this.url = URL.createObjectURL(_this.file);
+    },
+    actualizarPersona: function actualizarPersona() {
+      var me = this;
+      var formData = new FormData();
+      formData.append('id', this.persona_id);
+      formData.append('nombre', this.nombre);
+      formData.append('fechanac', this.fechanac);
+      formData.append('genero', this.genero);
+      formData.append('direccion', this.direccion);
+      formData.append('telefono', this.telefono);
+      formData.append('email', this.email);
+      formData.append('estatura', this.estatura);
+      formData.append('foto', this.foto);
+      axios.post("/jugador/actualizar", formData).then(function (response) {
+        me.cerrarModal();
+        me.listarPersona(1, "", "nombre"); //console.log(response.data);  
       });
     },
     actualizarPerson: function actualizarPerson() {
@@ -43244,9 +43250,7 @@ var render = function() {
                                 attrs: {
                                   id: "direccion",
                                   name: "direccion",
-                                  maxlength: "250",
-                                  onKeyDown: "cuenta()",
-                                  onKeyUp: "cuenta()"
+                                  maxlength: "250"
                                 },
                                 domProps: { value: _vm.direccion },
                                 on: {
@@ -43851,9 +43855,7 @@ var render = function() {
                                   attrs: {
                                     id: "direccion",
                                     name: "direccion",
-                                    maxlength: "250",
-                                    onKeyDown: "cuenta()",
-                                    onKeyUp: "cuenta()"
+                                    maxlength: "250"
                                   },
                                   domProps: { value: _vm.direccion },
                                   on: {
@@ -43884,7 +43886,7 @@ var render = function() {
                                     }
                                   ],
                                   staticClass: "form-control",
-                                  attrs: { type: "text", "data-mask": "" },
+                                  attrs: { type: "text" },
                                   domProps: { value: _vm.telefono },
                                   on: {
                                     input: function($event) {
@@ -43932,7 +43934,29 @@ var render = function() {
                               })
                             ]),
                             _vm._v(" "),
-                            _vm._m(7)
+                            _c("div", { staticClass: "form-group" }, [
+                              _c(
+                                "label",
+                                { attrs: { for: "exampleInputFile" } },
+                                [_vm._v("Foto")]
+                              ),
+                              _vm._v(" "),
+                              _c("input", {
+                                attrs: { type: "file", id: "foto" },
+                                on: { change: _vm.obtenerImagen }
+                              })
+                            ]),
+                            _vm._v(" "),
+                            _c("figure", [
+                              _c("img", {
+                                attrs: {
+                                  src: _vm.imagen,
+                                  alt: "Foto de jugador",
+                                  width: "304",
+                                  height: "300"
+                                }
+                              })
+                            ])
                           ]
                         )
                       ]),
@@ -44080,16 +44104,6 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "input-group-addon" }, [
       _c("i", { staticClass: "fa fa-phone" })
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "form-group" }, [
-      _c("label", { attrs: { for: "exampleInputFile" } }, [_vm._v("Foto")]),
-      _vm._v(" "),
-      _c("input", { attrs: { type: "file", id: "exampleInputFile" } })
     ])
   }
 ]

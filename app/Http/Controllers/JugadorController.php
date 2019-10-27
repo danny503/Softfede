@@ -84,6 +84,12 @@ class JugadorController extends Controller
     public function update(Request $request)
     {
         if (!$request->ajax()) return redirect('/');
+
+        if($request->hasFile('foto')){
+            $file = $request->file('foto');
+            $name = time().$file->getClientOriginalName();
+            $file->move(public_path().'/images/',$name);
+        }     
         
         try{
             DB::beginTransaction();
@@ -102,7 +108,7 @@ class JugadorController extends Controller
             $persona->save();
             
             $jugador->estatura = $request->estatura;
-            $jugador->foto = $request->foto;
+            $jugador->foto = $name;
             $jugador->save();
 
             DB::commit();
