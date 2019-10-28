@@ -3173,6 +3173,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -3187,6 +3190,7 @@ __webpack_require__.r(__webpack_exports__);
       foto: "",
       imagenMiniatura: '',
       arrayPersona: [],
+      errors: [],
       modal: 0,
       tituloModal: "",
       tipoAccion: 0,
@@ -3259,7 +3263,10 @@ __webpack_require__.r(__webpack_exports__);
       reader.readAsDataURL(file);
     },
     registrarPersona: function registrarPersona() {
+      var _this3 = this;
+
       var me = this;
+      this.errors = [];
       var formData = new FormData();
       formData.append('nombre', this.nombre);
       formData.append('fechanac', this.fechanac);
@@ -3272,6 +3279,11 @@ __webpack_require__.r(__webpack_exports__);
       axios.post("/jugador/registrar", formData).then(function (response) {
         me.cerrarModal();
         me.listarPersona(1, "", "nombre"); //console.log(response.data);  
+      })["catch"](function (error) {
+        if (error.response.status == 422) {
+          _this3.errors = error.response.data.errors;
+        } //console.log(error);
+
       });
     },
     listarPersona: function listarPersona(page, buscar, criterio) {
@@ -3321,6 +3333,7 @@ __webpack_require__.r(__webpack_exports__);
       _this.url = URL.createObjectURL(_this.file);
     },
     actualizarPersona: function actualizarPersona() {
+      this.errors = [];
       var me = this;
       var formData = new FormData();
       formData.append('id', this.persona_id);
@@ -43188,7 +43201,15 @@ var render = function() {
                                     _vm.nombre = $event.target.value
                                   }
                                 }
-                              })
+                              }),
+                              _vm._v(" "),
+                              _vm.errors.nombre
+                                ? _c(
+                                    "span",
+                                    { staticClass: "badge badge-danger" },
+                                    [_vm._v(_vm._s(_vm.errors.nombre[0]))]
+                                  )
+                                : _vm._e()
                             ]
                           ),
                           _vm._v(" "),
@@ -43359,7 +43380,15 @@ var render = function() {
                                     _vm.telefono = $event.target.value
                                   }
                                 }
-                              })
+                              }),
+                              _vm._v(" "),
+                              _vm.errors.telefono
+                                ? _c(
+                                    "span",
+                                    { staticClass: "badge badge-danger" },
+                                    [_vm._v(_vm._s(_vm.errors.telefono[0]))]
+                                  )
+                                : _vm._e()
                             ])
                           ]),
                           _vm._v(" "),
@@ -43394,7 +43423,15 @@ var render = function() {
                                   _vm.email = $event.target.value
                                 }
                               }
-                            })
+                            }),
+                            _vm._v(" "),
+                            _vm.errors.email
+                              ? _c(
+                                  "span",
+                                  { staticClass: "badge badge-danger" },
+                                  [_vm._v(_vm._s(_vm.errors.email[0]))]
+                                )
+                              : _vm._e()
                           ]),
                           _vm._v(" "),
                           _c("div", { staticClass: "form-group" }, [
@@ -43441,7 +43478,15 @@ var render = function() {
                             _c("input", {
                               attrs: { type: "file", id: "exampleInputFile" },
                               on: { change: _vm.obtenerImagen }
-                            })
+                            }),
+                            _vm._v(" "),
+                            _vm.errors.foto
+                              ? _c(
+                                  "span",
+                                  { staticClass: "badge badge-danger" },
+                                  [_vm._v(_vm._s(_vm.errors.foto[0]))]
+                                )
+                              : _vm._e()
                           ]),
                           _vm._v(" "),
                           _c("figure", [
@@ -43718,7 +43763,6 @@ var render = function() {
                                   staticClass: "form-control",
                                   attrs: {
                                     type: "text",
-                                    id: "exampleInputNombre",
                                     placeholder: "Ingrese nombre su nombre"
                                   },
                                   domProps: { value: _vm.nombre },
@@ -43730,7 +43774,15 @@ var render = function() {
                                       _vm.nombre = $event.target.value
                                     }
                                   }
-                                })
+                                }),
+                                _vm._v(" "),
+                                _vm.errors.nombre
+                                  ? _c(
+                                      "span",
+                                      { staticClass: "badge badge-danger" },
+                                      [_vm._v(_vm._s(_vm.errors.nombre[0]))]
+                                    )
+                                  : _vm._e()
                               ]
                             ),
                             _vm._v(" "),
@@ -43896,7 +43948,53 @@ var render = function() {
                                       _vm.telefono = $event.target.value
                                     }
                                   }
-                                })
+                                }),
+                                _vm._v(" "),
+                                _vm.errors.telefono
+                                  ? _c(
+                                      "span",
+                                      { staticClass: "badge badge-danger" },
+                                      [_vm._v(_vm._s(_vm.errors.telefono[0]))]
+                                    )
+                                  : _vm._e()
+                              ])
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "form-group" }, [
+                              _c("label", [_vm._v("Correo:")]),
+                              _vm._v(" "),
+                              _c("div", { staticClass: "input-group" }, [
+                                _vm._m(7),
+                                _vm._v(" "),
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.email,
+                                      expression: "email"
+                                    }
+                                  ],
+                                  staticClass: "form-control",
+                                  attrs: { type: "text" },
+                                  domProps: { value: _vm.email },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.email = $event.target.value
+                                    }
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _vm.errors.email
+                                  ? _c(
+                                      "span",
+                                      { staticClass: "badge badge-danger" },
+                                      [_vm._v(_vm._s(_vm.errors.email[0]))]
+                                    )
+                                  : _vm._e()
                               ])
                             ]),
                             _vm._v(" "),
@@ -43941,10 +44039,31 @@ var render = function() {
                                 [_vm._v("Foto")]
                               ),
                               _vm._v(" "),
+                              _c("div", [
+                                _c("img", {
+                                  attrs: {
+                                    src:
+                                      "http://localhost:8000/images/" +
+                                      _vm.foto,
+                                    alt: "Foto de jugador",
+                                    width: "75",
+                                    height: "75"
+                                  }
+                                })
+                              ]),
+                              _vm._v(" "),
                               _c("input", {
                                 attrs: { type: "file", id: "foto" },
                                 on: { change: _vm.obtenerImagen }
-                              })
+                              }),
+                              _vm._v(" "),
+                              _vm.errors.foto
+                                ? _c(
+                                    "span",
+                                    { staticClass: "badge badge-danger" },
+                                    [_vm._v(_vm._s(_vm.errors.foto[0]))]
+                                  )
+                                : _vm._e()
                             ]),
                             _vm._v(" "),
                             _c("figure", [
@@ -44104,6 +44223,14 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "input-group-addon" }, [
       _c("i", { staticClass: "fa fa-phone" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "input-group-addon" }, [
+      _c("i", { staticClass: "fa fa-email" })
     ])
   }
 ]

@@ -48,7 +48,14 @@ class JugadorController extends Controller
     public function store(Request $request)
     {
         if (!$request->ajax()) return redirect('/');
+        $this->validate($request,[
+            'nombre' => 'max:250|required|unique:personas',
+            'email' => 'required|email|unique:personas',
+            //'telefono' =>  'required|min:15|numeric',
+            'telefono'=> 'regex:([0-9])',
+            'foto' => 'mimes:jpg,jpeg,png|max:1000',
         
+        ]);
         if($request->hasFile('foto')){
             $file = $request->file('foto');
             $name = time().$file->getClientOriginalName();
@@ -84,6 +91,14 @@ class JugadorController extends Controller
     public function update(Request $request)
     {
         if (!$request->ajax()) return redirect('/');
+        /*$this->validate($request,[
+            'nombre' => 'max:250|required|unique:personas',
+            'email' => 'required|email|unique:personas',
+            //'telefono' =>  'required|min:15|numeric',
+            'telefono'=> 'regex:([0-9])',
+            'foto' => 'mimes:jpg,jpeg,png',
+        
+        ]);*/
 
         if($request->hasFile('foto')){
             $file = $request->file('foto');

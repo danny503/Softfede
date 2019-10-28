@@ -52,8 +52,8 @@
                         class="form-control"
                         v-model="nombre"
                         id="exampleInputNombre"
-                        placeholder="Ingrese nombre su nombre"
-                      />
+                        placeholder="Ingrese nombre su nombre" />
+                        <span v-if="errors.nombre" class="badge badge-danger">{{errors.nombre[0]}}</span>
                     </div>
                     <div class="form-group">
                       <label>Fecha Nacimiento:</label>
@@ -102,6 +102,7 @@
                           <i class="fa fa-phone"></i>
                         </div>
                         <input type="text" class="form-control" v-model="telefono"  placeholder="Ingrese su telefono"/>
+                        <span v-if="errors.telefono" class="badge badge-danger">{{errors.telefono[0]}}</span>
                       </div>
                       <!-- /.input group -->
                     </div>
@@ -112,8 +113,8 @@
                         class="form-control"
                         id="exampleInputNombre"
                         v-model="email"
-                        placeholder="Ingrese su correo"
-                      />
+                        placeholder="Ingrese su correo" />
+                        <span v-if="errors.email" class="badge badge-danger">{{errors.email[0]}}</span>
                     </div>
                     <div class="form-group">
                       <label for="exampleInputEmail1">Estatura</label>
@@ -128,16 +129,13 @@
                     <div class="form-group">
                       <label for="exampleInputFile">Foto</label>
                       <input type="file" @change="obtenerImagen" id="exampleInputFile" />
+                      <span v-if="errors.foto" class="badge badge-danger">{{errors.foto[0]}}</span>
                     </div>
                     <figure>
                         <img :src="imagen" alt="Foto de jugador" width="304" height="300">
                     </figure>
                     <p class="text-center">
-                      <button
-                        type="button"
-                        class="btn btn-primary"
-                        @click="registrarPersona()"
-                      >Guardar</button>
+                      <button type="button" class="btn btn-primary" @click="registrarPersona()">Guardar</button>
                     </p>
                   </form>
                 </div>
@@ -224,13 +222,8 @@
                   <form action method="post" enctype="multipart/form-data" class="form-horizontal">
                     <div class="form-group label-floating">
                       <label for="exampleInputEmail1">Nombre</label>
-                      <input
-                        type="text"
-                        class="form-control"
-                        id="exampleInputNombre"
-                        v-model="nombre"
-                        placeholder="Ingrese nombre su nombre"
-                      />
+                      <input  type="text"  class="form-control"  v-model="nombre"  placeholder="Ingrese nombre su nombre"  />
+                      <span v-if="errors.nombre" class="badge badge-danger">{{errors.nombre[0]}}</span>
                     </div>
                     <div class="form-group">
                       <label>Fecha Nacimiento:</label>
@@ -259,10 +252,7 @@
                       </div>
                     </div>
                     <div class="form-group row">
-                      <label
-                        for="exampleInputEmail1"
-                        class="col-sm-4 col-form-label"
-                      >Direcci&oacute;n:</label>
+                      <label for="exampleInputEmail1" class="col-sm-4 col-form-label">Direcci&oacute;n:</label>
                       <div class="col-sm-12">
                         <textarea
                           id="direccion"
@@ -278,10 +268,19 @@
                         <div class="input-group-addon">
                           <i class="fa fa-phone"></i>
                         </div>
-                        <input
-                          type="text"
-                          class="form-control"
-                          v-model="telefono" />
+                        <input type="text" class="form-control" v-model="telefono" />
+                        <span v-if="errors.telefono" class="badge badge-danger">{{errors.telefono[0]}}</span>
+                      </div>
+                      <!-- /.input group -->
+                    </div>
+                      <div class="form-group">
+                      <label>Correo:</label>
+                      <div class="input-group">
+                        <div class="input-group-addon">
+                          <i class="fa fa-email"></i>
+                        </div>
+                        <input type="text" class="form-control" v-model="email" />
+                        <span v-if="errors.email" class="badge badge-danger">{{errors.email[0]}}</span>
                       </div>
                       <!-- /.input group -->
                     </div>
@@ -295,8 +294,12 @@
                         placeholder="Ingrese su estatura" />
                     </div>
                     <div class="form-group">                        
-                      <label for="exampleInputFile">Foto</label>                  
+                      <label for="exampleInputFile">Foto</label> 
+                      <div>
+                      <img :src="'http://localhost:8000/images/' + foto" alt="Foto de jugador" width="75" height="75"> 
+                      </div>                
                       <input type="file" id="foto" @change="obtenerImagen"/>
+                      <span v-if="errors.foto" class="badge badge-danger">{{errors.foto[0]}}</span>
                     </div>
                     <figure>
                         <img :src="imagen" alt="Foto de jugador" width="304" height="300">
@@ -335,6 +338,7 @@ export default {
       foto: "",
       imagenMiniatura: '',
       arrayPersona: [],
+      errors:[],
       modal: 0,
       tituloModal: "",
       tipoAccion: 0,
@@ -404,6 +408,7 @@ export default {
     },
     registrarPersona(){
       let me = this;
+      this.errors = []
       let formData = new FormData();
       formData.append('nombre',this.nombre);
       formData.append('fechanac',this.fechanac);
@@ -419,7 +424,12 @@ export default {
            me.cerrarModal();
           me.listarPersona(1, "", "nombre");
            //console.log(response.data);  
-         })
+           }).catch(error => {
+                    if (error.response.status == 422){
+                        this.errors = error.response.data.errors
+                    }
+                    //console.log(error);
+                });
 
     },
     listarPersona(page, buscar, criterio) {
@@ -476,7 +486,8 @@ export default {
         _this.url = URL.createObjectURL(_this.file);
     },
     actualizarPersona(){
-      let me = this;
+      this.errors = []
+      let me = this;      
       let formData = new FormData();
       formData.append('id',this.persona_id);
       formData.append('nombre',this.nombre);
