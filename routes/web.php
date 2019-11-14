@@ -10,11 +10,21 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+
+Route::get('/','IndexController@index'); //CREAMOS LA RUTA DEL INDEX Y HACEMOS REFERENCIA AL CONTROLADOR Y SU METODO LLAMADO INDEX
+//Route::get('/home', 'HomeController@index')->name('home');
 Route::group(['middleware'=>['guest']],function(){
     Route::get('/','Auth\LoginController@showLoginForm');
     Route::post('/login', 'Auth\LoginController@login')->name('login');
 });
- 
+/*Route::get('/', function () {
+    return view('welcome');
+});*/
+
+Route::get('/','IndexController@index'); 
+Auth::routes();
+
 Route::group(['middleware'=>['auth']],function(){
      
     Route::post('/logout', 'Auth\LoginController@logout')->name('logout');

@@ -13,14 +13,11 @@
               <input
                 type="text"
                 v-model="buscar"
-                @keyup.enter="listarPersona(1,buscar,criterio)"
-                placeholder="Buscar"
-              />
+                @keyup.enter="listarPersona(1,buscar,criterio)" placeholder="Buscar"/>
               <button
                 type="submit"
                 @click="listarPersona(1,buscar,criterio)"
-                class="btn btn-primary"
-              >
+                class="btn btn-primary">
                 <i class="fa fa-search"></i>
               </button>
             </div>
@@ -185,11 +182,7 @@
                     >Ant</a>
                   </li>
                   <li
-                    class="page-item"
-                    v-for="page in pagesNumber"
-                    :key="page"
-                    :class="[page == isActived ? 'active' : '']"
-                  >
+                    class="page-item" v-for="page in pagesNumber" :key="page" :class="[page == isActived ? 'active' : '']" >
                     <a
                       class="page-link"
                       href="#"
@@ -201,8 +194,7 @@
                     <a
                       class="page-link"
                       href="#"
-                      @click.prevent="cambiarPagina(pagination.current_page + 1,buscar,criterio)"
-                    >Sig</a>
+                      @click.prevent="cambiarPagina(pagination.current_page + 1,buscar,criterio)" >Sig</a>
                   </li>
                 </ul>
               </table>
