@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 //use Illuminate\Support\Facades\DB;
+
 use App\Equipo;
+use App\InscripcionJE;
 
 class EquipoController extends Controller
 {
@@ -49,6 +51,20 @@ class EquipoController extends Controller
         $equipo->nombre = $request->nombre;
         $equipo->logo = $request->logo;
         $equipo->save();
+
+        $inscripciones = $request->data;//Array de detalles
+        //Recorro todos los elementos
+
+        foreach($inscripciones as $ep=>$det)
+        {
+            $inscripciones = new InscripcionJE();
+            $inscripciones->idequipo = $equipo->id;
+            $inscripciones->idjugador = $det['idjugador'];
+            $inscripciones->fecha_ingreso = $det['fecha_ingreso'];
+            $inscripciones->numero_camisa = $det['numero_camisa'];  
+            $inscripciones->posicion = $det['posicion'];          
+            $detalle->save();
+        }          
     }
 
     /**
