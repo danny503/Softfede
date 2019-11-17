@@ -42197,7 +42197,7 @@ var render = function() {
       _c("div", { staticClass: "card-header" }, [
         _c("div", { staticClass: "card-header" }, [
           _c("i", { staticClass: "fa fa-align-justify" }),
-          _vm._v(" Equipos\r\n                            "),
+          _vm._v(" EquiposXenia Mi Amor\r\n                            "),
           _c(
             "button",
             {
@@ -58334,7 +58334,8 @@ Vue.component('rol', __webpack_require__(/*! ./components/Rol.vue */ "./resource
 Vue.component('user', __webpack_require__(/*! ./components/User.vue */ "./resources/js/components/User.vue")["default"]);
 Vue.component('index', __webpack_require__(/*! ./components/Index.vue */ "./resources/js/components/Index.vue")["default"]);
 Vue.component('cuerpotecnico', __webpack_require__(/*! ./components/CuerpoTecnico.vue */ "./resources/js/components/CuerpoTecnico.vue")["default"]);
-Vue.component('jugador', __webpack_require__(/*! ./components/Jugador.vue */ "./resources/js/components/Jugador.vue")["default"]); //Vue.component('login', require('./components/Login.vue').default);
+Vue.component('jugador', __webpack_require__(/*! ./components/Jugador.vue */ "./resources/js/components/Jugador.vue")["default"]); //Vue.component('index', require('./views/index.vue').default);
+//Vue.component('login', require('./components/Login.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

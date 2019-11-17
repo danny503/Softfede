@@ -4,7 +4,7 @@
         <section class="content-header">
           <div class="card-header">
                              <div class="card-header">
-                            <i class="fa fa-align-justify"></i> Equipos
+                            <i class="fa fa-align-justify"></i> EquiposXenia Mi Amor
                             <button type="button" @click="abrirModal('equipo','registrar')" class="btn btn-primary">
                             <i class="icon-plus"></i>&nbsp;Nuevo
                        </button>

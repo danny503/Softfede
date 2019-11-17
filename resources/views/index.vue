@@ -1,6 +1,8 @@
 @extends('layouts.principal') <!--HEREDAMOS- hacemos referencia a la carpeta layouts y al archibo principal.blade.php solo basta la primera letra-->
 @section('content') <!--aca hacemos refrencia a la seccion content y lo finalizamos en la parte de abajo-->
 	
+<template>
+	
 
 	<div class="header">
 	<div class="top-header">
@@ -21,7 +23,6 @@
 <div class="header-info">
 <h1>BALONCESTO ❤</h1>
 
-{{-- FORMULARIO PARA EL LOGUEO O LOGIN, LO ANTERIOR LE MODIFICAMOS AL ESTLO BLADE EL HTML --}}
 <form method="POST" action="{{ route('login') }}">
 @csrf
 	
@@ -30,7 +31,7 @@
 			 <input type="usuario" class="form-control{{ $errors->has('usuario') ? ' is-invalid' : '' }}" name="usuario" value="{{ old('usuario') }}" required autofocus  placeholder="Nombre de usuario">
 			 @if ($errors->has('usuario'))
                                     <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('usuario') }}</strong>
+                                        
                                     </span>
            @endif
 			</div>
@@ -39,15 +40,13 @@
 			 <input type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}"  name="password" required placeholder="Contrase&ntilde;a">
 			 @if ($errors->has('password'))
                                     <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('password') }}</strong>
+                                        
                                     </span>
              @endif
 		</div>
 		 <button type="submit" class="btn btn-primary">  {{ __('Login') }}</button> 
-		 
 
-	{{--en el link_to asignamos la ruta que esta en el web.php que nos manda aca--}}
-	{{--usamos el HOME CONTROLER al usar la autentificacion de laravel que crea por defecto mirar la documentacion--}}
+
 	
 <!-- descripcion de la pelicula de la pagina -->
 
@@ -60,14 +59,6 @@
 </div>
 </div>
 
-<div class="review-slider">
-<ul id="flexiselDemo1">
-<li><img src="images/r1.jpg" alt=""/></li>
-<li><img src="images/r2.jpg" alt=""/></li>
-<li><img src="images/r3.jpg" alt=""/></li>
-<li><img src="images/r4.jpg" alt=""/></li>
-<li><img src="images/r5.jpg" alt=""/></li>
-</ul>
 
-</div>
+</template>
 @endsection <!--finalizamos la seccion-->
