@@ -68,6 +68,5 @@
 <li><img src="images/r4.jpg" alt=""/></li>
 <li><img src="images/r5.jpg" alt=""/></li>
 </ul>
-
 </div>
 @endsection <!--finalizamos la seccion-->

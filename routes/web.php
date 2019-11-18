@@ -12,7 +12,7 @@
 */
 
 
-Route::get('/','IndexController@index'); //CREAMOS LA RUTA DEL INDEX Y HACEMOS REFERENCIA AL CONTROLADOR Y SU METODO LLAMADO INDEX
+//Route::get('/','IndexController@index'); //CREAMOS LA RUTA DEL INDEX Y HACEMOS REFERENCIA AL CONTROLADOR Y SU METODO LLAMADO INDEX
 //Route::get('/home', 'HomeController@index')->name('home');
 Route::group(['middleware'=>['guest']],function(){
     Route::get('/','Auth\LoginController@showLoginForm');
