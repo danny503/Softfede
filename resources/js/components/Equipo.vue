@@ -1,5 +1,5 @@
 <template>
-            <main class="main">
+            <div class="content-wrapper">
             <!-- Breadcrumb -->
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/">Escritorio</a></li>
@@ -66,7 +66,10 @@
                             </ul>
                         </nav>
                     </div>
-                    <div class="card-body"></div>
+                    <div class="card-body">
+
+
+                    </div>
                 </div>
                 <!-- Fin ejemplo de tabla Listado -->
             </div>
@@ -94,7 +97,7 @@
                 <!-- /.modal-dialog -->
             </div>
             <!--Fin del modal-->
-        </main>
+        </div>
 </template>
 
 <script>
