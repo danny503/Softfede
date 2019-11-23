@@ -2555,32 +2555,178 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       equipo_id: 0,
       idrama: 0,
       nombre_rama: 0,
-      nombre: '',
-      logo: '',
+      nombre: "",
+      logo: "",
       arrayEquipo: [],
       arrayDetalle: [],
       modal: 0,
-      tituloModal: '',
+      tituloModal: "",
       tipoAccion: 0,
       errorEquipo: 0,
       errorMostrarMsjEquipo: [],
       pagination: {
-        'total': 0,
-        'current_page': 0,
-        'per_page': 0,
-        'last_page': 0,
-        'from': 0,
-        'to': 0
+        total: 0,
+        current_page: 0,
+        per_page: 0,
+        last_page: 0,
+        from: 0,
+        to: 0
       },
       offset: 3,
-      criterio: 'nombre',
-      buscar: '',
+      criterio: "nombre",
+      buscar: "",
       arrayRama: []
     };
   },
@@ -2619,7 +2765,7 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     listarEquipo: function listarEquipo(page, buscar, criterio) {
       var me = this;
-      var url = '/equipo?page=' + page + '&buscar=' + buscar + '&criterio=' + criterio;
+      var url = "/equipo?page=" + page + "&buscar=" + buscar + "&criterio=" + criterio;
       axios.get(url).then(function (response) {
         var respuesta = response.data;
         me.arrayEquipo = respuesta.equipos.data;
@@ -2631,7 +2777,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     selectRama: function selectRama() {
       var me = this;
-      var url = '/rama/selectRama';
+      var url = "/rama/selectRama";
       axios.get(url).then(function (response) {
         // consolo.log(response);
         var respuesta = response.data;
@@ -2653,19 +2799,19 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       var me = this;
-      axios.post('/user/registrar', {
-        'nombre': this.nombre,
-        'tipo_documento': this.tipo_documento,
-        'num_documento': this.num_documento,
-        'direccion': this.direccion,
-        'telefono': this.telefono,
-        'email': this.email,
-        'idrol': this.idrol,
-        'usuario': this.usuario,
-        'password': this.password
+      axios.post("/user/registrar", {
+        nombre: this.nombre,
+        tipo_documento: this.tipo_documento,
+        num_documento: this.num_documento,
+        direccion: this.direccion,
+        telefono: this.telefono,
+        email: this.email,
+        idrol: this.idrol,
+        usuario: this.usuario,
+        password: this.password
       }).then(function (response) {
         me.cerrarModal();
-        me.listarPersona(1, '', 'nombre');
+        me.listarPersona(1, "", "nombre");
       })["catch"](function (error) {
         console.log(error);
       });
@@ -2676,20 +2822,20 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       var me = this;
-      axios.put('/user/actualizar', {
-        'nombre': this.nombre,
-        'tipo_documento': this.tipo_documento,
-        'num_documento': this.num_documento,
-        'direccion': this.direccion,
-        'telefono': this.telefono,
-        'email': this.email,
-        'idrol': this.idrol,
-        'usuario': this.usuario,
-        'password': this.password,
-        'id': this.persona_id
+      axios.put("/user/actualizar", {
+        nombre: this.nombre,
+        tipo_documento: this.tipo_documento,
+        num_documento: this.num_documento,
+        direccion: this.direccion,
+        telefono: this.telefono,
+        email: this.email,
+        idrol: this.idrol,
+        usuario: this.usuario,
+        password: this.password,
+        id: this.persona_id
       }).then(function (response) {
         me.cerrarModal();
-        me.listarPersona(1, '', 'nombre');
+        me.listarPersona(1, "", "nombre");
       })["catch"](function (error) {
         console.log(error);
       });
@@ -2706,15 +2852,15 @@ __webpack_require__.r(__webpack_exports__);
     },
     cerrarModal: function cerrarModal() {
       this.modal = 0;
-      this.tituloModal = '';
-      this.nombre = '';
-      this.tipo_documento = 'DNI';
-      this.num_documento = '';
-      this.direccion = '';
-      this.telefono = '';
-      this.email = '';
-      this.usuario = '';
-      this.password = '';
+      this.tituloModal = "";
+      this.nombre = "";
+      this.tipo_documento = "DNI";
+      this.num_documento = "";
+      this.direccion = "";
+      this.telefono = "";
+      this.email = "";
+      this.usuario = "";
+      this.password = "";
       this.idrol = 0;
       this.errorPersona = 0;
     },
@@ -2726,39 +2872,39 @@ __webpack_require__.r(__webpack_exports__);
         case "persona":
           {
             switch (accion) {
-              case 'registrar':
+              case "registrar":
                 {
                   this.modal = 1;
-                  this.tituloModal = 'Registrar Usuario';
-                  this.nombre = '';
-                  this.tipo_documento = 'DNI';
-                  this.num_documento = '';
-                  this.direccion = '';
-                  this.telefono = '';
-                  this.email = '';
-                  this.usuario = '';
-                  this.password = '';
+                  this.tituloModal = "Registrar Usuario";
+                  this.nombre = "";
+                  this.tipo_documento = "DNI";
+                  this.num_documento = "";
+                  this.direccion = "";
+                  this.telefono = "";
+                  this.email = "";
+                  this.usuario = "";
+                  this.password = "";
                   this.idrol = 0;
                   this.tipoAccion = 1;
                   break;
                 }
 
-              case 'actualizar':
+              case "actualizar":
                 {
                   //console.log(data);
                   this.modal = 1;
-                  this.tituloModal = 'Actualizar Usuario';
+                  this.tituloModal = "Actualizar Usuario";
                   this.tipoAccion = 2;
-                  this.persona_id = data['id'];
-                  this.nombre = data['nombre'];
-                  this.tipo_documento = data['tipo_documento'];
-                  this.num_documento = data['num_documento'];
-                  this.direccion = data['direccion'];
-                  this.telefono = data['telefono'];
-                  this.email = data['email'];
-                  this.usuario = data['usuario'];
-                  this.password = data['password'];
-                  this.idrol = data['idrol'];
+                  this.persona_id = data["id"];
+                  this.nombre = data["nombre"];
+                  this.tipo_documento = data["tipo_documento"];
+                  this.num_documento = data["num_documento"];
+                  this.direccion = data["direccion"];
+                  this.telefono = data["telefono"];
+                  this.email = data["email"];
+                  this.usuario = data["usuario"];
+                  this.password = data["password"];
+                  this.idrol = data["idrol"];
                   break;
                 }
             }
@@ -2769,25 +2915,25 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       swal({
-        title: 'Esta seguro de desactivar este usuario?',
-        type: 'warning',
+        title: "Esta seguro de desactivar este usuario?",
+        type: "warning",
         showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Aceptar!',
-        cancelButtonText: 'Cancelar',
-        confirmButtonClass: 'btn btn-success',
-        cancelButtonClass: 'btn btn-danger',
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Aceptar!",
+        cancelButtonText: "Cancelar",
+        confirmButtonClass: "btn btn-success",
+        cancelButtonClass: "btn btn-danger",
         buttonsStyling: false,
         reverseButtons: true
       }).then(function (result) {
         if (result.value) {
           var me = _this;
-          axios.put('/user/desactivar', {
-            'id': id
+          axios.put("/user/desactivar", {
+            id: id
           }).then(function (response) {
-            me.listarPersona(1, '', 'nombre');
-            swal('Desactivado!', 'El registro ha sido desactivado con éxito.', 'success');
+            me.listarPersona(1, "", "nombre");
+            swal("Desactivado!", "El registro ha sido desactivado con éxito.", "success");
           })["catch"](function (error) {
             console.log(error);
           });
@@ -2799,25 +2945,25 @@ __webpack_require__.r(__webpack_exports__);
       var _this2 = this;
 
       swal({
-        title: 'Esta seguro de activar este usuario?',
-        type: 'warning',
+        title: "Esta seguro de activar este usuario?",
+        type: "warning",
         showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Aceptar!',
-        cancelButtonText: 'Cancelar',
-        confirmButtonClass: 'btn btn-success',
-        cancelButtonClass: 'btn btn-danger',
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Aceptar!",
+        cancelButtonText: "Cancelar",
+        confirmButtonClass: "btn btn-success",
+        cancelButtonClass: "btn btn-danger",
         buttonsStyling: false,
         reverseButtons: true
       }).then(function (result) {
         if (result.value) {
           var me = _this2;
-          axios.put('/user/activar', {
-            'id': id
+          axios.put("/user/activar", {
+            id: id
           }).then(function (response) {
-            me.listarPersona(1, '', 'nombre');
-            swal('Activado!', 'El registro ha sido activado con éxito.', 'success');
+            me.listarPersona(1, "", "nombre");
+            swal("Activado!", "El registro ha sido activado con éxito.", "success");
           })["catch"](function (error) {
             console.log(error);
           });
@@ -9204,7 +9350,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.modal-content{\n    width: 100% !important;\n    position: absolute !important;\n}\n.mostrar{\n    display: list-item !important;\n    opacity: 1 !important;\n    position: absolute !important;\n    background-color: #3c29297a !important;\n}\n.div-error{\n    display: flex;\n    justify-content: center;\n}\n.text-error{\n    color: red !important;\n    font-weight: bold;\n}\n@media (min-width: 600px) {\n.btnagregar {\n        margin-top: 2rem;\n}\n}\n\n", ""]);
+exports.push([module.i, "\n.modal-content {\r\n  width: 100% !important;\r\n  position: absolute !important;\n}\n.mostrar {\r\n  display: list-item !important;\r\n  opacity: 1 !important;\r\n  position: absolute !important;\r\n  background-color: #3c29297a !important;\n}\n.div-error {\r\n  display: flex;\r\n  justify-content: center;\n}\n.text-error {\r\n  color: red !important;\r\n  font-weight: bold;\n}\n@media (min-width: 600px) {\n.btnagregar {\r\n    margin-top: 2rem;\n}\n}\r\n", ""]);
 
 // exports
 
@@ -42190,7 +42336,7 @@ var render = function() {
       _c("div", { staticClass: "card" }, [
         _c("div", { staticClass: "card-header" }, [
           _c("i", { staticClass: "fa fa-align-justify" }),
-          _vm._v(" Inscripcion\n                "),
+          _vm._v(" Inscripcion\n         "),
           _c(
             "button",
             {
@@ -42202,10 +42348,7 @@ var render = function() {
                 }
               }
             },
-            [
-              _c("i", { staticClass: "icon-plus" }),
-              _vm._v(" Nuevo\n                ")
-            ]
+            [_c("i", { staticClass: "icon-plus" }), _vm._v(" Nuevo\n         ")]
           )
         ]),
         _vm._v(" "),
@@ -42290,7 +42433,10 @@ var render = function() {
                       }
                     }
                   },
-                  [_c("i", { staticClass: "fa fa-search" }), _vm._v(" Buscar")]
+                  [
+                    _c("i", { staticClass: "fa fa-search" }),
+                    _vm._v(" Buscar\n               ")
+                  ]
                 )
               ])
             ])
@@ -42325,9 +42471,7 @@ var render = function() {
                           },
                           [_c("i", { staticClass: "icon-eye" })]
                         ),
-                        _vm._v(
-                          "  \n                                    \n                                "
-                        )
+                        _vm._v("\n \n                 ")
                       ]),
                       _vm._v(" "),
                       _c("td", {
@@ -42433,7 +42577,183 @@ var render = function() {
           ])
         ]),
         _vm._v(" "),
-        _c("div", { staticClass: "card-body" })
+        _c("div", { staticClass: "card-body" }, [
+          _c("div", { staticClass: "form-group row border" }, [
+            _c("div", { staticClass: "col-md-6" }, [
+              _c("label", { attrs: { for: "" } }, [_vm._v("Nombre")]),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.nombre,
+                    expression: "nombre"
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: { type: "text" },
+                domProps: { value: _vm.nombre },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.nombre = $event.target.value
+                  }
+                }
+              })
+            ]),
+            _vm._v(" "),
+            _vm._m(2),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-md-4" }, [
+              _c("label", { attrs: { for: "" } }, [_vm._v("Logo")]),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.logo,
+                    expression: "logo"
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: { type: "text" },
+                domProps: { value: _vm.logo },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.logo = $event.target.value
+                  }
+                }
+              })
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "form-group row border" }, [
+            _c("div", { staticClass: "col-md-6" }, [
+              _c("div", { staticClass: "form-group" }, [
+                _c("label", { attrs: { for: "" } }, [_vm._v("Jugadores")]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-inline" }, [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.idjugador,
+                        expression: "idjugador"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: { type: "text", placeholder: "Ingrese jugador" },
+                    domProps: { value: _vm.idjugador },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.idjugador = $event.target.value
+                      }
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c("button", { staticClass: "btn btn-primary" }, [
+                    _vm._v("...")
+                  ])
+                ])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-md-2" }, [
+              _c("div", { staticClass: "form-group" }, [
+                _c("label", [_vm._v("Numero de camisa")]),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.numero_camisa,
+                      expression: "numero_camisa"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  attrs: { type: "number" },
+                  domProps: { value: _vm.numero_camisa },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.numero_camisa = $event.target.value
+                    }
+                  }
+                })
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-md-4" }, [
+              _c("div", { staticClass: "form-group" }, [
+                _c("label", [_vm._v("Posición")]),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.posicion,
+                      expression: "posicion"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  attrs: { type: "text" },
+                  domProps: { value: _vm.posicion },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.posicion = $event.target.value
+                    }
+                  }
+                })
+              ])
+            ]),
+            _vm._v(" "),
+            _vm._m(3)
+          ]),
+          _vm._v(" "),
+          _vm._m(4),
+          _vm._v(" "),
+          _c("div", { staticClass: "form=group row border" }, [
+            _c("div", { staticClass: "col-md-12" }, [
+              _c(
+                "button",
+                { staticClass: "btn btn-secondary", attrs: { type: "button" } },
+                [_vm._v("Cerrar")]
+              ),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-primary",
+                  attrs: { type: "button" },
+                  on: {
+                    click: function($event) {
+                      return _vm.registrarIngreso()
+                    }
+                  }
+                },
+                [_vm._v("Registrar equipo")]
+              )
+            ])
+          ])
+        ])
       ])
     ]),
     _vm._v(" "),
@@ -42576,6 +42896,102 @@ var staticRenderFns = [
         _c("th", { staticClass: "text-center list-group-item-success" }, [
           _vm._v("Eliminar")
         ])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-md-6" }, [
+      _c("div", { staticClass: "form-group" }, [
+        _c("label", { attrs: { for: "" } }, [_vm._v("Rama")]),
+        _vm._v(" "),
+        _c("select", { staticClass: "form-control" })
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-md-2" }, [
+      _c("div", { staticClass: "form-group" }, [
+        _c(
+          "button",
+          { staticClass: "btn btn-success form-control btnagregar" },
+          [_c("i", { staticClass: "icon-plus" })]
+        )
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "form-group row border" }, [
+      _c("div", { staticClass: "table-responsive" }, [
+        _c(
+          "table",
+          { staticClass: "table table-bordered table-striped table-sm" },
+          [
+            _c("thead", [
+              _c("tr", [
+                _c("th", [_vm._v("Opciones")]),
+                _vm._v(" "),
+                _c("th", [_vm._v("Jugador")]),
+                _vm._v(" "),
+                _c("th", [_vm._v("N° Camisa")]),
+                _vm._v(" "),
+                _c("th", [_vm._v("Posición")])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("tbody", [
+              _c("tr", [
+                _c("td", [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-danger btn-sm",
+                      attrs: { type: "button" }
+                    },
+                    [_c("i", { staticClass: "icon-close" })]
+                  )
+                ]),
+                _vm._v(" "),
+                _c("td", [
+                  _vm._v(
+                    "\n                                 Jugador\n                             "
+                  )
+                ]),
+                _vm._v(" "),
+                _c("td", [
+                  _c("input", {
+                    staticClass: "form-control",
+                    attrs: { type: "number", value: "3" }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("td", [
+                  _vm._v(
+                    "\n                                Delantero\n                             "
+                  )
+                ]),
+                _vm._v(" "),
+                _c("td")
+              ]),
+              _vm._v(" "),
+              _c("tr", { staticStyle: { "background-color": "#CEECF5" } }, [
+                _c("td", { attrs: { colspan: "4", aling: "right" } }, [
+                  _c("strong", [_vm._v("Total :")])
+                ]),
+                _vm._v(" "),
+                _c("td")
+              ])
+            ])
+          ]
+        )
       ])
     ])
   }
