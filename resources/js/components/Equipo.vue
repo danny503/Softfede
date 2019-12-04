@@ -1,16 +1,12 @@
 <template>
-<div class="content-wrapper">
         <!-- Content Header (Page header) -->
-        <section class="content-header">
-          <div class="card-header">
+        <section class="content-header">          
                              <div class="card-header">
                             <i class="fa fa-align-justify"></i> Equipos
                             <button type="button" @click="abrirModal('equipo','registrar')" class="btn btn-primary">
                             <i class="icon-plus"></i>&nbsp;Nuevo
                        </button>
                    </div>
-
-                       <div class="card-header">
   <div class="content-wrapper">
     <!-- Breadcrumb -->
     <ol class="breadcrumb">
@@ -187,12 +183,13 @@
                               </td>
                               <td v-text="detalle.persona">jdjfdj
                               </td>
+                              <td>hsjdjs</td>
+                              <td>djfhdf</td>
                               <td>
                                   <input type="text" v-model="detalle.ncamisa" value="3" class="form-control">sdff
                               </td>
                               <td v-text="detalle.posicion">sdfsfd              
-                              </td>                              
-                                                            
+                              </td>                                                                                          
                           </tr>                          
                     </tbody>
                     <tbody v-else>
@@ -293,6 +290,8 @@
     </div>
     <!--Fin del modal-->
   </div>
+  
+        </section>
 </template>
 
 <script>
