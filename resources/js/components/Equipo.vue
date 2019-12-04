@@ -13,12 +13,13 @@
           <i class="fa fa-align-justify"></i> Inscripcion
           <button
             type="button"
-            @click="abrirModal('Inscripcion','registrar')"
-            class="btn btn-secondary"
-          >
+            @click="mostrarDetalle()"
+            class="btn btn-secondary" >
             <i class="icon-plus"></i>&nbsp;Nuevo
           </button>
         </div>
+        <!--Listado -->
+        <template v-if="listado">
         <div class="card-body">
           <div class="form-group row">
             <div class="col-md-6">
@@ -63,8 +64,7 @@
                       class="btn btn-success btn-sm"
                     >
                       <i class="icon-eye"></i>
-                    </button>
- &nbsp;
+                    </button>&nbsp;
                   </td>
                   <td v-text="equipo.nombre"></td>
                   <td v-text="equipo.nombre_rama"></td>
@@ -86,8 +86,7 @@
                 class="page-item"
                 v-for="page in pagesNumber"
                 :key="page"
-                :class="[page == isActived ? 'active' : '']"
-              >
+                :class="[page == isActived ? 'active' : '']">
                 <a
                   class="page-link"
                   href="#"
@@ -105,6 +104,10 @@
             </ul>
           </nav>
         </div>
+        </template>
+        <!--Fin Listado -->
+        <!--Inicio Detalle -->
+        <template v-else>
         <div class="card-body">
           <div class="form-group row border">
             <div class="col-md-6">
@@ -126,31 +129,29 @@
           <div class="form-group row border">
               <div class="col-md-6">
                   <div class="form-group">
-                      <label for="">Jugadores</label>
+                      <label for="">Jugadores <span style="color:red;" v-show="idpersona==0">(Seleccione)</span></label>
                       <div class="form-inline">
-                          <input type="text" class="form-control" v-model="idjugador" placeholder="Ingrese jugador">
-                          <button class="btn btn-primary">...</button>
-
+                          <input type="text" class="form-control" v-model="idpersona" placeholder="Ingrese jugador">
+                          <button @click="abrirModal()" class="btn btn-primary">...</button>
                       </div>
                   </div>
               </div>
               <div class="col-md-2">
                   <div class="form-group">
-                      <label >Numero de camisa</label>
-                      <input type="number" class="form-control" v-model="numero_camisa">
+                      <label >Numero de camisa<span style="color:red;" v-show="ncamisa==0">(Seleccione)</span></label>
+                      <input type="number" class="form-control" v-model="ncamisa">
                   </div>
               </div>
               <div class="col-md-4">
                   <div class="form-group">
-                      <label >Posición</label>
+                      <label >Posición <span style="color:red;" v-show="posicion==0">(Seleccione)</span></label>
                       <input type="text" class="form-control" v-model="posicion">
                   </div>
               </div>
               <div class="col-md-2">
                   <div class="form-group">
-                      <button class="btn btn-success form-control btnagregar"><i class="icon-plus"></i></button>
-                      
-                          
+                      <button @click="agregarDetalle()" class="btn btn-success form-control btnagregar"><i class="icon-plus"></i></button>
+
                   </div>
               </div>
           </div>          
@@ -165,41 +166,43 @@
                           <th>Posición</th>  
                           </tr>                        
                       </thead>
-                      <tbody>
-                          <tr>
+                      <tbody v-if="arrayDetalle.legth">
+                          <tr v-for="(detalle, index) in arrayDetalle" :key="detalle.id">
                               <td>
-                                  <button type="button" class="btn btn-danger btn-sm">
+                                  <button @click="eliminarDetalle(index)" type="button" class="btn btn-danger btn-sm">
                                       <i class="icon-close"></i>
                                   </button>
                               </td>
-                              <td>
-                                  Jugador
+                              <td v-text="detalle.persona">jdjfdj
                               </td>
                               <td>
-                                  <input type="number" value="3" class="form-control">
+                                  <input type="text" v-model="detalle.ncamisa" value="3" class="form-control">sdff
                               </td>
-                              <td>
-                                 Delantero
-                              </td>
-                              <td></td>
-                          </tr>
-                          <tr style="background-color: #CEECF5;">
-                              <td colspan="4" aling="right"><strong>Total :</strong></td>
-                              <td></td>
-
-                          </tr>
+                              <td v-text="detalle.posicion">sdfsfd              
+                              </td>                              
+                                                            
+                          </tr>                          
+                    </tbody>
+                    <tbody v-else>
+                      <tr>
+                        <td colspan="5">
+                          No hay jugadores agregados
+                        </td>
+                      </tr>
                     </tbody>
                   </table>
               </div>
           </div>
-          <div class="form=group row border">
-              <div class="col-md-12">
-                  <button type="button" class="btn btn-secondary">Cerrar</button>
+          <div class="form=group row">
+              <div class="col-md-12"> 
+                  <button type="button" @click="ocultarDetalle()" class="btn btn-secondary">Cerrar</button>
                   <button type="button" class="btn btn-primary" @click="registrarIngreso()">Registrar equipo</button>
               </div>
 
           </div>
         </div>
+        </template>
+        <!--Fin detalle -->
       </div>
       <!-- Fin ejemplo de tabla Listado -->
     </div>
@@ -211,8 +214,7 @@
       role="dialog"
       aria-labelledby="myModalLabel"
       style="display: none;"
-      aria-hidden="true"
-    >
+      aria-hidden="true">
       <div class="modal-dialog modal-primary modal-lg" role="document">
         <div class="modal-content">
           <div class="modal-header">
@@ -221,21 +223,56 @@
               <span aria-hidden="true">×</span>
             </button>
           </div>
-          <div class="modal-body"></div>
+          <div class="modal-body">
+                <div class="form-group row">
+              <div class="col-md-6">
+                <div>
+                  <select class="col-md-3" v-model="criterioJ">
+                    <option value="nombre">Nombre</option>
+                    <option value="apellido">Apellido</option>
+                  </select>
+                  <input type="text" v-model="buscarJ" @keyup.enter="listarPersona(buscarJ,criterioJ)" placeholder="Buscar"/>
+                  <button type="submit" @click="listarPersona(buscarJ,criterioJ)" class="btn btn-primary">
+                    <i class="fa fa-search"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="table-responseve">
+              <table class="table table-hover text-center">
+                <thead>
+                  <tr>
+                    <th class="text-center">Opciones</th>
+                    <th class="text-center">Nombre</th>
+                    <th class="text-center">Fecha Nacimiento</th>
+                    <th class="text-center">Género</th>
+                    <th class="text-center">Dirección</th>
+                    <th class="text-center">Teléfono</th>
+                    <th class="text-center">Estatura</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="persona in arrayPersona" :key="persona.id">
+                    <td>          
+                      <button type="button" @click="agregarDetalleModal(persona)" class="btn btn-success btn-sm">
+                       <i class="fa fa-check"></i>
+                      </button>
+                      </td>
+                    <td v-text="persona.nombre"></td>
+                    <td v-text="persona.fechanac"></td>
+                    <td v-text="persona.genero"></td>
+                    <td v-text="persona.direccion"></td>
+                    <td v-text="persona.telefono"></td>
+                    <td v-text="persona.estatura"></td>                                     
+                  </tr>
+                </tbody>               
+              </table>
+            </div>
+          </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" @click="cerrarModal()">Cerrar</button>
-            <button
-              type="button"
-              v-if="tipoAccion==1"
-              class="btn btn-primary"
-              @click="registrarPersona()"
-            >Guardar</button>
-            <button
-              type="button"
-              v-if="tipoAccion==2"
-              class="btn btn-primary"
-              @click="actualizarPersona()"
-            >Actualizar</button>
+            <button type="button" v-if="tipoAccion==1" class="btn btn-primary" @click="registrarPersona()">Guardar</button>
+            <button type="button" v-if="tipoAccion==2" class="btn btn-primary" @click="actualizarPersona()">Actualizar</button>
           </div>
         </div>
         <!-- /.modal-content -->
@@ -252,12 +289,17 @@ export default {
     return {
       equipo_id: 0,
       idrama: 0,
+      idpersona:0,
       nombre_rama: 0,
       nombre: "",
       logo: "",
+      ncamisa :0,
+      persona: "",
+      posicion: "",
       arrayEquipo: [],
+      arrayPersona: [],
       arrayDetalle: [],
-
+      listado:1,
       modal: 0,
       tituloModal: "",
       tipoAccion: 0,
@@ -272,8 +314,10 @@ export default {
         to: 0
       },
       offset: 3,
-      criterio: "nombre",
+      criterio: "",
       buscar: "",
+      criterioJ: 'nombre',
+      buscarJ: '',
       arrayRama: []
     };
   },
@@ -420,60 +464,92 @@ export default {
 
       return this.errorPersona;
     },
-    cerrarModal() {
-      this.modal = 0;
-      this.tituloModal = "";
-      this.nombre = "";
-      this.tipo_documento = "DNI";
-      this.num_documento = "";
-      this.direccion = "";
-      this.telefono = "";
-      this.email = "";
-      this.usuario = "";
-      this.password = "";
-      this.idrol = 0;
-      this.errorPersona = 0;
+    mostrarDetalle(){
+      this.listado=0;
     },
-    abrirModal(modelo, accion, data = []) {
-      this.selectRol();
-      switch (modelo) {
-        case "persona": {
-          switch (accion) {
-            case "registrar": {
-              this.modal = 1;
-              this.tituloModal = "Registrar Usuario";
-              this.nombre = "";
-              this.tipo_documento = "DNI";
-              this.num_documento = "";
-              this.direccion = "";
-              this.telefono = "";
-              this.email = "";
-              this.usuario = "";
-              this.password = "";
-              this.idrol = 0;
-              this.tipoAccion = 1;
-              break;
-            }
-            case "actualizar": {
-              //console.log(data);
-              this.modal = 1;
-              this.tituloModal = "Actualizar Usuario";
-              this.tipoAccion = 2;
-              this.persona_id = data["id"];
-              this.nombre = data["nombre"];
-              this.tipo_documento = data["tipo_documento"];
-              this.num_documento = data["num_documento"];
-              this.direccion = data["direccion"];
-              this.telefono = data["telefono"];
-              this.email = data["email"];
-              this.usuario = data["usuario"];
-              this.password = data["password"];
-              this.idrol = data["idrol"];
-              break;
-            }
-          }
+    ocultarDetalle(){
+      this.listado=1;
+    },
+    encuentra(id){
+      var sw=0;
+      for(var i=0;i<this.arrayDetalle.length;i++){
+        if(this.arrayDetalle[i].idpersona==id){
+          sw = true;
         }
       }
+      return sw;
+    },
+
+    eliminarDetalle(index){
+      let me =this;
+      me.arrayDetalle.splice(index,1 );
+    },
+    agregarDetalle(){
+      let me=this;
+      if(me.idpersona==0 || me.ncamisa==0 || me.posicion=="" ){        
+      }
+      else{
+        if(me.encuentra(me.idpersona)){
+          swal({
+            type: 'error',
+            title: 'Error',
+            text : 'Este jugador ya esta agregado',
+          })
+        }
+        else{
+          me.arrayDetalle.push({
+          idpersona: me.idpersona,
+          persona: me.persona,
+          ncamisa : me.ncamisa,
+          posicion : me.posicion,
+        });      
+        me.idpersona=0;
+        me.persona='';
+        me.ncamisa=0;
+        me.posicion='';
+        }
+          
+      }
+    
+    },
+    agregarDetalleModal(data =[]){
+                let me=this;
+                if(me.encuentra(data['id'])){
+                        swal({
+                            type: 'error',
+                            title: 'Error...',
+                            text: 'Este jugador ya se encuentra agregado!',
+                        })
+                    }else{
+                    me.arrayDetalle.push({
+                    idpersona: data['id'],
+                    persona: data['nombre'],
+                    ncamisa: 1,
+                    posicion: 1
+                    });
+                 }
+            }, 
+    listarPersona(buscar, criterio) {
+      let me = this;
+      var url = "/jugador/listarJugador?buscar=" + buscar + "&criterio=" + criterio;
+      axios.get(url).then(function(response) {
+          var respuesta = response.data;
+          me.arrayPersona = respuesta.personas.data;
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
+   
+    cerrarModal() {
+      this.modal = 0;
+      this.tituloModal = "";     
+    },
+    abrirModal(modelo, accion, data = []) {
+     
+          this.modal = 1;
+          this.tituloModal = "Seleccion uno a vrios jugadores";      
+      
     },
     desactivarUsuario(id) {
       swal({

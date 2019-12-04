@@ -45,6 +45,32 @@ class JugadorController extends Controller
         ];
     }
 
+    public function listarJugador(Request $request)
+    {
+        if (!$request->ajax()) return redirect('/');
+
+        $buscar = $request->buscar;
+        $criterio = $request->criterio;
+        
+        if ($buscar==''){
+            $personas = Jugador::join('personas','jugadores.id','=','personas.id')
+            ->select('personas.id','personas.nombre','personas.fechanac',
+            'personas.genero','personas.direccion','personas.telefono',
+            'personas.email','jugadores.estatura','jugadores.foto')
+            ->orderBy('personas.id', 'desc')->paginate(6);
+        }
+        else{
+            $personas = Jugador::join('personas','jugadores.id','=','personas.id')
+            ->select('personas.id','personas.nombre','personas.fechanac',
+            'personas.genero','personas.direccion','personas.telefono',
+            'personas.email','jugadores.estatura','jugadores.foto')            
+            ->where('personas.'.$criterio, 'like', '%'. $buscar . '%')
+            ->orderBy('personas.id', 'desc')->paginate(6);
+        }
+        
+        return [ 'personas' => $personas ];
+    }
+
     public function store(Request $request)
     {
         if (!$request->ajax()) return redirect('/');
