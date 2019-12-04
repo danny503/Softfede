@@ -52,6 +52,11 @@ Route::group(['middleware' => ['Tecnico']], function () {
     Route::get('/cuerpotecnico','CuerpoTecnicoController@index');
     Route::post('/cuerpotecnico/registrar','CuerpoTecnicoController@store');
     Route::put('/cuerpotecnico/actualizar','CuerpoTecnicoController@update');
+
+    Route::get('/jugador','JugadorController@index');
+    Route::post('/jugador/registrar','JugadorController@store');
+    Route::post('/jugador/actualizar','JugadorController@update');
+    Route::get('/jugador/listarJugador','JugadorController@listarJugador');
 });
 
 Route::group(['middleware' => ['Administrador']], function () {
@@ -85,6 +90,7 @@ Route::group(['middleware' => ['Administrador']], function () {
     Route::get('/jugador','JugadorController@index');
     Route::post('/jugador/registrar','JugadorController@store');
     Route::post('/jugador/actualizar','JugadorController@update');
+    Route::get('/jugador/listarJugador','JugadorController@listarJugador');
     
     Route::get('/cuerpotecnico','CuerpoTecnicoController@index');
     Route::post('/cuerpotecnico/registrar','CuerpoTecnicoController@store');
