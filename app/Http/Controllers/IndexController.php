@@ -20,6 +20,11 @@ class IndexController extends Controller
       return view('index'); //RETORNAMOS LA VISTA INDEX - HACEMOS REFERENCIA AL HTML que sera en BLADE
     }
 
+    public function reviews()
+    {
+      return view('reviews');//RETORNAMOS LA VISTA CONTACTO
+    }
+
     public function administrador(){  //AGREGAMOS PARA EL ADMINISTRADOR EN EL CONTROLADOR UN MÉTODO
         return view('welcome'); //le decimos que busque en vistas (VIEWS) en la carpeta ADMIN y coja el archivo index
        }

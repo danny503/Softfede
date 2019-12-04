@@ -1,82 +1,77 @@
-{{--PARTE REPETITIVA DE LA PARTE FRONTEND DE LAS VISTAS DE LA PAGINA--}}
-<!DOCTYPE html>
+@extends('layouts.principal')
+@section('content')
+
 <!--REPITE-->
-<html>
-<head>
-<title>SOFTFEDES</title>
-<link href="css/bootstrap.css" rel='stylesheet' type='text/css' />
-<!-- Custom Theme files -->
-<link href="css/style.css" rel="stylesheet" type="text/css" media="all" />
-<!-- Custom Theme files -->
-<script src="js/jquery.min.js"></script>
-<!-- Custom Theme files -->
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="keywords" content="Cinema Responsive web template, Bootstrap Web Templates, Flat Web Templates, Andriod Compatible web template,
-Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyErricsson, Motorola web design" />
-	<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
-<!--webfont-->
-<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
-</head>
+
+<!--FIN REPITE-->
+
+<!--
+Author: W3layouts
+Author URL: http://w3layouts.com
+License: Creative Commons Attribution 3.0 Unported
+License URL: http://creativecommons.org/licenses/by/3.0/
+-->
 <body>
 	<!-- header-section-starts -->
 	<div class="full">
-			<div class="menu"> <!-- MENU DEL COSTADO-->
-				<ul>
-					<li><a class="active" href="/"><i class="home"></i></a></li>
-					<li><a href="/reviews"><div class="cat"><i class="watching"></i><i class="watching1"></i></div></a></li>
-					<li><a href="contacto"><div class="cnt"><i class="contact"></i><i class="contact1"></i></div></a></li>
-				</ul>
+
+
+		<div class="review-content">
+			<div class="top-header span_top">
+				<div class="logo">
+					<a href="/"><img src="images/logo.png" alt="" /></a>
+					<p>CINEMA MURPHY</p>
+				</div>
+				<div class="search v-search">
+					<form>
+						<input type="text" value="Search.." onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Search..';}"/>
+						<input type="submit" value="">
+					</form>
+				</div>
+				<div class="clearfix"></div>
 			</div>
-		<div class="main">
-      <!--FIN REPITE-->
+			<div class="reviews-section">
+				<h3 class="head">Movie Reviews</h3>
+								<div class="col-md-9 reviews-grids">
 
-<!-- LA PARTE QUE REPITE O EN COMUN A LAS VIAS SE PONE EN ESTE DOCUMENTO Y DESPUES SE HEREDA DEJANDO SOLO LA PARTE QUE ES CARACTERISTICA DE LA VISTA, POR EJEMPLO INDEX, CONTACTO Y OTROS CAMPOS QUE SON DIFERENTES -->
- 		@yield('content') <!--ACA HACEMOS REFERENCIA QUE EN ESTA PARTE IRA EL CONTENIDO DIFERENTE Y SERA LO QUE HEREDAREMOS-->
+{{--HACEMOS UN RECORRIDO CON LOS DATOS QUE NOS MANDA DESDE EL FrontController metodo reviews--}}
 
-<!--REPITE-->
-	<div class="footer">
-		<h6>DECLARACION : </h6>
-		<p class="claim">Este es un freebies y no un sitio web oficial, no tengo intención de revelar ninguna película, marca, noticias. Mi objetivo aquí es entrenar o ejercitar mi habilidad y compartir este freebies.</p>
-		<h4>CORREO:</h4>
-		<a href="https://www.facebook.com/brayanmurphy.crespoespinoza">BrayanMurphyC@gmail.com</a>
-		<h4>FACEBOOK:</h4>
-		<a href="https://www.facebook.com/brayanmurphy.crespoespinoza">brayanmurphy.crespoespinoza</a>
-		<div class="copyright">
-			<p> Template by  <a href="http://w3layouts.com">  W3layouts</a></p>
-		</div>
-	</div>
-	</div>
-	</div>
-			<script type="text/javascript">
-		$(window).load(function() {
+									@foreach ($moviesfront as $moviepeli)
 
-		  $("#flexiselDemo1").flexisel({
-				visibleItems: 6,
-				animationSpeed: 1000,
-				autoPlay: true,
-				autoPlaySpeed: 3000,
-				pauseOnHover: false,
-				enableResponsiveBreakpoints: true,
-				responsiveBreakpoints: {
-					portrait: {
-						changePoint:480,
-						visibleItems: 2
-					},
-					landscape: {
-						changePoint:640,
-						visibleItems: 3
-					},
-					tablet: {
-						changePoint:768,
-						visibleItems: 4
-					}
-				}
-			});
-			});
-		</script>
-		<script type="text/javascript" src="js/jquery.flexisel.js"></script>
-	<div class="clearfix"></div>
+											<div class="review">
+													<div class="movie-pic">
+															<img src="movies/{{$moviepeli->path}}" alt="" /> {{--colocamos las fotos d PELICULA que esta en la carpetamovies y se guarda en el path--}}
+													</div>
+											<div class="review-info">
+														<a class="span" href="single.html">
+														<i>{{$moviepeli->name}}</i></a> {{-- mostramos del moviesfront que trae del modelo MOVIE su nombre--}}
+															<p class="info">CAST:&nbsp;&nbsp;{{$moviepeli->cast}}</p>
+															<p class="info">DIRECTION:&nbsp;&nbsp;{{$moviepeli->direction}}</p>
+															<p class="info">GENRE:&nbsp;&nbsp;{{$moviepeli->genre}}</p>
+															<p class="info">DURATION:&nbsp;&nbsp;{{$moviepeli->duration}}</p>
+											</div>
+											<div class="clearfix"></div>
+										</div>
+									@endforeach
+								</div>
+
+							</div>
+								<div class="clearfix"></div>
+						</div>
+
+					<div class="review-slider">
+						 <ul id="flexiselDemo1">
+							<li><img src="images/r1.jpg" alt=""/></li>
+							<li><img src="images/r2.jpg" alt=""/></li>
+							<li><img src="images/r3.jpg" alt=""/></li>
+							<li><img src="images/r4.jpg" alt=""/></li>
+							<li><img src="images/r5.jpg" alt=""/></li>
+							<li><img src="images/r6.jpg" alt=""/></li>
+						</ul>
+					</div>
+				</div>
 </body>
-</html>
+<!--REPITE-->
+
 <!--FIN REPITE-->
+@endsection

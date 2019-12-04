@@ -23,6 +23,7 @@ Route::group(['middleware'=>['guest']],function(){
 });*/
 
 Route::get('/','IndexController@index'); 
+Route::get('reviews','IndexController@reviews'); 
 Auth::routes();
 
 Route::group(['middleware'=>['auth']],function(){
