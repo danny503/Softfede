@@ -2749,6 +2749,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2835,7 +2843,7 @@ __webpack_require__.r(__webpack_exports__);
       var me = this;
       var url = "/rama/selectRama";
       axios.get(url).then(function (response) {
-        // consolo.log(response);
+        console.log(response);
         var respuesta = response.data;
         me.arrayRama = respuesta.ramas;
       })["catch"](function (error) {
@@ -2849,25 +2857,28 @@ __webpack_require__.r(__webpack_exports__);
       me.pagination.current_page = page;
       me.listarEquipo(page, buscar, criterio);
     },
-    registrarPersona: function registrarPersona() {
-      if (this.validarPersona()) {
+    registrarEquipo: function registrarEquipo() {
+      if (this.validarEquipo()) {
         return;
       }
 
       var me = this;
-      axios.post("/user/registrar", {
-        nombre: this.nombre,
-        tipo_documento: this.tipo_documento,
-        num_documento: this.num_documento,
-        direccion: this.direccion,
-        telefono: this.telefono,
-        email: this.email,
-        idrol: this.idrol,
-        usuario: this.usuario,
-        password: this.password
+      axios.post('/equipo/registrar', {
+        'nombre': this.nombre,
+        'idrama': this.idrama,
+        'logo': this.logo,
+        'data': this.arrayDetalle
       }).then(function (response) {
-        me.cerrarModal();
-        me.listarPersona(1, "", "nombre");
+        me.listado = 1;
+        me.listarEquipo(1, '', 'nombre');
+        me.idrama = 0;
+        me.nombre = '';
+        me.logo = '';
+        me.idpersona = 0;
+        me.persona = '';
+        me.ncamisa = 0;
+        me.posicion = '';
+        me.arrayDetalle = [];
       })["catch"](function (error) {
         console.log(error);
       });
@@ -2896,18 +2907,26 @@ __webpack_require__.r(__webpack_exports__);
         console.log(error);
       });
     },
-    validarPersona: function validarPersona() {
-      this.errorPersona = 0;
-      this.errorMostrarMsjPersona = [];
-      if (!this.nombre) this.errorMostrarMsjPersona.push("El nombre de la pesona no puede estar vacío.");
-      if (!this.usuario) this.errorMostrarMsjPersona.push("El nombre de usuario no puede estar vacío.");
-      if (!this.password) this.errorMostrarMsjPersona.push("La password del usuario no puede estar vacía.");
-      if (this.idrol == 0) this.errorMostrarMsjPersona.push("Seleccione una Role.");
-      if (this.errorMostrarMsjPersona.length) this.errorPersona = 1;
-      return this.errorPersona;
+    validarEquipo: function validarEquipo() {
+      this.errorEquipo = 0;
+      this.errorMostrarMsjEquipo = [];
+      if (!this.nombre) this.errorMostrarMsjEquipo.push("El nombre del equipo no puede estar vacío.");
+      if (this.idrama == 0) this.errorMostrarMsjEquipo.push("La rama no puede estar vacío.");
+      if (this.arrayDetalle.length <= 0) this.errorMostrarMsjEquipo.push("Ingrese detalle");
+      if (this.errorMostrarMsjEquipo.length) this.errorEquipo = 1;
+      return this.errorEquipo;
     },
     mostrarDetalle: function mostrarDetalle() {
+      var me = this;
       this.listado = 0;
+      me.idrama = 0;
+      me.nombre = '';
+      me.logo = '';
+      me.idpersona - 0;
+      me.persona = '';
+      me.ncamisa = 0;
+      me.posicion = '';
+      me.arrayDetalle = [];
     },
     ocultarDetalle: function ocultarDetalle() {
       this.listado = 1;
@@ -3052,6 +3071,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   mounted: function mounted() {
     this.listarEquipo(1, this.buscar, this.criterio);
+    this.selectRama();
   }
 });
 
@@ -42739,7 +42759,60 @@ var render = function() {
                         })
                       ]),
                       _vm._v(" "),
-                      _vm._m(2),
+                      _c("div", { staticClass: "col-md-6" }, [
+                        _c("div", { staticClass: "form-group" }, [
+                          _c("label", { attrs: { for: "" } }, [_vm._v("Rama")]),
+                          _vm._v(" "),
+                          _c(
+                            "select",
+                            {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.idrama,
+                                  expression: "idrama"
+                                }
+                              ],
+                              staticClass: "form-control",
+                              on: {
+                                change: function($event) {
+                                  var $$selectedVal = Array.prototype.filter
+                                    .call($event.target.options, function(o) {
+                                      return o.selected
+                                    })
+                                    .map(function(o) {
+                                      var val =
+                                        "_value" in o ? o._value : o.value
+                                      return val
+                                    })
+                                  _vm.idrama = $event.target.multiple
+                                    ? $$selectedVal
+                                    : $$selectedVal[0]
+                                }
+                              }
+                            },
+                            [
+                              _c(
+                                "option",
+                                { attrs: { value: "0", disabled: "" } },
+                                [_vm._v("Seleccione una rama")]
+                              ),
+                              _vm._v(" "),
+                              _vm._l(_vm.arrayRama, function(rama) {
+                                return _c("option", {
+                                  key: rama.id,
+                                  domProps: {
+                                    value: rama.id,
+                                    textContent: _vm._s(rama.nombre)
+                                  }
+                                })
+                              })
+                            ],
+                            2
+                          )
+                        ])
+                      ]),
                       _vm._v(" "),
                       _c("div", { staticClass: "col-md-4" }, [
                         _c("label", { attrs: { for: "" } }, [_vm._v("Logo")]),
@@ -42765,6 +42838,38 @@ var render = function() {
                             }
                           }
                         })
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-md-12" }, [
+                        _c(
+                          "div",
+                          {
+                            directives: [
+                              {
+                                name: "show",
+                                rawName: "v-show",
+                                value: _vm.errorEquipo,
+                                expression: "errorEquipo"
+                              }
+                            ],
+                            staticClass: "form-group row div-error"
+                          },
+                          [
+                            _c(
+                              "div",
+                              { staticClass: "text-center text-error" },
+                              _vm._l(_vm.errorMostrarMsjEquipo, function(
+                                error
+                              ) {
+                                return _c("div", {
+                                  key: error,
+                                  domProps: { textContent: _vm._s(error) }
+                                })
+                              }),
+                              0
+                            )
+                          ]
+                        )
                       ])
                     ]),
                     _vm._v(" "),
@@ -42950,9 +43055,9 @@ var render = function() {
                               "table table-bordered table-striped table-sm"
                           },
                           [
-                            _vm._m(3),
+                            _vm._m(2),
                             _vm._v(" "),
-                            _vm.arrayDetalle.legth
+                            _vm.arrayDetalle.length
                               ? _c(
                                   "tbody",
                                   _vm._l(_vm.arrayDetalle, function(
@@ -42983,23 +43088,11 @@ var render = function() {
                                         )
                                       ]),
                                       _vm._v(" "),
-                                      _c(
-                                        "td",
-                                        {
-                                          domProps: {
-                                            textContent: _vm._s(detalle.persona)
-                                          }
-                                        },
-                                        [
-                                          _vm._v(
-                                            "jdjfdj\n                            "
-                                          )
-                                        ]
-                                      ),
-                                      _vm._v(" "),
-                                      _c("td", [_vm._v("hsjdjs")]),
-                                      _vm._v(" "),
-                                      _c("td", [_vm._v("djfhdf")]),
+                                      _c("td", {
+                                        domProps: {
+                                          textContent: _vm._s(detalle.persona)
+                                        }
+                                      }),
                                       _vm._v(" "),
                                       _c("td", [
                                         _c("input", {
@@ -43026,32 +43119,41 @@ var render = function() {
                                               )
                                             }
                                           }
-                                        }),
-                                        _vm._v(
-                                          "sdff\n                            "
-                                        )
+                                        })
                                       ]),
                                       _vm._v(" "),
-                                      _c(
-                                        "td",
-                                        {
-                                          domProps: {
-                                            textContent: _vm._s(
-                                              detalle.posicion
-                                            )
+                                      _c("td", [
+                                        _c("input", {
+                                          directives: [
+                                            {
+                                              name: "model",
+                                              rawName: "v-model",
+                                              value: detalle.posicion,
+                                              expression: "detalle.posicion"
+                                            }
+                                          ],
+                                          staticClass: "form-control",
+                                          attrs: { type: "text", value: "3" },
+                                          domProps: { value: detalle.posicion },
+                                          on: {
+                                            input: function($event) {
+                                              if ($event.target.composing) {
+                                                return
+                                              }
+                                              _vm.$set(
+                                                detalle,
+                                                "posicion",
+                                                $event.target.value
+                                              )
+                                            }
                                           }
-                                        },
-                                        [
-                                          _vm._v(
-                                            "sdfsfd              \n                            "
-                                          )
-                                        ]
-                                      )
+                                        })
+                                      ])
                                     ])
                                   }),
                                   0
                                 )
-                              : _c("tbody", [_vm._m(4)])
+                              : _c("tbody", [_vm._m(3)])
                           ]
                         )
                       ])
@@ -43080,7 +43182,7 @@ var render = function() {
                             attrs: { type: "button" },
                             on: {
                               click: function($event) {
-                                return _vm.registrarIngreso()
+                                return _vm.registrarEquipo()
                               }
                             }
                           },
@@ -43249,7 +43351,7 @@ var render = function() {
                       "table",
                       { staticClass: "table table-hover text-center" },
                       [
-                        _vm._m(5),
+                        _vm._m(4),
                         _vm._v(" "),
                         _c(
                           "tbody",
@@ -43406,18 +43508,6 @@ var staticRenderFns = [
         _c("th", { staticClass: "text-center list-group-item-success" }, [
           _vm._v("Eliminar")
         ])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-md-6" }, [
-      _c("div", { staticClass: "form-group" }, [
-        _c("label", { attrs: { for: "" } }, [_vm._v("Rama")]),
-        _vm._v(" "),
-        _c("select", { staticClass: "form-control" })
       ])
     ])
   },
