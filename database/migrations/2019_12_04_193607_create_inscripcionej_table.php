@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateInscripcionjeTable extends Migration
+class CreateInscripcionejTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateInscripcionjeTable extends Migration
      */
     public function up()
     {
-        Schema::create('inscripcionje', function (Blueprint $table) {
+        Schema::create('inscripcionej', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('idequipo')->unsigned();
             $table->foreign('idequipo')->references('id')->on('equipos');
@@ -35,6 +35,6 @@ class CreateInscripcionjeTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('inscripcionje');
+        Schema::dropIfExists('inscripcionej');
     }
 }

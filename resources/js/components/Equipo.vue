@@ -66,11 +66,7 @@
               <tbody>
                 <tr v-for="equipo in arrayEquipo" :key="equipo.id">
                   <td>
-                    <button
-                      type="button"
-                      @click="abrirModal('equipo','actualizar',equipo)"
-                      class="btn btn-success btn-sm"
-                    >
+                    <button type="button" @click="abrirModal('equipo','actualizar',equipo)" class="btn btn-success btn-sm">
                       <i class="icon-eye"></i>
                     </button>&nbsp;
                   </td>
@@ -126,13 +122,25 @@
             <div class="col-md-6">
               <div class="form-group">
                 <label for>Rama</label>
-                <select class="form-control"></select>
+                 <select class="form-control" v-model="idrama">
+                <option value="0" disabled>Seleccione una rama</option>
+                <option v-for="rama in arrayRama" :key="rama.id" :value="rama.id" v-text="rama.nombre"></option>
+                 </select>
               </div>
             </div>
+            
             <div class="col-md-4">
               <label for>Logo</label>
               <input type="text" class="form-control" v-model="logo" />
             </div>
+            <div class="col-md-12">
+              <div v-show="errorEquipo" class="form-group row div-error">
+                      <div class="text-center text-error">
+                       <div v-for="error in errorMostrarMsjEquipo" :key="error" v-text="error">
+                      </div>
+                  </div>
+             </div>
+              </div>            
           </div>
           <div class="form-group row border">
               <div class="col-md-6">
@@ -159,7 +167,6 @@
               <div class="col-md-2">
                   <div class="form-group">
                       <button @click="agregarDetalle()" class="btn btn-success form-control btnagregar"><i class="icon-plus"></i></button>
-
                   </div>
               </div>
           </div>          
@@ -174,22 +181,23 @@
                           <th>Posición</th>  
                           </tr>                        
                       </thead>
-                      <tbody v-if="arrayDetalle.legth">
+                      <tbody v-if="arrayDetalle.length">
                           <tr v-for="(detalle, index) in arrayDetalle" :key="detalle.id">
                               <td>
                                   <button @click="eliminarDetalle(index)" type="button" class="btn btn-danger btn-sm">
                                       <i class="icon-close"></i>
                                   </button>
                               </td>
-                              <td v-text="detalle.persona">jdjfdj
+                              <td v-text="detalle.persona" >
                               </td>
-                              <td>hsjdjs</td>
-                              <td>djfhdf</td>
+                              
                               <td>
-                                  <input type="text" v-model="detalle.ncamisa" value="3" class="form-control">sdff
+                                  <input type="text" v-model="detalle.ncamisa" value="3" class="form-control">
                               </td>
-                              <td v-text="detalle.posicion">sdfsfd              
-                              </td>                                                                                          
+                               <td>
+                                  <input type="text" v-model="detalle.posicion" value="3" class="form-control">
+                              </td>           
+                                                                                                                        
                           </tr>                          
                     </tbody>
                     <tbody v-else>
@@ -205,7 +213,7 @@
           <div class="form=group row">
               <div class="col-md-12"> 
                   <button type="button" @click="ocultarDetalle()" class="btn btn-secondary">Cerrar</button>
-                  <button type="button" class="btn btn-primary" @click="registrarIngreso()">Registrar equipo</button>
+                  <button type="button" class="btn btn-primary" @click="registrarEquipo()">Registrar equipo</button>
               </div>
 
           </div>
@@ -297,7 +305,7 @@
 <script>
 export default {
   data() {
-    return {
+    return {    
       equipo_id: 0,
       idrama: 0,
       idpersona:0,
@@ -383,7 +391,7 @@ export default {
       axios
         .get(url)
         .then(function(response) {
-          // consolo.log(response);
+           console.log(response);
           var respuesta = response.data;
           me.arrayRama = respuesta.ramas;
         })
@@ -398,28 +406,31 @@ export default {
       me.pagination.current_page = page;
       me.listarEquipo(page, buscar, criterio);
     },
-    registrarPersona() {
-      if (this.validarPersona()) {
+    registrarEquipo() {
+      if (this.validarEquipo()) {
         return;
       }
 
       let me = this;
 
-      axios
-        .post("/user/registrar", {
-          nombre: this.nombre,
-          tipo_documento: this.tipo_documento,
-          num_documento: this.num_documento,
-          direccion: this.direccion,
-          telefono: this.telefono,
-          email: this.email,
-          idrol: this.idrol,
-          usuario: this.usuario,
-          password: this.password
+      axios.post('/equipo/registrar', {
+          'nombre': this.nombre,
+          'idrama': this.idrama,
+          'logo': this.logo,
+          'data' : this.arrayDetalle
+         
         })
         .then(function(response) {
-          me.cerrarModal();
-          me.listarPersona(1, "", "nombre");
+          me.listado=1;
+          me.listarEquipo(1, '', 'nombre');
+          me.idrama=0;
+          me.nombre='';
+          me.logo='';
+          me.idpersona=0;
+          me.persona='';
+          me.ncamisa=0;
+          me.posicion='';
+          me.arrayDetalle=[];
         })
         .catch(function(error) {
           console.log(error);
@@ -453,30 +464,28 @@ export default {
           console.log(error);
         });
     },
-    validarPersona() {
-      this.errorPersona = 0;
-      this.errorMostrarMsjPersona = [];
+    validarEquipo() {
+      this.errorEquipo = 0;
+      this.errorMostrarMsjEquipo = [];
 
-      if (!this.nombre)
-        this.errorMostrarMsjPersona.push(
-          "El nombre de la pesona no puede estar vacío."
-        );
-      if (!this.usuario)
-        this.errorMostrarMsjPersona.push(
-          "El nombre de usuario no puede estar vacío."
-        );
-      if (!this.password)
-        this.errorMostrarMsjPersona.push(
-          "La password del usuario no puede estar vacía."
-        );
-      if (this.idrol == 0)
-        this.errorMostrarMsjPersona.push("Seleccione una Role.");
-      if (this.errorMostrarMsjPersona.length) this.errorPersona = 1;
+      if (!this.nombre) this.errorMostrarMsjEquipo.push("El nombre del equipo no puede estar vacío.");
+      if (this.idrama==0) this.errorMostrarMsjEquipo.push("La rama no puede estar vacío.");
+      if(this.arrayDetalle.length<=0)this.errorMostrarMsjEquipo.push("Ingrese detalle");
+      if (this.errorMostrarMsjEquipo.length) this.errorEquipo = 1;
 
-      return this.errorPersona;
+      return this.errorEquipo;
     },
     mostrarDetalle(){
+      let me = this;
       this.listado=0;
+          me.idrama=0;
+          me.nombre='';
+          me.logo='';
+          me.idpersona-0;
+          me.persona='';
+          me.ncamisa=0;
+          me.posicion='';
+          me.arrayDetalle=[];
     },
     ocultarDetalle(){
       this.listado=1;
@@ -643,6 +652,7 @@ export default {
   },
   mounted() {
     this.listarEquipo(1, this.buscar, this.criterio);
+    this.selectRama();
   }
 };
 </script>

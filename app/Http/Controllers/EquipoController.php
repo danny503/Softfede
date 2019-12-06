@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-//use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\DB;
 
 use App\Equipo;
 use App\InscripcionJE;
@@ -45,7 +45,10 @@ class EquipoController extends Controller
    
     public function store(Request $request)
     {
+        
         if (!$request->ajax()) return redirect('/');
+        try{
+            DB::beginTransaction();
         $equipo = new Equipo();
         $equipo->idrama = $request->idrama;
         $equipo->nombre = $request->nombre;
@@ -57,23 +60,21 @@ class EquipoController extends Controller
 
         foreach($inscripciones as $ep=>$det)
         {
-            $inscripciones = new InscripcionJE();
-            $inscripciones->idequipo = $equipo->id;
-            $inscripciones->idjugador = $det['idjugador'];
-            $inscripciones->fecha_ingreso = $det['fecha_ingreso'];
-            $inscripciones->numero_camisa = $det['numero_camisa'];  
-            $inscripciones->posicion = $det['posicion'];          
-            $detalle->save();
-        }          
-    }
+            $inscripcion = new InscripcionJE();
+            $inscripcion->idequipo = $equipo->id;
+            $inscripcion->idjugador = $det['idpersona'];
+           // $inscripcion->fecha_ingreso = $det['fecha_ingreso'];
+            $inscripcion->numero_camisa = $det['ncamisa'];  
+            $inscripcion->posicion = $det['posicion'];          
+            $inscripcion->save();
+        }
+        DB::commit();
+    } catch (Exception $e){
+        DB:rollBack();
+    }          
+}
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    
     public function update(Request $request)
     {
         if (!$request->ajax()) return redirect('/');
