@@ -4,7 +4,7 @@
         <section class="content-header">
           <div class="card-header">
                              <div class="card-header">
-                            <i class="fa fa-align-justify"></i> Equipos
+                            <i class="fa fa-align-justify"></i> Categorias
                             <button type="button" class="btn btn-primary" @click="abrirModal('categoria','registrar')" >
                             <i class="icon-plus"></i>&nbsp;Nuevo
                        </button>
@@ -40,8 +40,7 @@
                                     </thead>
                                     
                                    <tbody>
-                                       
-                                       {{$i=1}}
+
                                         <tr v-for="categoria in arrayCategoria" :key="categoria.id">
                                             <td>{{  $i }}</td>
                                             <td v-text="categoria.nombre"></td>
@@ -55,11 +54,8 @@
                                 </table>
                                 
                             </div>
-                            {{$i++}}
-                        </div>
-                        
-                        
-                        </div>
+                        </div>                                                
+                    </div>
         </section>
         <!-- Main content -->
         <section class="content">

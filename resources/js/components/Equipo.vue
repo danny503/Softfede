@@ -559,7 +559,7 @@ export default {
     abrirModal(modelo, accion, data = []) {
      
           this.modal = 1;
-          this.tituloModal = "Seleccion uno a vrios jugadores";      
+          this.tituloModal = "Seleccion uno a varios jugadores";      
       
     },
     desactivarUsuario(id) {

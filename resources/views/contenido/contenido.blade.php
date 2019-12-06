@@ -1,5 +1,6 @@
 @extends('principal')
 @section('contenido')
+
 @if(Auth::check())
             @if (Auth::user()->idrol == 1)
                             
@@ -91,7 +92,6 @@
  
             @endif
 
-            @endif
- 
+            @endif         
         
  @endsection

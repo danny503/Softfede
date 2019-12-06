@@ -262,7 +262,7 @@ export default {
     },
     desactivarSede(id) {
       swal({
-        title: "Esta seguro de desactivar esta categoría?",
+        title: "Esta seguro de desactivar esta sede?",
         type: "warning",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",

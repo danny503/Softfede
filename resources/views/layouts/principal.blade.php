@@ -25,7 +25,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 			<div class="menu"> <!-- MENU DEL COSTADO-->
 				<ul>
 					<li><a class="active" href="/"><i class="home"></i></a></li>
-					<li><a href="reviews"><div class="cat"><i class="contact"></i><i class="watching1"></i></div></a></li>
+					<li><a href="Jugador.vue"><div class="cat"><i class="contact"></i><i class="watching1"></i></div></a></li>
 					<li><a href="contacto"><div class="cnt"><i class="contact"></i><i class="contact1"></i></div></a></li>
 				</ul>
 			</div>

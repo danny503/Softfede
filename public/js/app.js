@@ -1949,10 +1949,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2987,7 +2983,7 @@ __webpack_require__.r(__webpack_exports__);
     abrirModal: function abrirModal(modelo, accion) {
       var data = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
       this.modal = 1;
-      this.tituloModal = "Seleccion uno a vrios jugadores";
+      this.tituloModal = "Seleccion uno a varios jugadores";
     },
     desactivarUsuario: function desactivarUsuario(id) {
       var _this = this;
@@ -4057,7 +4053,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       swal({
-        title: "Esta seguro de desactivar esta categoría?",
+        title: "Esta seguro de desactivar esta sede?",
         type: "warning",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
@@ -41171,7 +41167,7 @@ var render = function() {
       _c("div", { staticClass: "card-header" }, [
         _c("div", { staticClass: "card-header" }, [
           _c("i", { staticClass: "fa fa-align-justify" }),
-          _vm._v(" Equipos\n                        "),
+          _vm._v(" Categorias\n                        "),
           _c(
             "button",
             {
@@ -41201,57 +41197,45 @@ var render = function() {
               _vm._v(" "),
               _c(
                 "tbody",
-                [
-                  _vm._v(
-                    "\n                                   \n                                   " +
-                      _vm._s((_vm.$i = 1)) +
-                      "\n                                    "
-                  ),
-                  _vm._l(_vm.arrayCategoria, function(categoria) {
-                    return _c("tr", { key: categoria.id }, [
-                      _c("td", [_vm._v(_vm._s(_vm.$i))]),
-                      _vm._v(" "),
-                      _c("td", {
-                        domProps: { textContent: _vm._s(categoria.nombre) }
-                      }),
-                      _vm._v(" "),
-                      _c("td", {
-                        domProps: { textContent: _vm._s(categoria.descripcion) }
-                      }),
-                      _vm._v(" "),
-                      _c("td", [
-                        _c(
-                          "a",
-                          {
-                            staticClass: "btn btn-warning btn-raised btn-xs",
-                            attrs: { href: "#!" },
-                            on: {
-                              click: function($event) {
-                                return _vm.abrirModal(
-                                  "categoria",
-                                  "actualizar",
-                                  categoria
-                                )
-                              }
+                _vm._l(_vm.arrayCategoria, function(categoria) {
+                  return _c("tr", { key: categoria.id }, [
+                    _c("td", [_vm._v(_vm._s(_vm.$i))]),
+                    _vm._v(" "),
+                    _c("td", {
+                      domProps: { textContent: _vm._s(categoria.nombre) }
+                    }),
+                    _vm._v(" "),
+                    _c("td", {
+                      domProps: { textContent: _vm._s(categoria.descripcion) }
+                    }),
+                    _vm._v(" "),
+                    _c("td", [
+                      _c(
+                        "a",
+                        {
+                          staticClass: "btn btn-warning btn-raised btn-xs",
+                          attrs: { href: "#!" },
+                          on: {
+                            click: function($event) {
+                              return _vm.abrirModal(
+                                "categoria",
+                                "actualizar",
+                                categoria
+                              )
                             }
-                          },
-                          [_c("i", { staticClass: "fa fa-pencil" })]
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _vm._m(3, true)
-                    ])
-                  })
-                ],
-                2
+                          }
+                        },
+                        [_c("i", { staticClass: "fa fa-pencil" })]
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _vm._m(3, true)
+                  ])
+                }),
+                0
               )
             ])
-          ]),
-          _vm._v(
-            "\n                        " +
-              _vm._s(_vm.$i++) +
-              "\n                    "
-          )
+          ])
         ])
       ])
     ]),
