@@ -30,8 +30,10 @@ Vue.component('user', require('./components/User.vue').default);
 Vue.component('index', require('./components/Index.vue').default);
 Vue.component('cuerpotecnico', require('./components/CuerpoTecnico.vue').default);
 Vue.component('jugador', require('./components/Jugador.vue').default);
+//Vue.component('pro-component', require('./components/ProPartido.vue').default);
 //Vue.component('index', require('./views/index.vue').default);
-//Vue.component('login', require('./components/Login.vue').default);
+Vue.component('pro-component', require('./components/ProPartido.vue').default);
+Vue.component('arbitro', require('./components/Arbitro.vue').default);
 
 
 

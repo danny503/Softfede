@@ -22,19 +22,19 @@ Route::group(['middleware'=>['guest']],function(){
     return view('welcome');
 });*/
 
-Route::get('/','IndexController@index'); 
+Route::get('/','IndexController@index');
 Auth::routes();
 
 Route::group(['middleware'=>['auth']],function(){
-     
+
     Route::post('/logout', 'Auth\LoginController@logout')->name('logout');
-     
+
     Route::get('/main', function () {
         return view('contenido/contenido');
     })->name('main');
- 
+
 Route::group(['middleware' => ['Tecnico']], function () {
-    
+
     Route::get('/equipo','EquipoController@index');
     Route::post('/equipo/registrar','EquipoController@store');
     Route::put('/equipo/actualizar','EquipoController@update');
@@ -80,14 +80,20 @@ Route::group(['middleware' => ['Administrador']], function () {
     Route::put('/user/activar','UserController@activar');
     Route::put('/user/desactivar','UserController@desactivar');
 
-    
+
     Route::get('/jugador','JugadorController@index');
     Route::post('/jugador/registrar','JugadorController@store');
     Route::post('/jugador/actualizar','JugadorController@update');
-    
+
     Route::get('/cuerpotecnico','CuerpoTecnicoController@index');
     Route::post('/cuerpotecnico/registrar','CuerpoTecnicoController@store');
     Route::put('/cuerpotecnico/actualizar','CuerpoTecnicoController@update');
+
+    Route::get('/arbitro','ArbitroController@index');
+    Route::post('/arbitro/registrar','ArbitroController@store');
+    Route::put('/arbitro/actualizar','ArbitroController@update');
+
+    //Route::get('/propartido','ProPartidoController@index');
 
     });
 

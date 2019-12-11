@@ -166,7 +166,7 @@
                     <td v-text="persona.telefono"></td>
                     <td v-text="persona.email"></td>
                     <td v-text="persona.estatura"></td>
-                    <td >                     
+                    <td >
                         <img :src="'http://localhost:8000/images/' + persona.foto" alt="Foto de jugador" width="75" height="75">
                     </td>
                   <td><a href="#" class="btn btn-warning btn-raised btn-xs" @click="abrirModal('persona','actualizar',persona)" ><i class="fa fa-pencil"></i></a></td>
@@ -200,7 +200,7 @@
               </table>
             </div>
           </div>
-          
+
           <div class="modal fade" tabindex="-1" :class="{'mostrar' : modal}" role="dialog" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
             <div class="modal-dialog modal-primary modal-lg" role="document">
               <div class="modal-content">
@@ -239,7 +239,7 @@
                         <select class="form-control" v-model="genero">
                           <option value>Seleccione su genero</option>
                           <option value="Femenino">Femenino</option>
-                          <option value="Masculino">Maculino</option>
+                          <option value="Masculino">Masculino</option>
                         </select>
                       </div>
                     </div>
@@ -285,11 +285,11 @@
                         id="exampleInputNombre"
                         placeholder="Ingrese su estatura" />
                     </div>
-                    <div class="form-group">                        
-                      <label for="exampleInputFile">Foto</label> 
+                    <div class="form-group">
+                      <label for="exampleInputFile">Foto</label>
                       <div>
-                      <img :src="'http://localhost:8000/images/' + foto" alt="Foto de jugador" width="75" height="75"> 
-                      </div>                
+                      <img :src="'http://localhost:8000/images/' + foto" alt="Foto de jugador" width="75" height="75">
+                      </div>
                       <input type="file" id="foto" @change="obtenerImagen"/>
                       <span v-if="errors.foto" class="badge badge-danger">{{errors.foto[0]}}</span>
                     </div>
@@ -415,7 +415,7 @@ export default {
          .then(response=>{
            me.cerrarModal();
           me.listarPersona(1, "", "nombre");
-           //console.log(response.data);  
+           //console.log(response.data);
            }).catch(error => {
                     if (error.response.status == 422){
                         this.errors = error.response.data.errors
@@ -467,7 +467,7 @@ export default {
           me.cerrarModal();
           me.listarPersona(1, "", "nombre");
         })
-   
+
         .catch(function(error) {
           console.log(error);
         });
@@ -479,7 +479,7 @@ export default {
     },
     actualizarPersona(){
       this.errors = []
-      let me = this;      
+      let me = this;
       let formData = new FormData();
       formData.append('id',this.persona_id);
       formData.append('nombre',this.nombre);
@@ -495,7 +495,7 @@ export default {
          .then(function(response){
            me.cerrarModal();
            me.listarPersona(1, "", "nombre");
-           //console.log(response.data);  
+           //console.log(response.data);
          })
 
     },
@@ -548,7 +548,7 @@ export default {
       this.telefono = "";
       this.email = "";
       this.estatura = "";
-      this.foto = ""; 
+      this.foto = "";
       this.errorPersona = 0;
     },
     abrirModal(modelo, accion, data = []) {

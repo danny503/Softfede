@@ -2,7 +2,7 @@
 @section('contenido')
 @if(Auth::check())
             @if (Auth::user()->idrol == 1)
-                            
+
             <template v-if="menu==0">
             <index></index>
             </template>
@@ -22,7 +22,7 @@
             <equipo-component></equipo-component>
             </template>
             <template v-if="menu==6">
-            <h1>Contenido 6</h1>
+            <arbitro></arbitro>
             </template>
             <template v-if="menu==7">
             <h1>Contenido 7</h1>
@@ -52,7 +52,7 @@
             <h1>Contenido 15</h1>
             </template>
             <template v-if="menu==16">
-            <h1>Contenido 16</h1>
+            <pro-component></pro-component>
             </template>
             <template v-if="menu==17">
             <h1>Contenido 17</h1>
@@ -70,7 +70,7 @@
             <h1>Contenido 21</h1>
             </template>
             @elseif (Auth::user()->idrol == 2)
-                
+
             @elseif (Auth::user()->idrol == 3)
             <template v-if="menu==0">
             <index></index>
@@ -85,13 +85,13 @@
             <tipo></tipo>
             </template>
              @elseif (Auth::user()->idrol == 4)
-                
+
             @else
-           
- 
+
+
             @endif
 
             @endif
- 
-        
+
+
  @endsection

@@ -2,7 +2,7 @@
 
 @section('login')
 
-<template>    
+<template>
 <div class="blog_post_image"></div>
     <div class="login-box">
       <div class="login-logo">
@@ -50,6 +50,6 @@
     </div><!-- /.login-box -->
 
 
-</template>    
+</template>
 @endsection
 

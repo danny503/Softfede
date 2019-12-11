@@ -38,7 +38,7 @@
                                              <th class="text-center list-group-item-success">Direccion</th>
                                              <th class="text-center list-group-item-success">Telefono</th>
                                               <th class="text-center list-group-item-success">Email</th>
-                                              <th class="text-center list-group-item-success">Tipo</th>
+                                              <th class="text-center list-group-item-success">Cargo</th>
                                             <th class="text-center list-group-item-success">Actualizar</th>
                                             <th class="text-center list-group-item-success">Eliminar</th>
                                         </tr>
@@ -53,7 +53,7 @@
                                     <td v-text="persona.direccion"></td>
                                     <td v-text="persona.telefono"></td>
                                     <td v-text="persona.email"></td>
-                                    <td v-text="persona.nombre_tipo"></td>
+                                    <td v-text="persona.cargo"></td>
                                     <td><a href="#!" class="btn btn-warning btn-raised btn-xs" @click="abrirModal('persona','actualizar',persona)" ><i class="fa fa-pencil"></i></a></td>
                                     <td><a href="#!" class="btn btn-danger btn-raised btn-xs"><i class="fa fa-trash"></i></a></td>
                                 </tr>
@@ -134,11 +134,11 @@
                                 <div class="form-group row">
                                     <label class="col-md-3 form-control-label" for="text-input">Tipo</label>
                                     <div class="col-md-9">
-                                        <select class="form-control" v-model="idtipo">
-                                            <option value="0" disabled>Seleccione</option>
-                                            <option v-for="tipo in arrayTipo" :key="tipo.id" :value="tipo.id" v-text="tipo.nombre"></option>
+                                        <select class="form-control" v-model="cargo">
+                                            <option value="" disabled>Seleccione el tipo</option>
+                                            <option value="Arbitro_mesa">Arbitro de mesa</option>
+                                            <option value="Arbitro_Cancha">Arbitro de cancha</option>
                                         </select>
-                                        <span class="help-block"></span>
                                     </div>
                                 </div>
                                 <div v-show="errorPersona" class="form-group row div-error">
@@ -176,10 +176,9 @@
                 direccion : '',
                 telefono : '',
                 email : '',
-                idtipo : '',
+                cargo : '',
 
                 arrayPersona : [],
-                arrayTipo : [],
                 modal : 0,
                 tituloModal : '',
                 tipoAccion : 0,
@@ -230,7 +229,7 @@
         methods : {
             listarPersona (page,buscar,criterio){
                 let me=this;
-                var url= '/cuerpotecnico?page=' + page + '&buscar='+ buscar + '&criterio='+ criterio;
+                var url= '/arbitro?page=' + page + '&buscar='+ buscar + '&criterio='+ criterio;
                 axios.get(url).then(function (response) {
                     var respuesta= response.data;
                     me.arrayPersona = respuesta.personas.data;
@@ -252,32 +251,19 @@
                    return;
                 }
                 let me = this;
-                axios.post('/cuerpotecnico/registrar',{
+                axios.post('/arbitro/registrar',{
                     'nombre': this.nombre,
                     'fechanac': this.fechanac,
                     'genero' : this.genero,
                     'direccion' : this.direccion,
                     'telefono' : this.telefono,
                     'email' : this.email,
-                    'idtipo': this.idtipo
+                    'cargo': this.cargo
 
                 }).then(function (response) {
                     me.cerrarModal();
                     me.listarPersona(1,'','nombre');
                 }).catch(function (error) {
-                    console.log(error);
-                });
-            },
-            selectTipo(){
-                 let me=this;
-                var url = '/tipo/selectTipo';
-                axios.get(url).then(function (response) {
-                   // consolo.log(response);
-                    var respuesta= response.data;
-                    me.arrayTipo = respuesta.tipos;
-                })
-                .catch(function (error) {
-                    // handle error
                     console.log(error);
                 });
             },
@@ -288,14 +274,14 @@
 
                 let me = this;
 
-                axios.put('/cuerpotecnico/actualizar',{
+                axios.put('/arbitro/actualizar',{
                     'nombre': this.nombre,
                     'fechanac': this.fechanac,
                     'genero' : this.genero,
                     'direccion' : this.direccion,
                     'telefono' : this.telefono,
                     'email' : this.email,
-                    'idtipo': this.idtipo,
+                    'cargo': this.cargo,
 
                     'id': this.persona_id
                 }).then(function (response) {
@@ -310,7 +296,7 @@
                 this.errorMostrarMsjPersona =[];
 
                 if (!this.nombre) this.errorMostrarMsjPersona.push("El nombre de la persona no puede estar vacío.");
-                if (this.idtipo ==0) this.errorMostrarMsjPersona.push("Debes seleccionar un tipo");
+                if (this.cargo ==0) this.errorMostrarMsjPersona.push("Debes seleccionar un cargo");
                 if (this.errorMostrarMsjPersona.length) this.errorPersona = 1;
 
                 return this.errorPersona;
@@ -324,13 +310,13 @@
                 this.direccion='';
                 this.telefono='';
                 this.email='';
-                this.idtipo=0,
+                this.cargo=0,
 
                 this.errorPersona=0;
 
             },
             abrirModal(modelo, accion, data = []){
-                this.selectTipo();
+               // this.selectTipo();
                 switch(modelo){
                     case "persona":
                     {
@@ -338,14 +324,14 @@
                             case 'registrar':
                             {
                                 this.modal = 1;
-                                this.tituloModal = 'Registrar Cuerpo Tecnico';
+                                this.tituloModal = 'Registrar Árbitro';
                                 this.nombre= '';
                                 this.fechanac='';
                                 this.genero='';
                                 this.direccion='';
                                 this.telefono='';
                                 this.email='';
-                                this.idtipo=0,
+                                this.cargo=0,
 
                                 this.tipoAccion = 1;
                                 break;
@@ -354,7 +340,7 @@
                             {
                                 //console.log(data);
                                 this.modal=1;
-                                this.tituloModal='Actualizar Cuerpo Tecnico';
+                                this.tituloModal='Actualizar Árbitro';
                                 this.tipoAccion=2;
                                 this.persona_id=data['id'];
                                 this.nombre = data['nombre'];
@@ -363,7 +349,7 @@
                                 this.direccion = data['direccion'];
                                 this.telefono = data['telefono'];
                                 this.email = data['email'];
-                                this.idtipo = data['idtipo'];
+                                this.cargo = data['cargo'];
 
                                 break;
                             }
