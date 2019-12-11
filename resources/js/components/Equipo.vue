@@ -27,7 +27,7 @@
           </button>
         </div>
         <!--Listado -->
-        <template v-if="listado">
+        <template v-if="listado==1">
         <div class="card-body">
           <div class="form-group row">
             <div class="col-md-6">
@@ -66,6 +66,9 @@
               <tbody>
                 <tr v-for="equipo in arrayEquipo" :key="equipo.id">
                   <td>
+                    <button type="button" @click="verEquipo(equipo.id)" class="btn btn-primary btn-sm">
+                        <i class="icon-eye"></i>
+                    </button> &nbsp;
                     <button type="button" @click="abrirModal('equipo','actualizar',equipo)" class="btn btn-success btn-sm">
                       <i class="icon-eye"></i>
                     </button>&nbsp;
@@ -111,14 +114,41 @@
         </template>
         <!--Fin Listado -->
         <!--Inicio Detalle -->
-        <template v-else>
+        <template v-if="listado==0">
         <div class="card-body">
           <div class="form-group row border">
-            <div class="col-md-6">
+           <!-- <div class="col-md-6">
               <label for>Nombre</label>
               <input type="text" class="form-control" v-model="nombre" />
-            </div>
+            </div>-->
 
+          <div class="col-md-6">
+              <div class="form-group">
+                <label for>Equipo</label>
+                 <select class="form-control" v-model="idequipo">
+                <option value="0" disabled>Seleccione un Equipo</option>
+                <option v-for="equipo in arrayEquipo" :key="equipo.id" :value="equipo.id" v-text="equipo.nombre"></option>
+                 </select>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for>Jugador</label>
+                 <select class="form-control" v-model="idjugador">
+                <option value="0" disabled>Seleccione un jugador</option>
+                <option v-for="jugador in arrayPersona" :key="jugador.id" :value="jugador.id" v-text="jugador.nombre"></option>
+                 </select>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label for>Numero de camisa</label>
+              <input type="number" class="form-control" v-model="numero_camisa" />
+            </div>
+            <div class="col-md-6">
+              <label for>posicion</label>
+              <input type="text" class="form-control" v-model="posicion" />
+            </div>
+<!--
             <div class="col-md-6">
               <div class="form-group">
                 <label for>Rama</label>
@@ -127,12 +157,12 @@
                 <option v-for="rama in arrayRama" :key="rama.id" :value="rama.id" v-text="rama.nombre"></option>
                  </select>
               </div>
-            </div>
+            </div>-->
             
-            <div class="col-md-4">
+           <!-- <div class="col-md-4">
               <label for>Logo</label>
               <input type="text" class="form-control" v-model="logo" />
-            </div>
+            </div>-->
             <div class="col-md-12">
               <div v-show="errorEquipo" class="form-group row div-error">
                       <div class="text-center text-error">
@@ -142,12 +172,12 @@
              </div>
               </div>            
           </div>
-          <div class="form-group row border">
+          <!--<div class="form-group row border">
               <div class="col-md-6">
                   <div class="form-group">
                       <label for="">Jugadores <span style="color:red;" v-show="idpersona==0">(Seleccione)</span></label>
                       <div class="form-inline">
-                          <input type="text" class="form-control" v-model="idpersona" placeholder="Ingrese jugador">
+                          <input type="text" class="form-control" v-model="idjugador" placeholder="Ingrese jugador">
                           <button @click="abrirModal()" class="btn btn-primary">...</button>
                       </div>
                   </div>
@@ -169,10 +199,10 @@
                       <button @click="agregarDetalle()" class="btn btn-success form-control btnagregar"><i class="icon-plus"></i></button>
                   </div>
               </div>
-          </div>          
+          </div> -->         
           <div class="form-group row border">
               <div class="table-responsive">
-                  <table class="table table-bordered table-striped table-sm">
+                  <!--table class="table table-bordered table-striped table-sm">
                       <thead>
                           <tr>
                           <th>Opciones</th>
@@ -207,7 +237,7 @@
                         </td>
                       </tr>
                     </tbody>
-                  </table>
+                  </table>-->
               </div>
           </div>
           <div class="form=group row">
@@ -220,6 +250,194 @@
         </div>
         </template>
         <!--Fin detalle -->
+         <!--Ver ingreso-->
+                   <template v-if="listado==2">
+                    <div class="card-body">
+                        <div class="form-group row border">
+                            <div class="col-md-9">
+                                <div class="form-group">
+                                    <label for="">rama</label>
+                                    <p v-text="nombre_rama"></p>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="">Equipo</label>
+                                <p v-text="nombre" ></p>
+                            </div>
+                            
+                        </div>
+                        <div class="form-group row border">
+                            <div class="table-responsive col-md-12">
+                                <table class="table table-bordered table-striped table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>jugador</th>
+                                            <th>numero de camisa</th>
+                                            <th>posicion</th>
+                                            <th>Actualizar</th>
+                                            <th>Eliminar</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody v-if="arrayDetalle.length">
+                                        <tr v-for="detalle in arrayDetalle" :key="detalle.id">
+                                            <td v-text="detalle.persona">
+                                            </td>
+                                            <td v-text="detalle.numero_camisa">
+                                            </td>
+                                            <td v-text="detalle.posicion">
+                                            </td>
+                                            <td><a href="#!" class="btn btn-warning btn-raised btn-xs" @click="abrirModal('detalle', detalle)" ><i class="fa fa-pencil"></i></a></td>
+                                            <td><a href="#!" class="btn btn-danger btn-raised btn-xs" v-on:click.prevent="deleteKeep(detalle)"><i class="fa fa-trash"></i></a></td>
+                                        </tr>
+                                    </tbody>  
+                                    <tbody v-else>
+                                        <tr>
+                                            <td colspan="4">
+                                                No hay jugadores agregados al equipo
+                                            </td>
+                                        </tr>
+                                    </tbody>                                  
+                                </table>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-12">
+                                <button type="button" @click="ocultarDetalle()" class="btn btn-secondary">Cerrar</button>
+                            </div>
+                        </div>
+                    </div>
+                    </template>
+                    <!--Fin ver ingreso-->
+
+                    <!-- inicio -->
+                    <template v-if="listado==3">
+        <div class="card-body">
+          <div class="form-group row border">
+           <!-- <div class="col-md-6">
+              <label for>Nombre</label>
+              <input type="text" class="form-control" v-model="nombre" />
+            </div>-->
+                      
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for>Jugador</label>
+                 <select class="form-control" v-model="idjugador">
+                
+                <input v-for="jugador in arrayPersona" :key="jugador.id" :value="jugador.id" v-text="jugador.nombre">
+                 </select>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label for>Numero de camisa</label>
+              <input type="number" class="form-control" v-model="numero_camisa" />
+            </div>
+            <div class="col-md-6">
+              <label for>posicion</label>
+              <input type="text" class="form-control" v-model="posicion" />
+            </div>
+<!--
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for>Rama</label>
+                 <select class="form-control" v-model="idrama">
+                <option value="0" disabled>Seleccione una rama</option>
+                <option v-for="rama in arrayRama" :key="rama.id" :value="rama.id" v-text="rama.nombre"></option>
+                 </select>
+              </div>
+            </div>-->
+            
+           <!-- <div class="col-md-4">
+              <label for>Logo</label>
+              <input type="text" class="form-control" v-model="logo" />
+            </div>-->
+            <div class="col-md-12">
+              <div v-show="errorEquipo" class="form-group row div-error">
+                      <div class="text-center text-error">
+                       <div v-for="error in errorMostrarMsjEquipo" :key="error" v-text="error">
+                      </div>
+                  </div>
+             </div>
+              </div>            
+          </div>
+          <!--<div class="form-group row border">
+              <div class="col-md-6">
+                  <div class="form-group">
+                      <label for="">Jugadores <span style="color:red;" v-show="idpersona==0">(Seleccione)</span></label>
+                      <div class="form-inline">
+                          <input type="text" class="form-control" v-model="idjugador" placeholder="Ingrese jugador">
+                          <button @click="abrirModal()" class="btn btn-primary">...</button>
+                      </div>
+                  </div>
+              </div>
+              <div class="col-md-2">
+                  <div class="form-group">
+                      <label >Numero de camisa<span style="color:red;" v-show="ncamisa==0">(Seleccione)</span></label>
+                      <input type="number" class="form-control" v-model="ncamisa">
+                  </div>
+              </div>
+              <div class="col-md-4">
+                  <div class="form-group">
+                      <label >Posición <span style="color:red;" v-show="posicion==0">(Seleccione)</span></label>
+                      <input type="text" class="form-control" v-model="posicion">
+                  </div>
+              </div>
+              <div class="col-md-2">
+                  <div class="form-group">
+                      <button @click="agregarDetalle()" class="btn btn-success form-control btnagregar"><i class="icon-plus"></i></button>
+                  </div>
+              </div>
+          </div> -->         
+          <div class="form-group row border">
+              <div class="table-responsive">
+                  <!--table class="table table-bordered table-striped table-sm">
+                      <thead>
+                          <tr>
+                          <th>Opciones</th>
+                          <th>Jugador</th>
+                          <th>N° Camisa</th>
+                          <th>Posición</th>  
+                          </tr>                        
+                      </thead>
+                      <tbody v-if="arrayDetalle.length">
+                          <tr v-for="(detalle, index) in arrayDetalle" :key="detalle.id">
+                              <td>
+                                  <button @click="eliminarDetalle(index)" type="button" class="btn btn-danger btn-sm">
+                                      <i class="icon-close"></i>
+                                  </button>
+                              </td>
+                              <td v-text="detalle.persona" >
+                              </td>
+                              
+                              <td>
+                                  <input type="text" v-model="detalle.ncamisa" value="3" class="form-control">
+                              </td>
+                               <td>
+                                  <input type="text" v-model="detalle.posicion" value="3" class="form-control">
+                              </td>           
+                                                                                                                        
+                          </tr>                          
+                    </tbody>
+                    <tbody v-else>
+                      <tr>
+                        <td colspan="5">
+                          No hay jugadores agregados
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>-->
+              </div>
+          </div>
+          <div class="form=group row">
+              <div class="col-md-12"> 
+                  <button type="button" @click="ocultarDetalle()" class="btn btn-secondary">Cerrar</button>
+                  <button type="button" class="btn btn-primary" @click="actualizarEquipo()">Actualizar equipo</button>
+              </div>
+
+          </div>
+        </div>
+        </template>
+                    
+                    
       </div>
       <!-- Fin ejemplo de tabla Listado -->
     </div>
@@ -243,53 +461,121 @@
           <div class="modal-body">
                 <div class="form-group row">
               <div class="col-md-6">
-                <div>
-                  <select class="col-md-3" v-model="criterioJ">
-                    <option value="nombre">Nombre</option>
-                    <option value="apellido">Apellido</option>
-                  </select>
-                  <input type="text" v-model="buscarJ" @keyup.enter="listarPersona(buscarJ,criterioJ)" placeholder="Buscar"/>
-                  <button type="submit" @click="listarPersona(buscarJ,criterioJ)" class="btn btn-primary">
-                    <i class="fa fa-search"></i>
-                  </button>
-                </div>
+              <div class="form-group">
+                <label for>Jugador</label>
+                 <select class="form-control" v-model="idjugador">
+                <option value="0" disabled>Seleccione un jugador</option>
+                <option v-for="jugador in arrayPersona" :key="jugador.id" :value="jugador.id" v-text="jugador.nombre"></option>
+                 </select>
               </div>
             </div>
-            <div class="table-responseve">
-              <table class="table table-hover text-center">
-                <thead>
-                  <tr>
-                    <th class="text-center">Opciones</th>
-                    <th class="text-center">Nombre</th>
-                    <th class="text-center">Fecha Nacimiento</th>
-                    <th class="text-center">Género</th>
-                    <th class="text-center">Dirección</th>
-                    <th class="text-center">Teléfono</th>
-                    <th class="text-center">Estatura</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="persona in arrayPersona" :key="persona.id">
-                    <td>          
-                      <button type="button" @click="agregarDetalleModal(persona)" class="btn btn-success btn-sm">
-                       <i class="fa fa-check"></i>
-                      </button>
-                      </td>
-                    <td v-text="persona.nombre"></td>
-                    <td v-text="persona.fechanac"></td>
-                    <td v-text="persona.genero"></td>
-                    <td v-text="persona.direccion"></td>
-                    <td v-text="persona.telefono"></td>
-                    <td v-text="persona.estatura"></td>                                     
-                  </tr>
-                </tbody>               
-              </table>
+            <div class="col-md-6">
+              <label for>Numero de camisa</label>
+              <input type="number" class="form-control" v-model="numero_camisa" />
             </div>
+            <div class="col-md-6">
+              <label for>posicion</label>
+              <input type="text" class="form-control" v-model="posicion" />
+            </div>
+<!--
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for>Rama</label>
+                 <select class="form-control" v-model="idrama">
+                <option value="0" disabled>Seleccione una rama</option>
+                <option v-for="rama in arrayRama" :key="rama.id" :value="rama.id" v-text="rama.nombre"></option>
+                 </select>
+              </div>
+            </div>-->
+            
+           <!-- <div class="col-md-4">
+              <label for>Logo</label>
+              <input type="text" class="form-control" v-model="logo" />
+            </div>-->
+            <div class="col-md-12">
+              <div v-show="errorEquipo" class="form-group row div-error">
+                      <div class="text-center text-error">
+                       <div v-for="error in errorMostrarMsjEquipo" :key="error" v-text="error">
+                      </div>
+                  </div>
+             </div>
+              </div>            
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" @click="cerrarModal()">Cerrar</button>
-            <button type="button" v-if="tipoAccion==1" class="btn btn-primary" @click="registrarPersona()">Guardar</button>
-            <button type="button" v-if="tipoAccion==2" class="btn btn-primary" @click="actualizarPersona()">Actualizar</button>
+          <!--<div class="form-group row border">
+              <div class="col-md-6">
+                  <div class="form-group">
+                      <label for="">Jugadores <span style="color:red;" v-show="idpersona==0">(Seleccione)</span></label>
+                      <div class="form-inline">
+                          <input type="text" class="form-control" v-model="idjugador" placeholder="Ingrese jugador">
+                          <button @click="abrirModal()" class="btn btn-primary">...</button>
+                      </div>
+                  </div>
+              </div>
+              <div class="col-md-2">
+                  <div class="form-group">
+                      <label >Numero de camisa<span style="color:red;" v-show="ncamisa==0">(Seleccione)</span></label>
+                      <input type="number" class="form-control" v-model="ncamisa">
+                  </div>
+              </div>
+              <div class="col-md-4">
+                  <div class="form-group">
+                      <label >Posición <span style="color:red;" v-show="posicion==0">(Seleccione)</span></label>
+                      <input type="text" class="form-control" v-model="posicion">
+                  </div>
+              </div>
+              <div class="col-md-2">
+                  <div class="form-group">
+                      <button @click="agregarDetalle()" class="btn btn-success form-control btnagregar"><i class="icon-plus"></i></button>
+                  </div>
+              </div>
+          </div> -->         
+          <div class="form-group row border">
+              <div class="table-responsive">
+                  <!--table class="table table-bordered table-striped table-sm">
+                      <thead>
+                          <tr>
+                          <th>Opciones</th>
+                          <th>Jugador</th>
+                          <th>N° Camisa</th>
+                          <th>Posición</th>  
+                          </tr>                        
+                      </thead>
+                      <tbody v-if="arrayDetalle.length">
+                          <tr v-for="(detalle, index) in arrayDetalle" :key="detalle.id">
+                              <td>
+                                  <button @click="eliminarDetalle(index)" type="button" class="btn btn-danger btn-sm">
+                                      <i class="icon-close"></i>
+                                  </button>
+                              </td>
+                              <td v-text="detalle.persona" >
+                              </td>
+                              
+                              <td>
+                                  <input type="text" v-model="detalle.ncamisa" value="3" class="form-control">
+                              </td>
+                               <td>
+                                  <input type="text" v-model="detalle.posicion" value="3" class="form-control">
+                              </td>           
+                                                                                                                        
+                          </tr>                          
+                    </tbody>
+                    <tbody v-else>
+                      <tr>
+                        <td colspan="5">
+                          No hay jugadores agregados
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>-->
+              </div>
+          </div>
+          <div class="form=group row">
+              <div class="col-md-12"> 
+                  <button type="button" @click="ocultarDetalle()" class="btn btn-secondary">Cerrar</button>
+                  <button type="button" class="btn btn-primary" @click="actualizarEquipo()">Actualizar equipo</button>
+              </div>
+
+          </div>
           </div>
         </div>
         <!-- /.modal-content -->
@@ -305,7 +591,8 @@
 <script>
 export default {
   data() {
-    return {    
+    return {  
+      id:0,  
       equipo_id: 0,
       idrama: 0,
       idpersona:0,
@@ -315,7 +602,10 @@ export default {
       ncamisa :0,
       persona: "",
       posicion: "",
+      idequipo:0,
+      idjugador:0,
       arrayEquipo: [],
+      numero_camisa:"",
       arrayPersona: [],
       arrayDetalle: [],
       listado:1,
@@ -400,6 +690,7 @@ export default {
           console.log(error);
         });
     },
+   
     cambiarPagina(page, buscar, criterio) {
       let me = this;
       //actualiza la pagina actual
@@ -413,11 +704,11 @@ export default {
 
       let me = this;
 
-      axios.post('/equipo/registrar', {
-          'nombre': this.nombre,
-          'idrama': this.idrama,
-          'logo': this.logo,
-          'data' : this.arrayDetalle
+      axios.post('/inscripcionej/registrar', {
+          'idequipo': this.idequipo,
+          'idjugador': this.idjugador,
+          'numero_camisa':this.numero_camisa,
+          'posicion':this.posicion
          
         })
         .then(function(response) {
@@ -436,6 +727,26 @@ export default {
           console.log(error);
         });
     },
+     actualizarEquipo(){
+               if (this.validarPersona()){
+                    return;
+                }
+                
+                let me = this;
+
+                axios.put('/inscripcionej/actualizar',{
+                    'idjugador': this.idjugador,
+                    'numero_camisa': this.numero_camisa,
+                    'posicion' : this.posicion,
+                    
+                    'id': this.persona_id
+                }).then(function (response) {
+                    me.cerrarModal();
+                    me.listarPersona(1,'','nombre');
+                }).catch(function (error) {
+                    console.log(error);
+                }); 
+            },
     actualizarPersona() {
       if (this.validarPersona()) {
         return;
@@ -468,12 +779,18 @@ export default {
       this.errorEquipo = 0;
       this.errorMostrarMsjEquipo = [];
 
-      if (!this.nombre) this.errorMostrarMsjEquipo.push("El nombre del equipo no puede estar vacío.");
-      if (this.idrama==0) this.errorMostrarMsjEquipo.push("La rama no puede estar vacío.");
-      if(this.arrayDetalle.length<=0)this.errorMostrarMsjEquipo.push("Ingrese detalle");
+     // if (!this.nombre) this.errorMostrarMsjEquipo.push("El nombre del equipo no puede estar vacío.");
+     // if (this.idrama==0) this.errorMostrarMsjEquipo.push("La rama no puede estar vacío.");
+      //if(this.arrayDetalle.length<=0)this.errorMostrarMsjEquipo.push("Ingrese detalle");
       if (this.errorMostrarMsjEquipo.length) this.errorEquipo = 1;
 
       return this.errorEquipo;
+    },
+    deleteKeep: function(detalle) {
+       // var url = '/inscripcionej/delete/' + (this.detalle.id).then;
+        axios.delete('/inscripcionej/delete').then(response => {
+           this.listarPersona('delete');            
+        });
     },
     mostrarDetalle(){
       let me = this;
@@ -565,10 +882,13 @@ export default {
       this.modal = 0;
       this.tituloModal = "";     
     },
-    abrirModal(modelo, accion, data = []) {
+    abrirModal( data = []) {
      
           this.modal = 1;
-          this.tituloModal = "Seleccion uno a vrios jugadores";      
+          this.tituloModal = "Seleccion uno a vrios jugadores";  
+          this.equipo_id = data['id'];
+                                this.numero_camisa= data['numero_camisa'];
+                                this.posicion = data['posicion'];    
       
     },
     desactivarUsuario(id) {
@@ -610,6 +930,39 @@ export default {
         }
       });
     },
+     verEquipo(id){
+                let me=this;
+                me.listado=2;
+
+                //Obtener datos del ingreso
+                var arrayEquipoT=[];
+                var url= '/equipo/obtenerCabecera?id=' + id;
+
+                axios.get(url).then(function (response) {
+                    var respuesta= response.data;
+                    arrayEquipoT = respuesta.equipo;
+                    
+                    me.nombre_rama = arrayEquipoT[0]['nombre_rama'];
+                    me.nombre=arrayEquipoT[0]['nombre'];
+                  
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+
+                //obtener datos de los detalles
+                 var url= '/equipo/obtenerDetalles?id=' + id;
+                  
+                axios.get(url).then(function (response) {
+                    console.log(response);
+                    var respuesta= response.data;
+                    me.arrayDetalle = respuesta.detalles;
+
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+            },
     activarUsuario(id) {
       swal({
         title: "Esta seguro de activar este usuario?",
@@ -653,6 +1006,8 @@ export default {
   mounted() {
     this.listarEquipo(1, this.buscar, this.criterio);
     this.selectRama();
+    this.listarPersona(this.buscar,this.criterio);
+    
   }
 };
 </script>

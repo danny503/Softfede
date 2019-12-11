@@ -47,32 +47,17 @@ class EquipoController extends Controller
     {
         
         if (!$request->ajax()) return redirect('/');
-        try{
-            DB::beginTransaction();
+
         $equipo = new Equipo();
         $equipo->idrama = $request->idrama;
         $equipo->nombre = $request->nombre;
         $equipo->logo = $request->logo;
         $equipo->save();
 
-        $inscripciones = $request->data;//Array de detalles
-        //Recorro todos los elementos
+    }   
+       
 
-        foreach($inscripciones as $ep=>$det)
-        {
-            $inscripcion = new InscripcionJE();
-            $inscripcion->idequipo = $equipo->id;
-            $inscripcion->idjugador = $det['idpersona'];
-           // $inscripcion->fecha_ingreso = $det['fecha_ingreso'];
-            $inscripcion->numero_camisa = $det['ncamisa'];  
-            $inscripcion->posicion = $det['posicion'];          
-            $inscripcion->save();
-        }
-        DB::commit();
-    } catch (Exception $e){
-        DB:rollBack();
-    }          
-}
+
 
     
     public function update(Request $request)
@@ -83,6 +68,38 @@ class EquipoController extends Controller
         $equipo->nombre = $request->nombre;
         $equipo->logo = $request->logo;
         $equipo->save();
+    }
+    public function obtenerCabecera(Request $request){
+        if (!$request->ajax()) return redirect('/');
+ 
+        $id = $request->id;
+         
+
+        $equipos = Equipo::join('ramas','equipos.idrama','=','ramas.id')
+        ->select('equipos.id','equipos.idrama','equipos.nombre','ramas.nombre as nombre_rama')
+        ->where('equipos.id','=',$id)
+        ->orderBy('equipos.id', 'desc')->take(1)->get();
+
+         
+        return [
+           
+            'equipo' => $equipos
+        ];
+    }
+    public function obtenerDetalles(Request $request){
+        if (!$request->ajax()) return redirect('/');
+ 
+        $id = $request->id;
+         
+        $detalles = InscripcionJE::join('personas','inscripcionej.idjugador','=','personas.id')
+        ->select('inscripcionej.numero_camisa','inscripcionej.posicion','personas.nombre as persona')
+        ->where('inscripcionej.idequipo','=',$id)
+        ->orderBy('inscripcionej.id', 'desc')->get();                    
+         
+        return [
+           
+            'detalles' => $detalles
+        ];
     }
     public function desactivar(Request $request)
     {
@@ -98,6 +115,13 @@ class EquipoController extends Controller
         $equipo = Equipo::findOrFail($request->id);
         $equipo->condicion = '1';
         $equipo->save();
+    }
+    public function destroy($id)
+    {
+
+        $equipo = Equipo::find($id);
+        $equipo->delete();
+        //Session::flash('message','Usuario eliminado correctamente');
     }
   
 }

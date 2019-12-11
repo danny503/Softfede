@@ -41,6 +41,12 @@ Route::group(['middleware' => ['Tecnico']], function () {
     Route::put('/equipo/actualizar','EquipoController@update');
     Route::put('/equipo/activar','EquipoController@activar');
     Route::put('/equipo/desactivar','EquipoController@desactivar');
+    Route::get('/equipo/obtenerCabecera', 'EquipoController@obtenerCabecera');
+    Route::get('/equipo/obtenerDetalles', 'EquipoController@obtenerDetalles');
+
+    Route::post('/inscripcionej/registrar','InscripcionEJController@store');
+    Route::delete('/inscripcionej/delete','InscripcionEJController@destroy');
+    Route::put('/inscripcionej/actualizar','EquipoController@update');
 
     Route::get('/tipo','TipoController@index');
     Route::post('/tipo/registrar','TipoController@store');
@@ -57,6 +63,7 @@ Route::group(['middleware' => ['Tecnico']], function () {
     Route::post('/jugador/registrar','JugadorController@store');
     Route::post('/jugador/actualizar','JugadorController@update');
     Route::get('/jugador/listarJugador','JugadorController@listarJugador');
+    Route::get('/jugador/obtenerDetalles', 'JugadorController@obtenerDetalles');
 });
 
 Route::group(['middleware' => ['Administrador']], function () {

@@ -72,6 +72,12 @@
                                         <p>Equipos</p>
                                     </a>
                                 </li>
+                                <li @click="menu=22" class="nav-item">
+                                    <a href="#" class="nav-link">
+                                        <i class="fa fa-circle-o nav-icon"></i>
+                                        <p>registro de equipo</p>
+                                    </a>
+                                </li> 
                                 <li @click="menu=6" class="nav-item">
                                     <a href="#" class="nav-link">
                                         <i class="fa fa-circle-o nav-icon"></i>

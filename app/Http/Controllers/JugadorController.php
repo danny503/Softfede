@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Jugador;
 use App\Persona;
+use App\InscripcionJE;
 use Illuminate\Support\Facades\DB;
 class JugadorController extends Controller
 {
@@ -70,7 +71,24 @@ class JugadorController extends Controller
         
         return [ 'personas' => $personas ];
     }
+    public function obtenerDetalles(Request $request){
+        if (!$request->ajax()) return redirect('/');
+ 
+        $id = $request->id;
+         
+        $detalles = InscripcionJE::join('jugadores','inscripcionej.id','=','jugadores.id')
+        ->join('personas','jugadores.id','=','personas.id')
+        ->select('inscripcionej.id','inscripcionej.numero_camisa','inscripcionej.posicion','personas.nombre as persona')
+        ->where('inscripcionej.idequipo','=',$id)
+        ->orderBy('inscripcionej.id', 'desc')->get();
 
+       
+         
+        return [
+           
+            'detalles' => $detalles
+        ];
+    }
     public function store(Request $request)
     {
         if (!$request->ajax()) return redirect('/');

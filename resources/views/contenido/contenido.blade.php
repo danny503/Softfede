@@ -69,6 +69,9 @@
             <template v-if="menu==21">
             <h1>Contenido 21</h1>
             </template>
+            <template v-if="menu==22">
+            <equipos></equipos>
+            </template>
             @elseif (Auth::user()->idrol == 2)
                 
             @elseif (Auth::user()->idrol == 3)
@@ -87,11 +90,9 @@
              @elseif (Auth::user()->idrol == 4)
                 
             @else
-           
- 
+            
             @endif
 
             @endif
- 
-        
+       
  @endsection
