@@ -38,7 +38,7 @@
                 <input
                   type="text"
                   v-model="buscar"
-                  @keyup.enter="listarIngreso(1,buscar,criterio)"
+                  @keyup.enter="listarEquipo(1,buscar,criterio)"
                   class="form-control"
                   placeholder="Texto a buscar"
                 />
@@ -69,6 +69,9 @@
                     <button type="button" @click="abrirModal('equipo','actualizar',equipo)" class="btn btn-success btn-sm">
                       <i class="icon-eye"></i>
                     </button>&nbsp;
+                    <button type="button" @click="pdfEquipo(equipo.id)" class="btn btn-info btn-sm">
+                        <i class="fa fa-file"></i>
+                    </button> 
                   </td>
                   <td v-text="equipo.nombre"></td>
                   <td v-text="equipo.nombre_rama"></td>
@@ -431,6 +434,7 @@ export default {
           me.ncamisa=0;
           me.posicion='';
           me.arrayDetalle=[];
+          window.open('/equipo/listarPdf/'+ id ,'_blank');
         })
         .catch(function(error) {
           console.log(error);
@@ -489,6 +493,9 @@ export default {
     },
     ocultarDetalle(){
       this.listado=1;
+    },
+    pdfEquipo(id){
+      window.open('/equipo/listarPdf/'+ id ,'_blank');
     },
     encuentra(id){
       var sw=0;

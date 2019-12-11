@@ -43,5 +43,13 @@ class CategoriaController extends Controller
         $categoria->save();
     }
 
+    public function selectCategoria(Request $request){
+        if (!$request->ajax()) return redirect('/');
+        $categorias = Categoria:://where('condicion','=','1')
+        select('id','nombre','descripcion')->orderBy('nombre','asc')->get();
+        return ['categorias' => $categorias];
+
+    }
+
 
 }

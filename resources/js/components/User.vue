@@ -110,7 +110,7 @@
                                 <div class="form-group row">
                                     <label class="col-md-3 form-control-label" for="email-input">Teléfono</label>
                                     <div class="col-md-9">
-                                        <input type="text" v-model="telefono" class="form-control" placeholder="Teléfono">
+                                        <input type="text" class="form-control" data-inputmask="'mask': ['9999-9999 []', '+099 99 99 9999[9]-9999']" data-mask v-model="telefono">
                                         <span v-if="errors.telefono" class="badge badge-danger">{{errors.telefono[0]}}</span>
                                     </div>
                                 </div>
@@ -131,8 +131,7 @@
                                             </option>
                                         </select>
                                     </div>
-                                </div>
-                                
+                                </div>                                
                                 <div class="form-group row">
                                     <label class="col-md-3 form-control-label" for="email-input">Usuario (*)</label>
                                     <div class="col-md-9">

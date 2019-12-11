@@ -42,6 +42,28 @@ class EquipoController extends Controller
         ];
     }
 
+    public function listarEquipo(Request $request)
+    {
+        if (!$request->ajax()) return redirect('/');
+
+        $buscar = $request->buscar;
+        $criterio = $request->criterio;
+        
+        if ($buscar==''){
+            $equipos = Equipo::join('ramas','equipos.idrama','=','ramas.id')
+            ->select('equipos.id','equipos.nombre','ramas.nombre as nombre_rama')
+            ->orderBy('equipos.id', 'desc')->paginate(6);
+        }
+        else{
+            $equipos = Equipo::join('ramas','equipos.id','=','ramas.id')
+            ->select('equipos.id','equipos.nombre','ramas.nombre as nombre_rama')            
+            ->where('equipos.'.$criterio, 'like', '%'. $buscar . '%')
+            ->orderBy('equipos.id', 'desc')->paginate(6);
+        }
+        
+        return [ 'equipos' => $equipos ];
+    }
+
    
     public function store(Request $request)
     {
@@ -74,6 +96,22 @@ class EquipoController extends Controller
     }          
 }
 
+public function listarPdf(Request $request,$id){
+    $equipo = Equipo::join('ramas','equipos.idrama','=','ramas.id')
+    ->select('equipos.id','equipos.nombre','ramas.nombre as nombre_rama')
+    ->where('equipos.id','=',$id)
+    ->orderBy('equipos.id','desc')->take(1)->get();
+
+    $detalles = InscripcionJE::join('personas','inscripcionej.idjugador','=','personas.id')
+    //->join('ramas','equipos.idrama','=','ramas.id')
+    ->select('inscripcionej.id','personas.nombre as persona')
+    ->where('inscripcionej.idequipo','=',$id)
+    ->orderBy('inscripcionej.id','desc')->get();
+
+    $pdf = \PDF::loadView('pdf.equipo',['equipo'=>$equipo,'detalles'=>$detalles]);
+    return $pdf->stream('equipo-'.'.pdf');
+
+}
     
     public function update(Request $request)
     {

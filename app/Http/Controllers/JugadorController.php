@@ -79,7 +79,7 @@ class JugadorController extends Controller
             'email' => 'required|email|unique:personas',
             //'telefono' =>  'required|min:15|numeric',
             'telefono'=> 'regex:([0-9])',
-            'foto' => 'mimes:jpg,jpeg,png|max:1000',
+            'foto' => 'dimensions:min_width=100,min_height=150,mimes:jpg,jpeg,png|max:1500',
         
         ]);
         if($request->hasFile('foto')){
@@ -117,14 +117,16 @@ class JugadorController extends Controller
     public function update(Request $request)
     {
         if (!$request->ajax()) return redirect('/');
-        /*$this->validate($request,[
+       /* $this->validate($request,[
             'nombre' => 'max:250|required|unique:personas',
-            'email' => 'required|email|unique:personas',
+            'email' => 'required|email',
             //'telefono' =>  'required|min:15|numeric',
             'telefono'=> 'regex:([0-9])',
-            'foto' => 'mimes:jpg,jpeg,png',
+            //'foto' => 'mimes:jpg,jpeg,png',
         
         ]);*/
+
+        $name = "";
 
         if($request->hasFile('foto')){
             $file = $request->file('foto');

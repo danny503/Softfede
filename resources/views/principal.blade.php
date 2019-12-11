@@ -113,6 +113,14 @@
     <script src="admin/js/adminlte.js"></script>
     <script src="admin/js/sweetalert2.all.js"></script>  
     <script src="js/app.js"></script>
-   
+    <script src="admin/plugins/input-mask/jquery.inputmask.js"></script>
+    <script src="admin/plugins/input-mask/jquery.inputmask.date.extensions.js"></script>
+    <script src="admin/plugins/input-mask/jquery.inputmask.extensions.js"></script>
+    <script src="admin/plugins/input-mask/jquery.inputmask.phone.extensions.js"></script>
+    <script>
+      $(function () {
+        $("[data-mask]").inputmask();        
+      });
+    </script>
   </body>
 </html>

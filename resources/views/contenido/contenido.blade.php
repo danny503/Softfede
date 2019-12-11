@@ -26,7 +26,7 @@
             <h1>Contenido 6</h1>
             </template>
             <template v-if="menu==7">
-            <h1>Contenido 7</h1>
+            <torneo></torneo>
             </template>
             <template v-if="menu==8">
             <categoria></categoria>
@@ -50,7 +50,7 @@
             <h1>Contenido 14</h1>
             </template>
             <template v-if="menu==15">
-            <h1>Contenido 15</h1>
+            <planilla></planilla>
             </template>
             <template v-if="menu==16">
             <h1>Contenido 16</h1>

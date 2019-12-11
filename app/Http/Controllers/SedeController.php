@@ -41,7 +41,7 @@ class SedeController extends Controller
      */
     public function update(Request $request)
     {
-        //if (!$request->ajax()) return redirect('/');
+        if (!$request->ajax()) return redirect('/');
         $sede = Sede::findOrFail($request->id);
         $sede->nombre = $request->nombre;
         $sede->direccion = $request->direccion;

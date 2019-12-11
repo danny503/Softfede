@@ -167,7 +167,7 @@
                     <td v-text="persona.email"></td>
                     <td v-text="persona.estatura"></td>
                     <td >                     
-                        <img :src="'http://localhost:8000/images/' + persona.foto" alt="Foto de jugador" width="75" height="75">
+                        <img :src="'images/' + persona.foto" alt="Foto de jugador" width="75" height="75">
                     </td>
                   <td><a href="#" class="btn btn-warning btn-raised btn-xs" @click="abrirModal('persona','actualizar',persona)" ><i class="fa fa-pencil"></i></a></td>
                   <td><a href="#" class="btn btn-danger btn-raised btn-xs"><i class="fa fa-trash"></i></a></td>
@@ -288,7 +288,7 @@
                     <div class="form-group">                        
                       <label for="exampleInputFile">Foto</label> 
                       <div>
-                      <img :src="'http://localhost:8000/images/' + foto" alt="Foto de jugador" width="75" height="75"> 
+                      <img :src="'images/' + foto" alt="Foto de jugador" width="75" height="75"> 
                       </div>                
                       <input type="file" id="foto" @change="obtenerImagen"/>
                       <span v-if="errors.foto" class="badge badge-danger">{{errors.foto[0]}}</span>
@@ -422,7 +422,6 @@ export default {
                     }
                     //console.log(error);
                 });
-
     },
     listarPersona(page, buscar, criterio) {
       let me = this;
@@ -466,6 +465,11 @@ export default {
         .then(function(response) {
           me.cerrarModal();
           me.listarPersona(1, "", "nombre");
+          swal(
+                "Registrado!",
+                "Se ha registrado con éxito.",
+                "success"
+              );
         })
    
         .catch(function(error) {
@@ -495,9 +499,13 @@ export default {
          .then(function(response){
            me.cerrarModal();
            me.listarPersona(1, "", "nombre");
+           swal(
+                "Actualizado!",
+                "Se ha actualizado con éxito.",
+                "success"
+              );
            //console.log(response.data);  
          })
-
     },
     actualizarPerson() {
       if (this.validarPersona()) {

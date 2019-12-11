@@ -5,15 +5,10 @@
       <div class="card-header">
         <div class="card-header">
           <i class="fa fa-align-justify"></i> Sede
-          <button
-            type="button"
-            @click="abrirModal('sede','registrar')"
-            class="btn btn-primary"
-          >
+          <button type="button" @click="abrirModal('sede','registrar')" class="btn btn-primary">
             <i class="icon-plus"></i>&nbsp;Nuevo
           </button>
         </div>
-
         <div class="card-header">
           <div class="form-group row">
             <div class="col-md-6">
@@ -31,8 +26,7 @@
                 <button
                   type="submit"
                   @click="listarSede(1,buscar,criterio)"
-                  class="btn btn-primary"
-                >
+                  class="btn btn-primary">
                   <i class="fa fa-search"></i>
                 </button>
               </div>
@@ -67,11 +61,8 @@
                     </div>
                   </td>
                   <td>
-                    <a
-                      href="#!"
-                      @click="abrirModal('sede','actualizar',sede)"
-                      class="btn btn-primary btn-raised btn-xs"
-                    >
+                    <a href="#!" @click="abrirModal('sede','actualizar',sede)"
+                      class="btn btn-primary btn-raised btn-xs">
                       <i class="fa fa-pencil"></i>
                     </a>
                   </td>
@@ -154,18 +145,8 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" @click="cerrarModal()">Cerrar</button>
-              <button
-                type="button"
-                v-if="tipoAccion==1"
-                class="btn btn-primary"
-                @click="registrarSede()"
-              >Guardar</button>
-              <button
-                type="button"
-                v-if="tipoAccion==2"
-                class="btn btn-primary"
-                @click="actualizarSede()"
-              >Actualizar</button>
+              <button type="button" v-if="tipoAccion==1" class="btn btn-primary" @click="registrarSede()">Guardar</button>
+              <button type="button" v-if="tipoAccion==2" class="btn btn-primary" @click="actualizarSede()">Actualizar</button>
             </div>
           </div>
           <!-- /.modal-content -->
@@ -241,8 +222,7 @@ export default {
 
       let me = this;
 
-      axios
-        .put("/sede/actualizar", {
+      axios.put("/sede/actualizar", {
           nombre: this.nombre,
           direccion: this.direccion,
           id: this.sede_id

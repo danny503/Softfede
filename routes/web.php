@@ -1,17 +1,5 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
-
-
 //Route::get('/','IndexController@index'); //CREAMOS LA RUTA DEL INDEX Y HACEMOS REFERENCIA AL CONTROLADOR Y SU METODO LLAMADO INDEX
 //Route::get('/home', 'HomeController@index')->name('home');
 Route::group(['middleware'=>['guest']],function(){
@@ -23,7 +11,12 @@ Route::group(['middleware'=>['guest']],function(){
 });*/
 
 Route::get('/','IndexController@index'); 
-Route::get('reviews','IndexController@reviews'); 
+Route::get('reviews','IndexController@reviews');
+Route::get('/user','UserController@index');
+    Route::post('/user/registrar','UserController@store');
+    Route::put('/user/actualizar','UserController@update');
+    Route::put('/user/activar','UserController@activar');
+    Route::put('/user/desactivar','UserController@desactivar'); 
 Auth::routes();
 
 Route::group(['middleware'=>['auth']],function(){
@@ -41,6 +34,8 @@ Route::group(['middleware' => ['Tecnico']], function () {
     Route::put('/equipo/actualizar','EquipoController@update');
     Route::put('/equipo/activar','EquipoController@activar');
     Route::put('/equipo/desactivar','EquipoController@desactivar');
+    Route::get('/equipo/listarEquipo','EquipoController@listarEquipo');
+    Route::get('/equipo/listarPdf/{id}', 'EquipoController@listarPdf')->name('equipo_pdf');    
 
     Route::get('/tipo','TipoController@index');
     Route::post('/tipo/registrar','TipoController@store');
@@ -76,6 +71,7 @@ Route::group(['middleware' => ['Administrador']], function () {
     Route::get('/categoria','CategoriaController@index');
     Route::post('/categoria/registrar','CategoriaController@store');
     Route::put('/categoria/actualizar','CategoriaController@update');
+    Route::get('/categoria/selectCategoria','CategoriaController@selectCategoria');
 
     Route::get('/rol','RolController@index');
     Route::get('/rol/selectRol','RolController@selectRol');
@@ -95,6 +91,17 @@ Route::group(['middleware' => ['Administrador']], function () {
     Route::get('/cuerpotecnico','CuerpoTecnicoController@index');
     Route::post('/cuerpotecnico/registrar','CuerpoTecnicoController@store');
     Route::put('/cuerpotecnico/actualizar','CuerpoTecnicoController@update');
+
+    Route::get('/torneo','TorneoController@index');
+    Route::post('/torneo/registrar','TorneoController@store');
+    Route::put('/torneo/activar','TorneoController@activar');
+    Route::put('/torneo/desactivar','TorneoController@desactivar');
+    Route::put('/torneo/actualizar','TorneoController@update');
+    Route::get('/torneo/obtenerCabecera', 'TorneoController@obtenerCabecera');
+    Route::get('/torneo/obtenerDetalles', 'TorneoController@obtenerDetalles');
+    Route::get('/torneo/pdf/{id}', 'TorneoController@pdf')->name('torneo_pdf');
+
+    Route::post('/detalletorneo/registrar','TorneoDetalleController@store');
 
     });
 

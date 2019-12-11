@@ -45,7 +45,7 @@
 		</div>
 		 <button type="submit" class="btn btn-primary">  {{ __('Login') }}</button> 
 		 
-
+		 <a href="register" class="text-center">Crear una cuenta</a>
 	{{--en el link_to asignamos la ruta que esta en el web.php que nos manda aca--}}
 	{{--usamos el HOME CONTROLER al usar la autentificacion de laravel que crea por defecto mirar la documentacion--}}
 	

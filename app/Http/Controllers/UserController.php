@@ -58,8 +58,9 @@ class UserController extends Controller
 
         $this->validate($request,[
             'email' => 'required|email|unique:personas',
-            //'telefono' =>  'required|min:15|numeric',
-            'telefono'=> 'regex:([0-9])',
+            'telefono' =>  'regex:/^ (\ + 36) [0-9]
+            {9} $ /',
+            //'telefono'=> 'max:9|min:9|regex:([0-9])',
             'usuario' => 'min:4|max:250|required|unique:users',
             //'usuario' => 'required|alpha',
            // 'usuario' => 'min:4|max:50|required',
