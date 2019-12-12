@@ -32,6 +32,8 @@ Vue.component('cuerpotecnico', require('./components/CuerpoTecnico.vue').default
 Vue.component('jugador', require('./components/Jugador.vue').default);
 Vue.component('planilla', require('./components/PlanillaJuego.vue').default);
 Vue.component('torneo', require('./components/Torneo.vue').default);
+Vue.component('equipos', require('./components/Equipos.vue').default);
+Vue.component('arbitro', require('./components/Arbitro.vue').default);
 
 //Vue.component('index', require('./views/index.vue').default);
 //Vue.component('login', require('./components/Login.vue').default);

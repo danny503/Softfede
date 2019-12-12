@@ -23,7 +23,7 @@
             <equipo-component></equipo-component>
             </template>
             <template v-if="menu==6">
-            <h1>Contenido 6</h1>
+            <arbitro></arbitro>
             </template>
             <template v-if="menu==7">
             <torneo></torneo>
@@ -69,6 +69,9 @@
             </template>
             <template v-if="menu==21">
             <h1>Contenido 21</h1>
+            </template>
+            <template v-if="menu==22">
+            <equipos></equipos>
             </template>
             @elseif (Auth::user()->idrol == 2)
                 

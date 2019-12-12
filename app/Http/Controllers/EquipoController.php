@@ -19,14 +19,14 @@ class EquipoController extends Controller
 
         if($buscar==''){
             $equipos = Equipo::join('ramas','equipos.idrama','=','ramas.id')
-            ->select('equipos.id','equipos.idrama','equipos.nombre','ramas.nombre as nombre_rama')
-            ->orderBy('equipos.id', 'desc')->paginate(4);
+            ->select('equipos.id','equipos.idrama','equipos.nombre','equipos.logo','ramas.nombre as nombre_rama')
+            ->orderBy('equipos.id', 'desc')->paginate(6);
         }
         else{
             $equipos = Equipo::join('ramas','equipos.idrama','=','ramas.id')
-            ->select('equipos.id','equipos.idrama','equipos.nombre','ramas.nombre as nombre_rama')
+            ->select('equipos.id','equipos.idrama','equipos.nombre','equipos.logo','ramas.nombre as nombre_rama')
             ->where('equipos.'.$criterio, 'like', '%'. $buscar . '%')
-            ->orderBy('equipos.id', 'desc')->paginate(4);           
+            ->orderBy('equipos.id', 'desc')->paginate(6);           
         }
         
         return [
@@ -42,85 +42,99 @@ class EquipoController extends Controller
         ];
     }
 
-    public function listarEquipo(Request $request)
-    {
-        if (!$request->ajax()) return redirect('/');
-
-        $buscar = $request->buscar;
-        $criterio = $request->criterio;
-        
-        if ($buscar==''){
-            $equipos = Equipo::join('ramas','equipos.idrama','=','ramas.id')
-            ->select('equipos.id','equipos.nombre','ramas.nombre as nombre_rama')
-            ->orderBy('equipos.id', 'desc')->paginate(6);
-        }
-        else{
-            $equipos = Equipo::join('ramas','equipos.id','=','ramas.id')
-            ->select('equipos.id','equipos.nombre','ramas.nombre as nombre_rama')            
-            ->where('equipos.'.$criterio, 'like', '%'. $buscar . '%')
-            ->orderBy('equipos.id', 'desc')->paginate(6);
-        }
-        
-        return [ 'equipos' => $equipos ];
-    }
-
    
     public function store(Request $request)
-    {
-        
+    {        
         if (!$request->ajax()) return redirect('/');
+        $this->validate($request,[    
+            'logo' => 'dimensions:min_width=70,min_height=70,mimes:jpg,jpeg,png|max:1500',
+            ]);
+
+            
+         if($request->hasFile('logo')){
+            $file = $request->file('logo');
+            $name = time().$file->getClientOriginalName();
+            $file->move(public_path().'/images/',$name);
+        }   
         try{
-            DB::beginTransaction();
+            DB::beginTransaction();       
         $equipo = new Equipo();
         $equipo->idrama = $request->idrama;
         $equipo->nombre = $request->nombre;
-        $equipo->logo = $request->logo;
+        $equipo->logo =  $name;
         $equipo->save();
-
-        $inscripciones = $request->data;//Array de detalles
-        //Recorro todos los elementos
-
-        foreach($inscripciones as $ep=>$det)
-        {
-            $inscripcion = new InscripcionJE();
-            $inscripcion->idequipo = $equipo->id;
-            $inscripcion->idjugador = $det['idpersona'];
-           // $inscripcion->fecha_ingreso = $det['fecha_ingreso'];
-            $inscripcion->numero_camisa = $det['ncamisa'];  
-            $inscripcion->posicion = $det['posicion'];          
-            $inscripcion->save();
-        }
         DB::commit();
+
     } catch (Exception $e){
-        DB:rollBack();
-    }          
-}
+        DB::rollBack();
+    }
 
-public function listarPdf(Request $request,$id){
-    $equipo = Equipo::join('ramas','equipos.idrama','=','ramas.id')
-    ->select('equipos.id','equipos.nombre','ramas.nombre as nombre_rama')
-    ->where('equipos.id','=',$id)
-    ->orderBy('equipos.id','desc')->take(1)->get();
+    }   
+       
+    public function listarPdf(Request $request,$id){
+        $equipo = Equipo::join('ramas','equipos.idrama','=','ramas.id')
+        ->select('equipos.id','equipos.nombre','ramas.nombre as nombre_rama')
+        ->where('equipos.id','=',$id)
+        ->orderBy('equipos.id','desc')->take(1)->get();
+    
+        $detalles = InscripcionJE::join('personas','inscripcionej.idjugador','=','personas.id')
+        //->join('ramas','equipos.idrama','=','ramas.id')
+        ->select('inscripcionej.id','personas.nombre as persona')
+        ->where('inscripcionej.idequipo','=',$id)
+        ->orderBy('inscripcionej.id','desc')->get();
+    
+        $pdf = \PDF::loadView('pdf.equipo',['equipo'=>$equipo,'detalles'=>$detalles]);
+        return $pdf->stream('equipo-'.'.pdf');
+    
+    }
 
-    $detalles = InscripcionJE::join('personas','inscripcionej.idjugador','=','personas.id')
-    //->join('ramas','equipos.idrama','=','ramas.id')
-    ->select('inscripcionej.id','personas.nombre as persona')
-    ->where('inscripcionej.idequipo','=',$id)
-    ->orderBy('inscripcionej.id','desc')->get();
 
-    $pdf = \PDF::loadView('pdf.equipo',['equipo'=>$equipo,'detalles'=>$detalles]);
-    return $pdf->stream('equipo-'.'.pdf');
-
-}
     
     public function update(Request $request)
     {
         if (!$request->ajax()) return redirect('/');
+
+        if($request->hasFile('logo')){
+            $file = $request->file('logo');
+            $name = time().$file->getClientOriginalName();
+            $file->move(public_path().'/images/',$name);
+        }  
         $equipo = Equipo::findOrFail($request->id);
         $equipo->idrama = $request->idrama;
         $equipo->nombre = $request->nombre;
-        $equipo->logo = $request->logo;
+        $equipo->logo = $name;
         $equipo->save();
+    }
+    public function obtenerCabecera(Request $request){
+        if (!$request->ajax()) return redirect('/');
+ 
+        $id = $request->id;
+
+        $equipos = Equipo::join('ramas','equipos.idrama','=','ramas.id')
+        ->select('equipos.id','equipos.idrama','equipos.nombre','ramas.nombre as nombre_rama')
+        ->where('equipos.id','=',$id)
+        ->orderBy('equipos.id', 'desc')->take(1)->get();
+
+         
+        return [
+           
+            'equipo' => $equipos
+        ];
+    }
+    public function obtenerDetalles(Request $request){
+        if (!$request->ajax()) return redirect('/');
+ 
+        $id = $request->id;
+         
+        $detalles = InscripcionJE::join('personas','inscripcionej.idjugador','=','personas.id')
+        ->select('inscripcionej.numero_camisa','inscripcionej.posicion','personas.nombre as persona')
+        ->where('inscripcionej.idequipo','=',$id)
+        ->orderBy('inscripcionej.id', 'desc')->get();                    
+         
+        return [
+           
+            'detalles' => $detalles
+        ];
     }
     public function desactivar(Request $request)
     {
@@ -136,6 +150,13 @@ public function listarPdf(Request $request,$id){
         $equipo = Equipo::findOrFail($request->id);
         $equipo->condicion = '1';
         $equipo->save();
+    }
+    public function destroy($id)
+    {
+
+        $equipo = Equipo::find($id);
+        $equipo->delete();
+        //Session::flash('message','Usuario eliminado correctamente');
     }
   
 }

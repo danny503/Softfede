@@ -31,11 +31,17 @@ Route::group(['middleware' => ['Tecnico']], function () {
     
     Route::get('/equipo','EquipoController@index');
     Route::post('/equipo/registrar','EquipoController@store');
-    Route::put('/equipo/actualizar','EquipoController@update');
+    Route::post('/equipo/actualizar','EquipoController@update');
     Route::put('/equipo/activar','EquipoController@activar');
     Route::put('/equipo/desactivar','EquipoController@desactivar');
     Route::get('/equipo/listarEquipo','EquipoController@listarEquipo');
-    Route::get('/equipo/listarPdf/{id}', 'EquipoController@listarPdf')->name('equipo_pdf');    
+    Route::get('/equipo/obtenerCabecera', 'EquipoController@obtenerCabecera');
+    Route::get('/equipo/obtenerDetalles', 'EquipoController@obtenerDetalles');
+    Route::get('/equipo/listarPdf/{id}', 'EquipoController@listarPdf')->name('equipo_pdf');   
+    
+    Route::post('/inscripcionej/registrar','InscripcionEJController@store');
+    Route::delete('/inscripcionej/delete','InscripcionEJController@destroy');
+    Route::put('/inscripcionej/actualizar','EquipoController@update');
 
     Route::get('/tipo','TipoController@index');
     Route::post('/tipo/registrar','TipoController@store');
@@ -102,6 +108,10 @@ Route::group(['middleware' => ['Administrador']], function () {
     Route::get('/torneo/pdf/{id}', 'TorneoController@pdf')->name('torneo_pdf');
 
     Route::post('/detalletorneo/registrar','TorneoDetalleController@store');
+
+    Route::get('/arbitro','ArbitroController@index');
+    Route::post('/arbitro/registrar','ArbitroController@store');
+    Route::put('/arbitro/actualizar','ArbitroController@update');
 
     });
 
