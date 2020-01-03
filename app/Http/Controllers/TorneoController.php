@@ -133,6 +133,7 @@ class TorneoController extends Controller
         $torneo->fecha_inicio = $request->fecha_inicio;
         $torneo->fecha_fin = $request->fecha_fin;
         $torneo->estado = '1';
+
         $torneo->save();
 
         $inscripciones = $request->data;
@@ -140,22 +141,23 @@ class TorneoController extends Controller
         foreach($inscripciones as $ep=>$det)
         {
             $inscripcion = new DetalleTorneo();
+            $inscripcion = DetalleTorneo::findOrFail($request->id);
             $inscripcion->idtorneo = $torneo->id;
             $inscripcion->idequipo = $det['idequipo'];                    
             $inscripcion->save();
         }
     }
-
     public function desactivar(Request $request)
     {
         $torneo = Torneo::findOrFail($request->id);
         $torneo->estado = '0';
         $torneo->save();
-    }
+    }  
     public function activar(Request $request)
     {
         $torneo = Torneo::findOrFail($request->id);
         $torneo->estado = '1';
         $torneo->save();
     }
+    
 }

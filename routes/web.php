@@ -33,14 +33,15 @@ Route::group(['middleware' => ['Tecnico']], function () {
     Route::post('/equipo/registrar','EquipoController@store');
     Route::post('/equipo/actualizar','EquipoController@update');
     Route::put('/equipo/activar','EquipoController@activar');
+    Route::delete('/equipo/borrar/{id}','EquipoController@destroy');
     Route::put('/equipo/desactivar','EquipoController@desactivar');
     Route::get('/equipo/listarEquipo','EquipoController@listarEquipo');
     Route::get('/equipo/obtenerCabecera', 'EquipoController@obtenerCabecera');
     Route::get('/equipo/obtenerDetalles', 'EquipoController@obtenerDetalles');
-    Route::get('/equipo/listarPdf/{id}', 'EquipoController@listarPdf')->name('equipo_pdf');   
+    Route::get('/equipo/listarPdf/{id}', 'EquipoController@listarPdf')->name('equipo_pdf'); 
     
     Route::post('/inscripcionej/registrar','InscripcionEJController@store');
-    Route::delete('/inscripcionej/delete','InscripcionEJController@destroy');
+    Route::delete('/inscripcionej/borrar/{id}','InscripcionEJController@destroy');
     Route::put('/inscripcionej/actualizar','EquipoController@update');
 
     Route::get('/tipo','TipoController@index');
@@ -57,6 +58,7 @@ Route::group(['middleware' => ['Tecnico']], function () {
     Route::get('/jugador','JugadorController@index');
     Route::post('/jugador/registrar','JugadorController@store');
     Route::post('/jugador/actualizar','JugadorController@update');
+    Route::delete('/jugador/borrar/{id}','JugadorController@destroy');
     Route::get('/jugador/listarJugador','JugadorController@listarJugador');
 });
 
@@ -109,9 +111,22 @@ Route::group(['middleware' => ['Administrador']], function () {
 
     Route::post('/detalletorneo/registrar','TorneoDetalleController@store');
 
+    Route::get('/propartido','ProPartidoController@index');
+    
     Route::get('/arbitro','ArbitroController@index');
     Route::post('/arbitro/registrar','ArbitroController@store');
     Route::put('/arbitro/actualizar','ArbitroController@update');
+
+    Route::get('/equipo','EquipoController@index');
+    Route::post('/equipo/registrar','EquipoController@store');
+    Route::post('/equipo/actualizar','EquipoController@update');
+    Route::put('/equipo/activar','EquipoController@activar');
+    Route::delete('/equipo/borrar/{id}','EquipoController@destroy');
+    Route::put('/equipo/desactivar','EquipoController@desactivar');
+    Route::get('/equipo/listarEquipo','EquipoController@listarEquipo');
+    Route::get('/equipo/obtenerCabecera', 'EquipoController@obtenerCabecera');
+    Route::get('/equipo/obtenerDetalles', 'EquipoController@obtenerDetalles');
+    Route::get('/equipo/listarPdf/{id}', 'EquipoController@listarPdf')->name('equipo_pdf');   
 
     });
 

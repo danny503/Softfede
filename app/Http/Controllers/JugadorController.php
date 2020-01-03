@@ -161,5 +161,11 @@ class JugadorController extends Controller
         }
 
     }
+    public function destroy(Request $request, $id)
+    {        
+        $persona = Persona::findOrFail($request->id);
+        $persona->delete();
+        //Session::flash('message','Usuario eliminado correctamente');
+    }
       
 }

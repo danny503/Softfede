@@ -49,16 +49,10 @@
                                                  <img :src="'images/' + equipo.logo" alt="Logo del equipo" width="75" height="75">
                                             </td>                                            
                                             <td><a href="#!" @click="abrirModal('equipo','actualizar',equipo)" class="btn btn-primary btn-raised btn-xs"><i class="fa fa-pencil"></i></a></td>
-                                            <template v-if="equipo.condicion">
-                                            <button type="button" class="btn btn-danger btn-sm" @click="desactivarEquipo(equipo.id)">
+                                            
+                                            <button type="button" class="btn btn-danger btn-sm" @click="eliminarEquipo(equipo)">
                                                 <i class="fa fa-trash"></i>
-                                            </button>
-                                        </template>
-                                          <template v-else>
-                                            <button type="button" class="btn btn-info btn-sm" @click="activarEquipo(equipo.id)">
-                                                <i class="icon-ok"></i>
-                                            </button>
-                                        </template>
+                                            </button>                                     
                                         </tr>                                                                            
                                     </tbody>
                                 </table>
@@ -113,7 +107,7 @@
                                 <div class="form-group">
                                 <label for="exampleInputFile">Logo</label>
                                  <div>
-                                <img :src="'images/' + logo" alt="Foto de jugador" width="75" height="75"> 
+                                <img :src="'images/' + logo" alt="Foto de equipo" width="75" height="75"> 
                                 </div> 
                                 <input type="file" @change="obtenerImagen" id="exampleInputFile" />
                                 <span v-if="errors.logo" class="badge badge-danger">{{errors.logo[0]}}</span>
@@ -153,6 +147,7 @@
                 nombre : '',
                 logo : '',
                 arrayEquipo : [],
+                equipo:{idrama:0,idcategoria:0,nombre:'',logo:''},
                 imagenMiniatura: '',
                 modal : 0,
                 tituloModal : '',
@@ -298,6 +293,38 @@
                         "success"
                     );
                 //console.log(response.data);  
+                })
+            },
+            eliminar1(){
+                let me = this;
+                axios.delete('/equipo/delete')                                 
+            },
+           eliminarEquipo(data){//Esta nos abrirá un alert de javascript y si aceptamos borrará la tarea que hemos elegido
+               swal({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                let me =this;
+                let equipo_id = data.id
+                if (result.value) {                    
+                axios.delete('/equipo/borrar/'+equipo_id
+                    ).then(function (response) {
+                        me.listarEquipo(1,'','nombre');
+                         swal(
+                        'Deleted!',
+                        'Your file has been deleted.',
+                        'success'
+                    )
+                    })                                        
+                     .catch(function (error) {
+                        console.log(error);
+                    });
+                }
                 })
             },
              desactivarEquipo(id){

@@ -15,9 +15,9 @@ class CreateCuerpoTecnicoTable extends Migration
     {
         Schema::create('cuerpo_tecnico', function (Blueprint $table) {
             $table->integer('id')->unsigned();
-            $table->foreign('id')->references('id')->on('personas')->onDelete('cascade');
-
-            
+            $table->foreign('id')->references('id')->on('personas')->onDelete('cascade');            
+            $table->integer('idusuario')->unsigned();
+            $table->foreign('idusuario')->references('id')->on('users');
             $table->integer('idtipo')->unsigned();
             $table->foreign('idtipo')->references('id')->on('tipos');
 

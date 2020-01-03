@@ -53,7 +53,7 @@
             <planilla></planilla>
             </template>
             <template v-if="menu==16">
-            <h1>Contenido 16</h1>
+            <propartido></propartido>
             </template>
             <template v-if="menu==17">
             <h1>Contenido 17</h1>
@@ -85,9 +85,16 @@
             <template v-if="menu==5">
             <equipo-component></equipo-component>
             </template>
+            <template v-if="menu==3">
+            <jugador></jugador>
+            </template>
+            <template v-if="menu==22">
+            <equipos></equipos>
+            </template>
             <template v-if="menu==11">
             <tipo></tipo>
             </template>
+           
              @elseif (Auth::user()->idrol == 4)
                 
             @else

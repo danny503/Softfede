@@ -49,7 +49,12 @@
                                 </p>
                             </a>
                             <ul class="nav nav-treeview">
-                               
+                            <li @click="menu=3" class="nav-item">
+                                    <a href="#" class="nav-link">
+                                        <i class="fa fa-circle-o nav-icon"></i>
+                                        <p>Jugadores</p>
+                                    </a>
+                                </li>                               
                                 <li @click="menu=4" class="nav-item">
                                     <a href="#" class="nav-link">
                                         <i class="fa fa-circle-o nav-icon"></i>
@@ -66,6 +71,12 @@
                                     <a href="#" class="nav-link">
                                         <i class="fa fa-circle-o nav-icon"></i>
                                         <p>Equipos</p>
+                                    </a>
+                                </li> 
+                                <li @click="menu=22" class="nav-item">
+                                    <a href="#" class="nav-link">
+                                        <i class="fa fa-circle-o nav-icon"></i>
+                                        <p>Inscribirse</p>
                                     </a>
                                 </li>                                                                                              
                             </ul>

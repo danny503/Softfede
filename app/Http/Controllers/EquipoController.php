@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Support\Facades\Auth;
 use App\Equipo;
+use App\User;
 use App\InscripcionJE;
 
 class EquipoController extends Controller
@@ -19,7 +20,11 @@ class EquipoController extends Controller
 
         if($buscar==''){
             $equipos = Equipo::join('ramas','equipos.idrama','=','ramas.id')
-            ->select('equipos.id','equipos.idrama','equipos.nombre','equipos.logo','ramas.nombre as nombre_rama')
+            ->join('users','equipos.idusuario','=','users.id')
+            ->select('equipos.id','equipos.idrama','equipos.nombre','equipos.idusuario','equipos.logo','ramas.nombre as nombre_rama' ,'users.usuario as nombre_usuario')
+            ->where('users.id','=',Auth::id())
+            
+        //    SELECT a.*, b.usuario FROM equipos as a inner join users as b on a.idusuario = b.id where a.idusuario = b.usuario
             ->orderBy('equipos.id', 'desc')->paginate(6);
         }
         else{
@@ -60,6 +65,7 @@ class EquipoController extends Controller
             DB::beginTransaction();       
         $equipo = new Equipo();
         $equipo->idrama = $request->idrama;
+        $equipo->idusuario = \Auth::user()->id;
         $equipo->nombre = $request->nombre;
         $equipo->logo =  $name;
         $equipo->save();
@@ -78,7 +84,7 @@ class EquipoController extends Controller
         ->orderBy('equipos.id','desc')->take(1)->get();
     
         $detalles = InscripcionJE::join('personas','inscripcionej.idjugador','=','personas.id')
-        //->join('ramas','equipos.idrama','=','ramas.id')
+       // ->join('personas','jugadores.id','=','personas.id')
         ->select('inscripcionej.id','personas.nombre as persona')
         ->where('inscripcionej.idequipo','=',$id)
         ->orderBy('inscripcionej.id','desc')->get();
@@ -94,16 +100,39 @@ class EquipoController extends Controller
     {
         if (!$request->ajax()) return redirect('/');
 
+        //$name = "";
         if($request->hasFile('logo')){
             $file = $request->file('logo');
             $name = time().$file->getClientOriginalName();
             $file->move(public_path().'/images/',$name);
-        }  
+        } 
         $equipo = Equipo::findOrFail($request->id);
+   
         $equipo->idrama = $request->idrama;
         $equipo->nombre = $request->nombre;
         $equipo->logo = $name;
         $equipo->save();
+    }
+    public function listarEquipo(Request $request)
+    {
+        if (!$request->ajax()) return redirect('/');
+
+        $buscar = $request->buscar;
+        $criterio = $request->criterio;
+        
+        if ($buscar==''){
+            $equipos = Equipo::join('ramas','equipos.idrama','=','ramas.id')
+            ->select('equipos.id','equipos.nombre','ramas.nombre as nombre_rama')
+            ->orderBy('equipos.id', 'desc')->paginate(6);
+        }
+        else{
+            $equipos = Equipo::join('ramas','equipos.id','=','ramas.id')
+            ->select('equipos.id','equipos.nombre','ramas.nombre as nombre_rama')            
+            ->where('equipos.'.$criterio, 'like', '%'. $buscar . '%')
+            ->orderBy('equipos.id', 'desc')->paginate(6);
+        }
+        
+        return [ 'equipos' => $equipos ];
     }
     public function obtenerCabecera(Request $request){
         if (!$request->ajax()) return redirect('/');
@@ -151,12 +180,11 @@ class EquipoController extends Controller
         $equipo->condicion = '1';
         $equipo->save();
     }
-    public function destroy($id)
-    {
-
-        $equipo = Equipo::find($id);
+    public function destroy(Request $request, $id)
+    {        
+        $equipo = Equipo::findOrFail($request->id);
         $equipo->delete();
         //Session::flash('message','Usuario eliminado correctamente');
     }
-  
+    
 }

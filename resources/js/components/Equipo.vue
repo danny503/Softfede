@@ -78,7 +78,9 @@
                   </td>
                   <td v-text="equipo.nombre"></td>
                   <td v-text="equipo.nombre_rama"></td>
-                  <td v-text="equipo.logo"></td>
+                   <td >                     
+                      <img :src="'images/' + equipo.logo" alt="Logo del equipo" width="75" height="75">
+                   </td> 
                 </tr>
               </tbody>
             </table>
@@ -290,7 +292,7 @@
                                             <td v-text="detalle.posicion">
                                             </td>
                                             <td><a href="#!" class="btn btn-warning btn-raised btn-xs" @click="abrirModal('detalle', detalle)" ><i class="fa fa-pencil"></i></a></td>
-                                            <td><a href="#!" class="btn btn-danger btn-raised btn-xs" v-on:click.prevent="deleteKeep(detalle)"><i class="fa fa-trash"></i></a></td>
+                                            <td><a href="#!" class="btn btn-danger btn-raised btn-xs" v-on:click.prevent="eliminarJugador(detalle)"><i class="fa fa-trash"></i></a></td>
                                         </tr>
                                     </tbody>  
                                     <tbody v-else>
@@ -311,7 +313,7 @@
                     </div>
                     </template>
                     <!--Fin ver ingreso-->
-
+                        
                     <!-- inicio -->
                     <template v-if="listado==3">
         <div class="card-body">
@@ -599,6 +601,7 @@ export default {
       equipo_id: 0,
       idrama: 0,
       idpersona:0,
+      detalle_id: 0,
       nombre_rama: 0,
       nombre: "",
       logo: "",
@@ -681,10 +684,8 @@ export default {
     selectRama() {
       let me = this;
       var url = "/rama/selectRama";
-      axios
-        .get(url)
-        .then(function(response) {
-           console.log(response);
+      axios.get(url).then(function(response) {
+          // console.log(response);
           var respuesta = response.data;
           me.arrayRama = respuesta.ramas;
         })
@@ -704,9 +705,7 @@ export default {
       if (this.validarEquipo()) {
         return;
       }
-
       let me = this;
-
       axios.post('/inscripcionej/registrar', {
           'idequipo': this.idequipo,
           'idjugador': this.idjugador,
@@ -755,11 +754,8 @@ export default {
       if (this.validarPersona()) {
         return;
       }
-
       let me = this;
-
-      axios
-        .put("/user/actualizar", {
+      axios.put("/user/actualizar", {
           nombre: this.nombre,
           tipo_documento: this.tipo_documento,
           num_documento: this.num_documento,
@@ -799,6 +795,64 @@ export default {
            this.listarPersona('delete');            
         });
     },
+     eliminarJugador(data){//Esta nos abrirá un alert de javascript y si aceptamos borrará la tarea que hemos elegido
+               swal({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                let me =this;
+                let id = data.id
+                if (result.value) {                    
+                axios.delete('/inscripcionej/borrar/'+ id
+                    ).then(function (response) {
+                      console.log(response);
+                        //me.arrayDetalle();
+                         swal(
+                        'Deleted!',
+                        'Your file has been deleted.',
+                        'success'
+                    )
+                    })                                        
+                     .catch(function (error) {
+                        console.log(error);
+                    });
+                }
+                })
+            },
+    eliminarJugador1(id){//Esta nos abrirá un alert de javascript y si aceptamos borrará la tarea que hemos elegido
+               swal({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                let me =this;
+                //let id = data.id
+                if (result.value) {
+                                      
+                axios.delete('/inscripcionej/borrar?id=' + id).then(function (response) {
+                        //id: id
+                        me.listarPersona(1,'','nombre');
+                         swal(
+                        'Deleted!',
+                        'Your file has been deleted.',
+                        'success'
+                    )
+                    })                                        
+                     .catch(function (error) {
+                        console.log(error);
+                    });
+                }
+                })
+            },
     mostrarDetalle(){
       let me = this;
       this.listado=0;
@@ -915,11 +969,9 @@ export default {
         if (result.value) {
           let me = this;
 
-          axios
-            .put("/user/desactivar", {
+          axios.put("/user/desactivar", {
               id: id
-            })
-            .then(function(response) {
+            }).then(function(response) {
               me.listarPersona(1, "", "nombre");
               swal(
                 "Desactivado!",
@@ -961,7 +1013,7 @@ export default {
                  var url= '/equipo/obtenerDetalles?id=' + id;
                   
                 axios.get(url).then(function (response) {
-                    console.log(response);
+                    //console.log(response);
                     var respuesta= response.data;
                     me.arrayDetalle = respuesta.detalles;
 
@@ -987,8 +1039,7 @@ export default {
         if (result.value) {
           let me = this;
 
-          axios
-            .put("/user/activar", {
+          axios.put("/user/activar", {
               id: id
             })
             .then(function(response) {

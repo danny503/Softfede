@@ -15,4 +15,18 @@ class InscripcionJE extends Model
         'posicion'
     ];
     public $timestamps = false;
+    
+   public function jugadores(){
+    return $this->belongsToMany('App\Jugador');
+    }
+    public function equipos(){
+        return $this->belongsToMany('App\Equipo');
+    }
+    public function borrar(Request $request)
+    {
+        $id = $request->id;
+       
+       // DELETE FROM `inscripcionej` WHERE `inscripcionej`.`id` = 5;
+               
+    }
 }

@@ -1,12 +1,7 @@
 <template>
         <!-- Content Header (Page header) -->
         <section class="content-header">          
-                             <div class="card-header">
-                            <i class="fa fa-align-justify"></i> Torneos
-                            <button type="button" @click="abrirModal('equipo','registrar')" class="btn btn-primary">
-                            <i class="icon-plus"></i>&nbsp;Nuevo
-                       </button>
-                   </div>
+                     
   <div class="content-wrapper">
     <!-- Breadcrumb -->
     <ol class="breadcrumb">
@@ -69,21 +64,16 @@
                             <i class="fa fa-eye"></i>
                         </button> &nbsp;
                      <template v-if="torneo.estado">
-                      <a href="#" @click="desactivarTorneo(torneo.id)"
-                        class="btn btn-danger btn-raised btn-sm">
+                      <a href="#" @click="desactivarTorneo(torneo.id)" class="btn btn-danger btn-raised btn-sm">
                         <i class="fa fa-trash"></i>
                       </a>
                   </template>                  
                   <template v-else>
-                      <a
-                        href="#"
-                        @click="activarTorneo(torneo.id)"
-                        class="btn btn-success btn-raised btn-sm"
-                      >
+                      <a href="#" @click="activarTorneo(torneo.id)" class="btn btn-success btn-raised btn-sm">
                         <i class="fa fa-check"></i>
                       </a>
                   </template>&nbsp;
-                  <button type="button" @click="mostrarDetalle('torneo','actualizar',torneo)" class="btn btn-primary btn-sm">
+                  <button type="button" @click="abrirModal('torneo','actualizar',torneo)" class="btn btn-primary btn-sm">
                             <i class="fa fa-plus"></i>
                    </button> &nbsp;
                    <button type="button" @click="pdfTorneo(torneo.id)" class="btn btn-info btn-sm">
@@ -106,7 +96,7 @@
               </tbody>
             </table>
           </div>
-          <nav>
+          <nav>            
             <ul class="pagination">
               <li class="page-item" v-if="pagination.current_page > 1">
                 <a
@@ -224,7 +214,7 @@
           <div class="form=group row">
               <div class="col-md-12"> 
                   <button type="button" @click="ocultarDetalle()" class="btn btn-secondary">Cerrar</button>
-                  <button type="button" class="btn btn-primary" @click="registrarTorneo()">Registrar equipo</button>
+                  <button type="button" class="btn btn-primary" @click="registrarTorneo()">Registrar torneo</button>
               </div>
           </div>
         </div>
@@ -305,7 +295,7 @@
                         <div class="form-group row">
                             <div class="col-md-12">
                                 <button type="button" @click="ocultarDetalle()" class="btn btn-secondary">Cerrar</button>                                
-                                <button type="button" @click="abrirModal('equipo','actualizar')" class="btn btn-warning">Editar</button>
+                                <button type="button" @click="abrirModal('equipo','actualizar', equipo)" class="btn btn-warning">Editar</button>
                             </div>
                         </div>
                     </div>
@@ -620,7 +610,7 @@ export default {
           me.idequipo=0;
           me.equipo='';
           me.arrayDetalle=[];
-          window.open('/torneo/pdf/'+ response.data.id);
+         // window.open('/torneo/pdf/'+ response.data.id);
         })
         .catch(function(error) {
           console.log(error);
@@ -782,16 +772,15 @@ export default {
     abrirModal(modelo, accion, data = []) {     
           this.modal = 1;
           this.tituloModal = "Seleccion uno a varios equipos";  
-
           this.selectCategoria();
           switch(modelo){
-                    case "equipo":
+                    case "torneo":
                     {
                         switch(accion){
                             case 'registrar':
                             {
                                 this.modal = 1;
-                                this.tituloModal = 'Registrar equipo';
+                                this.tituloModal = 'Registrar torneo';
                                 this.nombre= '';
                                 this.idcategoria=0;
                                 this.fecha_inicio='';
@@ -799,18 +788,19 @@ export default {
                                 this.tipoAccion = 1;
                                 break;
                             }
-                            case 'actualizar':
+                            case "actualizar":
                             {
                                 //console.log(data);
                                 this.modal=1;
                                 this.tituloModal='Actualizar detalle';
                                 this.tipoAccion=2;
-                                this.idequipo=data['id'];
+                                this.idtorneo=data['id'];
+                                this.idequipo=data['ideuipo'];
                                 this.nombre = data['nombre'];
                                 this.idcategoria = data['idcategoria'];
                                 this.fecha_inicio = data['fecha_inicio'];
                                 this.fecha_fin = data['fecha_fin'];
-                                this.arrayDetalle= data['datalle'];
+                         //       this.arrayDetalle= data['datalle'];
                                 break;
                             }
                         }
@@ -837,12 +827,10 @@ export default {
                 .catch(function (error) {
                     console.log(error);
                 });
-
                 //obtener datos de los detalles
                  var url= '/torneo/obtenerDetalles?id=' + id;
-
                 axios.get(url).then(function (response) {
-                    console.log(response);
+                   // console.log(response);
                     var respuesta= response.data;
                     me.arrayDetalle = respuesta.detalles;
 
@@ -910,7 +898,7 @@ export default {
               id: id
             })
             .then(function(response) {
-              me.listarTorneo(1, "", "nombre");
+              me.listarTorneo();
               swal(
                 "Desactivado!",
                 "El registro ha sido desactivado con éxito.",
@@ -929,7 +917,7 @@ export default {
     },
     activarTorneo(id) {
       swal({
-        title: "Esta seguro de activar este usuario?",
+        title: "Esta seguro de activar este torneo?",
         type: "warning",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
@@ -944,8 +932,7 @@ export default {
         if (result.value) {
           let me = this;
 
-          axios
-            .put("/torneo/activar", {
+          axios.put("/torneo/activar", {
               id: id
             })
             .then(function(response) {

@@ -3411,6 +3411,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -3418,6 +3420,7 @@ __webpack_require__.r(__webpack_exports__);
       equipo_id: 0,
       idrama: 0,
       idpersona: 0,
+      detalle_id: 0,
       nombre_rama: 0,
       nombre: "",
       logo: "",
@@ -3501,7 +3504,7 @@ __webpack_require__.r(__webpack_exports__);
       var me = this;
       var url = "/rama/selectRama";
       axios.get(url).then(function (response) {
-        console.log(response);
+        // console.log(response);
         var respuesta = response.data;
         me.arrayRama = respuesta.ramas;
       })["catch"](function (error) {
@@ -3604,6 +3607,59 @@ __webpack_require__.r(__webpack_exports__);
         _this.listarPersona('delete');
       });
     },
+    eliminarJugador: function eliminarJugador(data) {
+      var _this2 = this;
+
+      //Esta nos abrirá un alert de javascript y si aceptamos borrará la tarea que hemos elegido
+      swal({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then(function (result) {
+        var me = _this2;
+        var id = data.id;
+
+        if (result.value) {
+          axios["delete"]('/inscripcionej/borrar/' + id).then(function (response) {
+            console.log(response); //me.arrayDetalle();
+
+            swal('Deleted!', 'Your file has been deleted.', 'success');
+          })["catch"](function (error) {
+            console.log(error);
+          });
+        }
+      });
+    },
+    eliminarJugador1: function eliminarJugador1(id) {
+      var _this3 = this;
+
+      //Esta nos abrirá un alert de javascript y si aceptamos borrará la tarea que hemos elegido
+      swal({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then(function (result) {
+        var me = _this3; //let id = data.id
+
+        if (result.value) {
+          axios["delete"]('/inscripcionej/borrar?id=' + id).then(function (response) {
+            //id: id
+            me.listarPersona(1, '', 'nombre');
+            swal('Deleted!', 'Your file has been deleted.', 'success');
+          })["catch"](function (error) {
+            console.log(error);
+          });
+        }
+      });
+    },
     mostrarDetalle: function mostrarDetalle() {
       var me = this;
       this.listado = 0;
@@ -3700,7 +3756,7 @@ __webpack_require__.r(__webpack_exports__);
       this.posicion = data['posicion'];
     },
     desactivarUsuario: function desactivarUsuario(id) {
-      var _this2 = this;
+      var _this4 = this;
 
       swal({
         title: "Esta seguro de desactivar este usuario?",
@@ -3716,7 +3772,7 @@ __webpack_require__.r(__webpack_exports__);
         reverseButtons: true
       }).then(function (result) {
         if (result.value) {
-          var me = _this2;
+          var me = _this4;
           axios.put("/user/desactivar", {
             id: id
           }).then(function (response) {
@@ -3746,7 +3802,7 @@ __webpack_require__.r(__webpack_exports__);
 
       var url = '/equipo/obtenerDetalles?id=' + id;
       axios.get(url).then(function (response) {
-        console.log(response);
+        //console.log(response);
         var respuesta = response.data;
         me.arrayDetalle = respuesta.detalles;
       })["catch"](function (error) {
@@ -3754,7 +3810,7 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     activarUsuario: function activarUsuario(id) {
-      var _this3 = this;
+      var _this5 = this;
 
       swal({
         title: "Esta seguro de activar este usuario?",
@@ -3770,7 +3826,7 @@ __webpack_require__.r(__webpack_exports__);
         reverseButtons: true
       }).then(function (result) {
         if (result.value) {
-          var me = _this3;
+          var me = _this5;
           axios.put("/user/activar", {
             id: id
           }).then(function (response) {
@@ -3941,12 +3997,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -3956,6 +4006,12 @@ __webpack_require__.r(__webpack_exports__);
       nombre: '',
       logo: '',
       arrayEquipo: [],
+      equipo: {
+        idrama: 0,
+        idcategoria: 0,
+        nombre: '',
+        logo: ''
+      },
       imagenMiniatura: '',
       modal: 0,
       tituloModal: '',
@@ -4099,8 +4155,38 @@ __webpack_require__.r(__webpack_exports__);
         swal("Actualizado!", "Se ha actualizado con éxito.", "success"); //console.log(response.data);  
       });
     },
-    desactivarEquipo: function desactivarEquipo(id) {
+    eliminar1: function eliminar1() {
+      var me = this;
+      axios["delete"]('/equipo/delete');
+    },
+    eliminarEquipo: function eliminarEquipo(data) {
       var _this4 = this;
+
+      //Esta nos abrirá un alert de javascript y si aceptamos borrará la tarea que hemos elegido
+      swal({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then(function (result) {
+        var me = _this4;
+        var equipo_id = data.id;
+
+        if (result.value) {
+          axios["delete"]('/equipo/borrar/' + equipo_id).then(function (response) {
+            me.listarEquipo(1, '', 'nombre');
+            swal('Deleted!', 'Your file has been deleted.', 'success');
+          })["catch"](function (error) {
+            console.log(error);
+          });
+        }
+      });
+    },
+    desactivarEquipo: function desactivarEquipo(id) {
+      var _this5 = this;
 
       swal({
         title: 'Esta seguro de desactivar este equipo?',
@@ -4116,7 +4202,7 @@ __webpack_require__.r(__webpack_exports__);
         reverseButtons: true
       }).then(function (result) {
         if (result.value) {
-          var me = _this4;
+          var me = _this5;
           axios.put('/equipo/desactivar', {
             'id': id
           }).then(function (response) {
@@ -4130,7 +4216,7 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     activarEquipo: function activarEquipo(id) {
-      var _this5 = this;
+      var _this6 = this;
 
       swal({
         title: 'Esta seguro de activar este equipo?',
@@ -4146,7 +4232,7 @@ __webpack_require__.r(__webpack_exports__);
         reverseButtons: true
       }).then(function (result) {
         if (result.value) {
-          var me = _this5;
+          var me = _this6;
           axios.put('/equipo/activar', {
             'id': id
           }).then(function (response) {
@@ -4742,6 +4828,32 @@ __webpack_require__.r(__webpack_exports__);
         console.log(error);
       });
     },
+    eliminarJugador: function eliminarJugador(data) {
+      var _this4 = this;
+
+      //Esta nos abrirá un alert de javascript y si aceptamos borrará la tarea que hemos elegido
+      swal({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then(function (result) {
+        var me = _this4;
+        var persona_id = data.id;
+
+        if (result.value) {
+          axios["delete"]('/jugador/borrar/' + persona_id).then(function (response) {
+            me.listarPersona(1, '', 'nombre');
+            swal('Deleted!', 'Your file has been deleted.', 'success');
+          })["catch"](function (error) {
+            console.log(error);
+          });
+        }
+      });
+    },
     validarPersona: function validarPersona() {
       this.errorPersona = 0;
       this.errorMostrarMsjPersona = [];
@@ -4809,6 +4921,59 @@ __webpack_require__.r(__webpack_exports__);
   },
   mounted: function mounted() {
     this.listarPersona(1, this.buscar, this.criterio);
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ProPartido.vue?vue&type=script&lang=js&":
+/*!*********************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ProPartido.vue?vue&type=script&lang=js& ***!
+  \*********************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      arrayProPartido: []
+    };
+  },
+  methods: {
+    listarPartido: function listarPartido() {
+      var me = this; //var url = '/sede?page=' + page + '&buscar='+ buscar + '&criterio='+ criterio;
+
+      axios.get('/propartido').then(function (response) {
+        me.arrayProPartido = response.data;
+      })["catch"](function (error) {
+        // handle error
+        console.log(error);
+      });
+    }
+  },
+  mounted: function mounted() {
+    this.listarPartido();
   }
 });
 
@@ -4973,16 +5138,6 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -6052,16 +6207,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -6214,8 +6359,7 @@ __webpack_require__.r(__webpack_exports__);
         me.fecha_fin = '';
         me.idequipo = 0;
         me.equipo = '';
-        me.arrayDetalle = [];
-        window.open('/torneo/pdf/' + response.data.id);
+        me.arrayDetalle = []; // window.open('/torneo/pdf/'+ response.data.id);
       })["catch"](function (error) {
         console.log(error);
       });
@@ -6371,13 +6515,13 @@ __webpack_require__.r(__webpack_exports__);
       this.selectCategoria();
 
       switch (modelo) {
-        case "equipo":
+        case "torneo":
           {
             switch (accion) {
               case 'registrar':
                 {
                   this.modal = 1;
-                  this.tituloModal = 'Registrar equipo';
+                  this.tituloModal = 'Registrar torneo';
                   this.nombre = '';
                   this.idcategoria = 0;
                   this.fecha_inicio = '';
@@ -6386,18 +6530,19 @@ __webpack_require__.r(__webpack_exports__);
                   break;
                 }
 
-              case 'actualizar':
+              case "actualizar":
                 {
                   //console.log(data);
                   this.modal = 1;
                   this.tituloModal = 'Actualizar detalle';
                   this.tipoAccion = 2;
-                  this.idequipo = data['id'];
+                  this.idtorneo = data['id'];
+                  this.idequipo = data['ideuipo'];
                   this.nombre = data['nombre'];
                   this.idcategoria = data['idcategoria'];
                   this.fecha_inicio = data['fecha_inicio'];
-                  this.fecha_fin = data['fecha_fin'];
-                  this.arrayDetalle = data['datalle'];
+                  this.fecha_fin = data['fecha_fin']; //       this.arrayDetalle= data['datalle'];
+
                   break;
                 }
             }
@@ -6423,7 +6568,7 @@ __webpack_require__.r(__webpack_exports__);
 
       var url = '/torneo/obtenerDetalles?id=' + id;
       axios.get(url).then(function (response) {
-        console.log(response);
+        // console.log(response);
         var respuesta = response.data;
         me.arrayDetalle = respuesta.detalles;
       })["catch"](function (error) {
@@ -6480,7 +6625,7 @@ __webpack_require__.r(__webpack_exports__);
           axios.put("/torneo/desactivar", {
             id: id
           }).then(function (response) {
-            me.listarTorneo(1, "", "nombre");
+            me.listarTorneo();
             swal("Desactivado!", "El registro ha sido desactivado con éxito.", "success");
           })["catch"](function (error) {
             console.log(error);
@@ -6493,7 +6638,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this2 = this;
 
       swal({
-        title: "Esta seguro de activar este usuario?",
+        title: "Esta seguro de activar este torneo?",
         type: "warning",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
@@ -45665,9 +45810,16 @@ var render = function() {
                                   }
                                 }),
                                 _vm._v(" "),
-                                _c("td", {
-                                  domProps: { textContent: _vm._s(equipo.logo) }
-                                })
+                                _c("td", [
+                                  _c("img", {
+                                    attrs: {
+                                      src: "images/" + equipo.logo,
+                                      alt: "Logo del equipo",
+                                      width: "75",
+                                      height: "75"
+                                    }
+                                  })
+                                ])
                               ])
                             }),
                             0
@@ -46099,7 +46251,9 @@ var render = function() {
                                             on: {
                                               click: function($event) {
                                                 $event.preventDefault()
-                                                return _vm.deleteKeep(detalle)
+                                                return _vm.eliminarJugador(
+                                                  detalle
+                                                )
                                               }
                                             }
                                           },
@@ -46794,85 +46948,62 @@ var render = function() {
               _c(
                 "tbody",
                 _vm._l(_vm.arrayEquipo, function(equipo) {
-                  return _c(
-                    "tr",
-                    { key: equipo.id },
-                    [
-                      _c("td", [_vm._v("1")]),
-                      _vm._v(" "),
-                      _c("td", {
-                        domProps: { textContent: _vm._s(equipo.nombre) }
-                      }),
-                      _vm._v(" "),
-                      _c("td", {
-                        domProps: { textContent: _vm._s(equipo.nombre_rama) }
-                      }),
-                      _vm._v(" "),
-                      _c("td", [
-                        _c("img", {
-                          attrs: {
-                            src: "images/" + equipo.logo,
-                            alt: "Logo del equipo",
-                            width: "75",
-                            height: "75"
-                          }
-                        })
-                      ]),
-                      _vm._v(" "),
-                      _c("td", [
-                        _c(
-                          "a",
-                          {
-                            staticClass: "btn btn-primary btn-raised btn-xs",
-                            attrs: { href: "#!" },
-                            on: {
-                              click: function($event) {
-                                return _vm.abrirModal(
-                                  "equipo",
-                                  "actualizar",
-                                  equipo
-                                )
-                              }
+                  return _c("tr", { key: equipo.id }, [
+                    _c("td", [_vm._v("1")]),
+                    _vm._v(" "),
+                    _c("td", {
+                      domProps: { textContent: _vm._s(equipo.nombre) }
+                    }),
+                    _vm._v(" "),
+                    _c("td", {
+                      domProps: { textContent: _vm._s(equipo.nombre_rama) }
+                    }),
+                    _vm._v(" "),
+                    _c("td", [
+                      _c("img", {
+                        attrs: {
+                          src: "images/" + equipo.logo,
+                          alt: "Logo del equipo",
+                          width: "75",
+                          height: "75"
+                        }
+                      })
+                    ]),
+                    _vm._v(" "),
+                    _c("td", [
+                      _c(
+                        "a",
+                        {
+                          staticClass: "btn btn-primary btn-raised btn-xs",
+                          attrs: { href: "#!" },
+                          on: {
+                            click: function($event) {
+                              return _vm.abrirModal(
+                                "equipo",
+                                "actualizar",
+                                equipo
+                              )
                             }
-                          },
-                          [_c("i", { staticClass: "fa fa-pencil" })]
-                        )
-                      ]),
-                      _vm._v(" "),
-                      equipo.condicion
-                        ? [
-                            _c(
-                              "button",
-                              {
-                                staticClass: "btn btn-danger btn-sm",
-                                attrs: { type: "button" },
-                                on: {
-                                  click: function($event) {
-                                    return _vm.desactivarEquipo(equipo.id)
-                                  }
-                                }
-                              },
-                              [_c("i", { staticClass: "fa fa-trash" })]
-                            )
-                          ]
-                        : [
-                            _c(
-                              "button",
-                              {
-                                staticClass: "btn btn-info btn-sm",
-                                attrs: { type: "button" },
-                                on: {
-                                  click: function($event) {
-                                    return _vm.activarEquipo(equipo.id)
-                                  }
-                                }
-                              },
-                              [_c("i", { staticClass: "icon-ok" })]
-                            )
-                          ]
-                    ],
-                    2
-                  )
+                          }
+                        },
+                        [_c("i", { staticClass: "fa fa-pencil" })]
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-danger btn-sm",
+                        attrs: { type: "button" },
+                        on: {
+                          click: function($event) {
+                            return _vm.eliminarEquipo(equipo)
+                          }
+                        }
+                      },
+                      [_c("i", { staticClass: "fa fa-trash" })]
+                    )
+                  ])
                 }),
                 0
               )
@@ -47142,7 +47273,7 @@ var render = function() {
                           _c("img", {
                             attrs: {
                               src: "images/" + _vm.logo,
-                              alt: "Foto de jugador",
+                              alt: "Foto de equipo",
                               width: "75",
                               height: "75"
                             }
@@ -48056,7 +48187,21 @@ var render = function() {
                           )
                         ]),
                         _vm._v(" "),
-                        _vm._m(4, true)
+                        _c("td", [
+                          _c(
+                            "a",
+                            {
+                              staticClass: "btn btn-danger btn-raised btn-xs",
+                              attrs: { href: "#" },
+                              on: {
+                                click: function($event) {
+                                  return _vm.eliminarJugador(persona)
+                                }
+                              }
+                            },
+                            [_c("i", { staticClass: "fa fa-trash" })]
+                          )
+                        ])
                       ])
                     }),
                     0
@@ -48254,7 +48399,7 @@ var render = function() {
                               _c("label", [_vm._v("Fecha Nacimiento:")]),
                               _vm._v(" "),
                               _c("div", { staticClass: "input-group" }, [
-                                _vm._m(5),
+                                _vm._m(4),
                                 _vm._v(" "),
                                 _c("input", {
                                   directives: [
@@ -48390,7 +48535,7 @@ var render = function() {
                               _c("label", [_vm._v("Télefono:")]),
                               _vm._v(" "),
                               _c("div", { staticClass: "input-group" }, [
-                                _vm._m(6),
+                                _vm._m(5),
                                 _vm._v(" "),
                                 _c("input", {
                                   directives: [
@@ -48428,7 +48573,7 @@ var render = function() {
                               _c("label", [_vm._v("Correo:")]),
                               _vm._v(" "),
                               _c("div", { staticClass: "input-group" }, [
-                                _vm._m(7),
+                                _vm._m(6),
                                 _vm._v(" "),
                                 _c("input", {
                                   directives: [
@@ -48654,21 +48799,6 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", { staticClass: "text-center" }, [_vm._v("Eliminar")])
       ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", [
-      _c(
-        "a",
-        {
-          staticClass: "btn btn-danger btn-raised btn-xs",
-          attrs: { href: "#" }
-        },
-        [_c("i", { staticClass: "fa fa-trash" })]
-      )
     ])
   },
   function() {
@@ -49335,6 +49465,73 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ProPartido.vue?vue&type=template&id=7c2e151f&":
+/*!*************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ProPartido.vue?vue&type=template&id=7c2e151f& ***!
+  \*************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "content-wrapper" }, [
+    _c("section", { staticClass: "content-header" }, [
+      _c("div", { staticClass: "card-header" }, [
+        _c("i", { staticClass: "fa fa-align-justify" }),
+        _vm._v(" Sede\n      "),
+        _c(
+          "button",
+          {
+            staticClass: "btn btn-primary",
+            attrs: { type: "button" },
+            on: {
+              click: function($event) {
+                return _vm.abrirModal("sede", "registrar")
+              }
+            }
+          },
+          [_c("i", { staticClass: "icon-plus" }), _vm._v(" Nuevo\n      ")]
+        )
+      ]),
+      _vm._v(" "),
+      _vm._m(0)
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "card-header" }, [
+      _c("div", { staticClass: "table-responsive" }, [
+        _c(
+          "form",
+          {
+            attrs: {
+              action: "propartido",
+              method: "post",
+              enctype: "multipart/form-data"
+            }
+          },
+          [_c("h1", [_vm._v("ola")])]
+        )
+      ])
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Rama.vue?vue&type=template&id=9ebded24&":
 /*!*******************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Rama.vue?vue&type=template&id=9ebded24& ***!
@@ -49621,110 +49818,99 @@ var render = function() {
           ])
         ]),
         _vm._v(" "),
-        _c("div", { staticClass: "tab-pane", attrs: { id: "list" } }, [
-          _c("div", { staticClass: "table-responsive" }, [
-            _c("table", { staticClass: "table table-hover text-center" }, [
-              _vm._m(1),
-              _vm._v(" "),
-              _c(
-                "tbody",
-                _vm._l(_vm.arraySede, function(sede) {
-                  return _c(
-                    "tr",
-                    { key: sede.id },
-                    [
-                      _c("td", [_vm._v("1")]),
-                      _vm._v(" "),
-                      _c("td", {
-                        domProps: { textContent: _vm._s(sede.nombre) }
-                      }),
-                      _vm._v(" "),
-                      _c("td", {
-                        domProps: { textContent: _vm._s(sede.direccion) }
-                      }),
-                      _vm._v(" "),
-                      _c("td", [
-                        sede.condicion
-                          ? _c("div", [
-                              _c(
-                                "span",
-                                { staticClass: "badge badge-success" },
-                                [_vm._v("Activo")]
-                              )
-                            ])
-                          : _c("div", [
-                              _c(
-                                "span",
-                                { staticClass: "badge badge-danger" },
-                                [_vm._v("Desactivado")]
-                              )
-                            ])
-                      ]),
-                      _vm._v(" "),
-                      _c("td", [
-                        _c(
-                          "a",
-                          {
-                            staticClass: "btn btn-primary btn-raised btn-xs",
-                            attrs: { href: "#!" },
-                            on: {
-                              click: function($event) {
-                                return _vm.abrirModal(
-                                  "sede",
-                                  "actualizar",
-                                  sede
-                                )
-                              }
-                            }
-                          },
-                          [_c("i", { staticClass: "fa fa-pencil" })]
-                        )
-                      ]),
-                      _vm._v(" "),
+        _c("div", { staticClass: "table-responsive" }, [
+          _c("table", { staticClass: "table table-hover text-center" }, [
+            _vm._m(1),
+            _vm._v(" "),
+            _c(
+              "tbody",
+              _vm._l(_vm.arraySede, function(sede) {
+                return _c(
+                  "tr",
+                  { key: sede.id },
+                  [
+                    _c("td", [_vm._v("1")]),
+                    _vm._v(" "),
+                    _c("td", {
+                      domProps: { textContent: _vm._s(sede.nombre) }
+                    }),
+                    _vm._v(" "),
+                    _c("td", {
+                      domProps: { textContent: _vm._s(sede.direccion) }
+                    }),
+                    _vm._v(" "),
+                    _c("td", [
                       sede.condicion
-                        ? [
-                            _c("td", [
-                              _c(
-                                "a",
-                                {
-                                  staticClass:
-                                    "btn btn-danger btn-raised btn-xs",
-                                  attrs: { href: "#" },
-                                  on: {
-                                    click: function($event) {
-                                      return _vm.desactivarSede(sede.id)
-                                    }
-                                  }
-                                },
-                                [_c("i", { staticClass: "fa fa-trash" })]
-                              )
+                        ? _c("div", [
+                            _c("span", { staticClass: "badge badge-success" }, [
+                              _vm._v("Activo")
                             ])
-                          ]
-                        : [
-                            _c("td", [
-                              _c(
-                                "a",
-                                {
-                                  staticClass:
-                                    "btn btn-success btn-raised btn-xs",
-                                  attrs: { href: "#" },
-                                  on: {
-                                    click: function($event) {
-                                      return _vm.activarSede(sede.id)
-                                    }
-                                  }
-                                },
-                                [_c("i", { staticClass: "fa fa-check" })]
-                              )
+                          ])
+                        : _c("div", [
+                            _c("span", { staticClass: "badge badge-danger" }, [
+                              _vm._v("Desactivado")
                             ])
-                          ]
-                    ],
-                    2
-                  )
-                }),
-                0
-              )
-            ])
+                          ])
+                    ]),
+                    _vm._v(" "),
+                    _c("td", [
+                      _c(
+                        "a",
+                        {
+                          staticClass: "btn btn-primary btn-raised btn-xs",
+                          attrs: { href: "#!" },
+                          on: {
+                            click: function($event) {
+                              return _vm.abrirModal("sede", "actualizar", sede)
+                            }
+                          }
+                        },
+                        [_c("i", { staticClass: "fa fa-pencil" })]
+                      )
+                    ]),
+                    _vm._v(" "),
+                    sede.condicion
+                      ? [
+                          _c("td", [
+                            _c(
+                              "a",
+                              {
+                                staticClass: "btn btn-danger btn-raised btn-xs",
+                                attrs: { href: "#" },
+                                on: {
+                                  click: function($event) {
+                                    return _vm.desactivarSede(sede.id)
+                                  }
+                                }
+                              },
+                              [_c("i", { staticClass: "fa fa-trash" })]
+                            )
+                          ])
+                        ]
+                      : [
+                          _c("td", [
+                            _c(
+                              "a",
+                              {
+                                staticClass:
+                                  "btn btn-success btn-raised btn-xs",
+                                attrs: { href: "#" },
+                                on: {
+                                  click: function($event) {
+                                    return _vm.activarSede(sede.id)
+                                  }
+                                }
+                              },
+                              [_c("i", { staticClass: "fa fa-check" })]
+                            )
+                          ])
+                        ]
+                  ],
+                  2
+                )
+              }),
+              0
+            )
           ])
         ])
       ]),
@@ -50441,27 +50627,6 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("section", { staticClass: "content-header" }, [
-    _c("div", { staticClass: "card-header" }, [
-      _c("i", { staticClass: "fa fa-align-justify" }),
-      _vm._v(" Torneos\n                          "),
-      _c(
-        "button",
-        {
-          staticClass: "btn btn-primary",
-          attrs: { type: "button" },
-          on: {
-            click: function($event) {
-              return _vm.abrirModal("equipo", "registrar")
-            }
-          }
-        },
-        [
-          _c("i", { staticClass: "icon-plus" }),
-          _vm._v(" Nuevo\n                     ")
-        ]
-      )
-    ]),
-    _vm._v(" "),
     _c("div", { staticClass: "content-wrapper" }, [
       _vm._m(0),
       _vm._v(" "),
@@ -50685,7 +50850,7 @@ var render = function() {
                                         attrs: { type: "button" },
                                         on: {
                                           click: function($event) {
-                                            return _vm.mostrarDetalle(
+                                            return _vm.abrirModal(
                                               "torneo",
                                               "actualizar",
                                               torneo
@@ -51191,7 +51356,7 @@ var render = function() {
                               }
                             }
                           },
-                          [_vm._v("Registrar equipo")]
+                          [_vm._v("Registrar torneo")]
                         )
                       ])
                     ])
@@ -51406,7 +51571,11 @@ var render = function() {
                             attrs: { type: "button" },
                             on: {
                               click: function($event) {
-                                return _vm.abrirModal("equipo", "actualizar")
+                                return _vm.abrirModal(
+                                  "equipo",
+                                  "actualizar",
+                                  _vm.equipo
+                                )
                               }
                             }
                           },
@@ -65085,7 +65254,8 @@ Vue.component('jugador', __webpack_require__(/*! ./components/Jugador.vue */ "./
 Vue.component('planilla', __webpack_require__(/*! ./components/PlanillaJuego.vue */ "./resources/js/components/PlanillaJuego.vue")["default"]);
 Vue.component('torneo', __webpack_require__(/*! ./components/Torneo.vue */ "./resources/js/components/Torneo.vue")["default"]);
 Vue.component('equipos', __webpack_require__(/*! ./components/Equipos.vue */ "./resources/js/components/Equipos.vue")["default"]);
-Vue.component('arbitro', __webpack_require__(/*! ./components/Arbitro.vue */ "./resources/js/components/Arbitro.vue")["default"]); //Vue.component('index', require('./views/index.vue').default);
+Vue.component('arbitro', __webpack_require__(/*! ./components/Arbitro.vue */ "./resources/js/components/Arbitro.vue")["default"]);
+Vue.component('propartido', __webpack_require__(/*! ./components/ProPartido.vue */ "./resources/js/components/ProPartido.vue")["default"]); //Vue.component('index', require('./views/index.vue').default);
 //Vue.component('login', require('./components/Login.vue').default);
 
 /**
@@ -65783,6 +65953,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_PlanillaJuego_vue_vue_type_template_id_48fc7bf4___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_PlanillaJuego_vue_vue_type_template_id_48fc7bf4___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/ProPartido.vue":
+/*!************************************************!*\
+  !*** ./resources/js/components/ProPartido.vue ***!
+  \************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _ProPartido_vue_vue_type_template_id_7c2e151f___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ProPartido.vue?vue&type=template&id=7c2e151f& */ "./resources/js/components/ProPartido.vue?vue&type=template&id=7c2e151f&");
+/* harmony import */ var _ProPartido_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ProPartido.vue?vue&type=script&lang=js& */ "./resources/js/components/ProPartido.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _ProPartido_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _ProPartido_vue_vue_type_template_id_7c2e151f___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _ProPartido_vue_vue_type_template_id_7c2e151f___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/ProPartido.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/ProPartido.vue?vue&type=script&lang=js&":
+/*!*************************************************************************!*\
+  !*** ./resources/js/components/ProPartido.vue?vue&type=script&lang=js& ***!
+  \*************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ProPartido_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./ProPartido.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ProPartido.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ProPartido_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/ProPartido.vue?vue&type=template&id=7c2e151f&":
+/*!*******************************************************************************!*\
+  !*** ./resources/js/components/ProPartido.vue?vue&type=template&id=7c2e151f& ***!
+  \*******************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ProPartido_vue_vue_type_template_id_7c2e151f___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./ProPartido.vue?vue&type=template&id=7c2e151f& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ProPartido.vue?vue&type=template&id=7c2e151f&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ProPartido_vue_vue_type_template_id_7c2e151f___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ProPartido_vue_vue_type_template_id_7c2e151f___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

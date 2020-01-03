@@ -15,4 +15,7 @@ class Jugador extends Model
     public function persona(){
         return $this->belongsTo('App\Persona');
     }
+    public function equipos(){
+        return $this->belongsToMany(Equipo::class);
+    }
 }

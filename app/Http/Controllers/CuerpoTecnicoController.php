@@ -5,22 +5,27 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\CuerpoTecnico;
 use App\Persona;
+use App\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 class CuerpoTecnicoController extends Controller
 {
     public function index(Request $request)
     {
+        //$request->user()->authorizeRoles('admin');
        if (!$request->ajax()) return redirect('/');
- 
+               
         $buscar = $request->buscar;
         $criterio = $request->criterio;
          
         if ($buscar==''){
             $personas = CuerpoTecnico::join('personas','cuerpo_tecnico.id','=','personas.id')
             ->join('tipos','cuerpo_tecnico.idtipo','=','tipos.id')
+            ->join('users','cuerpo_tecnico.idusuario', '=','users.id')
             ->select('personas.id','personas.nombre','personas.fechanac',
             'personas.genero','personas.direccion','personas.telefono',
-            'personas.email','cuerpo_tecnico.idtipo','tipos.nombre as nombre_tipo')
+            'personas.email','cuerpo_tecnico.idusuario','users.usuario as nombre_usuario','cuerpo_tecnico.idtipo','tipos.nombre as nombre_tipo')
+            ->where('users.id','=',Auth::id())
             ->orderBy('personas.id', 'desc')->paginate(3);
         }
         else{
@@ -65,6 +70,7 @@ class CuerpoTecnicoController extends Controller
              
             $cuerpoT = new CuerpoTecnico();
             $cuerpoT->idtipo = $request->idtipo;
+            $cuerpoT->idusuario = \Auth::user()->id;
            // $cuerpoT->condicion = $request->condicion=1;
 
             $cuerpoT->id = $persona->id;
@@ -84,7 +90,7 @@ class CuerpoTecnicoController extends Controller
         try{
             DB::beginTransaction();
  
-            //Buscar primero el proveedor a modificar
+            //Buscar primero el cuerpotec a modificar
             $cuerpoT = CuerpoTecnico::findOrFail($request->id);
  
             $persona = Persona::findOrFail($cuerpoT->id);

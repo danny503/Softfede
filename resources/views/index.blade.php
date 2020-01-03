@@ -51,10 +51,9 @@
 	
 <!-- descripcion de la pelicula de la pagina -->
 
-<p class="age"><a href="#">All Age</a> Don Hall, Chris Williams</p>
+<p class="age"><a href="#">All Age</a> Sub federacion balonceso</p>
 <p class="review">Rating	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: &nbsp;&nbsp;  8,5/10</p>
-<p class="review reviewgo">Genre	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : &nbsp;&nbsp; Animation, Action, Comedy</p>
-<p class="review">Release &nbsp;&nbsp;&nbsp;&nbsp;: &nbsp;&nbsp; 7 November 2014</p>
+<p class="review">Release &nbsp;&nbsp;&nbsp;&nbsp;: &nbsp;&nbsp; 7 November 2019</p>
 <!-- <a class="video" href="#"><i class="video1"></i>WATCH TRAILER</a>
 <a class="book" href="#"><i class="book1"></i>BOOK TICKET</a> -->
 </div>

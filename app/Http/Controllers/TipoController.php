@@ -64,9 +64,9 @@ class TipoController extends Controller
         $tipo->save();
     }
     public function selectTipo(Request $request){
-       // if (!$request->ajax()) return redirect('/');
+        if (!$request->ajax()) return redirect('/');
         $tipos = Tipo:://where('condicion','=','1')
-        select('id','nombre')->orderBy('nombre','asc')->get();
+        select('id','nombre')->where('condicion','=','1')->orderBy('nombre','asc')->get();
         return ['tipos' => $tipos];
 
     }

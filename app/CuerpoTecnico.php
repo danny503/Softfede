@@ -17,5 +17,8 @@ class CuerpoTecnico extends Model
     public function persona(){
         return $this->belongsTo('App\Persona');
     }
+    public function user(){
+        return $this->belongsTo('App\User');
+    }
     
 }

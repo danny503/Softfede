@@ -25,12 +25,13 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 // Fecha: jueves 7 de septiembre de 2017
 // Última modificación: domingo 10 de septiembre de 2017
 $eq = array();
-$eq[0] = "Panteras";
-$eq[1] = "Grea";
-$eq[2] = "Los Bueyes";
-$eq[3] = "Madrid";
-$eq[4] = "Barsa";
-
+$eq[0] = "A";
+$eq[1] = "B";
+$eq[2] = "C";
+$eq[3] = "D";
+$eq[4] = "E";
+$eq[5] = "F";
+$eq[6] = "G";
 // $tde: total de equipos
 $tde = count($eq);
 // $tdppj: total de partidos por jornada
@@ -84,7 +85,7 @@ for($i=1;$i<($tdppj-1);$i++){
 $tdt[$i+1][0] = $tdt[$i][0];
 $tdt[$i][1] = $tdt[$i+1][1];
 }
-// Colocando en la segunda fila de la primera						
+// Colocando en la segunda fila de la primera
 // columna el valor $tmp que esta en la primera
 
 // fila de la segunda columna.
@@ -145,7 +146,7 @@ $index++;
 
 // Mostrando la programación de partidos
 for($j = 1;$j <= $tdj;$j++){
-mostrar("JORNADA " . $j,"h2");
+mostrar("JORNADA " . $j,"h1");
 for($i=0;$i < $index;$i++){
 if($j==$pdp[$i][2]){
 if($pdp[$i][1] != -1){
@@ -169,8 +170,9 @@ mostrar($eq[$pdp[$i][0]]
 					<p>CINEMA MURPHY</p>
 				</div>
 				<div class="search v-search">
-					<form action="propartido" method="post" enctype="multipart/form-data">					
-					{{csrf_field()}}
+					<form>
+						<input type="text" value="Search.." onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Search..';}"/>
+						<input type="submit" value="">
 					</form>
 				</div>
 				<div class="clearfix"></div>

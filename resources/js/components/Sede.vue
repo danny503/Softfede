@@ -32,8 +32,7 @@
               </div>
             </div>
           </div>
-        </div>
-        <div class="tab-pane" id="list">
+        </div>        
           <div class="table-responsive">
             <table class="table table-hover text-center">
               <thead>
@@ -68,22 +67,14 @@
                   </td>
                   <template v-if="sede.condicion">
                     <td>
-                      <a
-                        href="#"
-                        @click="desactivarSede(sede.id)"
-                        class="btn btn-danger btn-raised btn-xs"
-                      >
+                      <a href="#" @click="desactivarSede(sede.id)" class="btn btn-danger btn-raised btn-xs">                      
                         <i class="fa fa-trash"></i>
                       </a>
                     </td>
                   </template>
                   <template v-else>
                     <td>
-                      <a
-                        href="#"
-                        @click="activarSede(sede.id)"
-                        class="btn btn-success btn-raised btn-xs"
-                      >
+                      <a href="#" @click="activarSede(sede.id)" class="btn btn-success btn-raised btn-xs">                      
                         <i class="fa fa-check"></i>
                       </a>
                     </td>
@@ -91,8 +82,7 @@
                 </tr>
               </tbody>
             </table>
-          </div>
-        </div>
+          </div>        
       </div>
       <ol class="breadcrumb" style=" margin-left: 10%; max-width: 100%; margin-right: 10%;"></ol>
     </section>
@@ -257,8 +247,7 @@ export default {
         if (result.value) {
           let me = this;
 
-          axios
-            .put("/sede/desactivar", {
+          axios.put("/sede/desactivar", {
               id: id
             })
             .then(function(response) {

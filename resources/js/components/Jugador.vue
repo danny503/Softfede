@@ -170,7 +170,7 @@
                         <img :src="'images/' + persona.foto" alt="Foto de jugador" width="75" height="75">
                     </td>
                   <td><a href="#" class="btn btn-warning btn-raised btn-xs" @click="abrirModal('persona','actualizar',persona)" ><i class="fa fa-pencil"></i></a></td>
-                  <td><a href="#" class="btn btn-danger btn-raised btn-xs"><i class="fa fa-trash"></i></a></td>
+                  <td><a href="#" class="btn btn-danger btn-raised btn-xs" @click="eliminarJugador(persona)"><i class="fa fa-trash"></i></a></td>
                   </tr>
                 </tbody>
                 <ul class="pagination">
@@ -533,6 +533,34 @@ export default {
           console.log(error);
         });
     },
+    eliminarJugador(data){//Esta nos abrirá un alert de javascript y si aceptamos borrará la tarea que hemos elegido
+               swal({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                let me =this;
+                let persona_id = data.id
+                if (result.value) {                    
+                axios.delete('/jugador/borrar/'+persona_id
+                    ).then(function (response) {
+                        me.listarPersona(1,'','nombre');
+                         swal(
+                        'Deleted!',
+                        'Your file has been deleted.',
+                        'success'
+                    )
+                    })                                        
+                     .catch(function (error) {
+                        console.log(error);
+                    });
+                }
+                })
+            },
     validarPersona() {
       this.errorPersona = 0;
       this.errorMostrarMsjPersona = [];

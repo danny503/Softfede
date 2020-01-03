@@ -149,12 +149,15 @@
                 <table id="facarticulo">
                     <thead>
                         <tr id="fa">
+                            <th>FOTO</th>                          
                             <th>JUGADOR</th>                          
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($detalles as $det)
                         <tr>
+                        <td><img :src="'images/' + jugador.foto" alt="Foto de jugador" width="75" height="75">{{$det->foto}}                        
+                    </td>
                             <td>{{$det->persona}}</td>                       
                         </tr>
                         @endforeach
