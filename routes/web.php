@@ -81,6 +81,10 @@ Route::group(['middleware' => ['Administrador']], function () {
     Route::put('/categoria/actualizar','CategoriaController@update');
     Route::get('/categoria/selectCategoria','CategoriaController@selectCategoria');
 
+
+    Route::get('/puntaje','PuntajePartidoController@index');
+    Route::post('/puntaje/registrar','PuntajePartidoController@store');
+
     Route::get('/rol','RolController@index');
     Route::get('/rol/selectRol','RolController@selectRol');
 
@@ -127,6 +131,8 @@ Route::group(['middleware' => ['Administrador']], function () {
     Route::get('/equipo/obtenerCabecera', 'EquipoController@obtenerCabecera');
     Route::get('/equipo/obtenerDetalles', 'EquipoController@obtenerDetalles');
     Route::get('/equipo/listarPdf/{id}', 'EquipoController@listarPdf')->name('equipo_pdf');   
+
+    Route::delete('/detalletorneo/borrar/{id}','DetalleTorneoController@destroy');
 
     });
 

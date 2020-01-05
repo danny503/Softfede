@@ -18,12 +18,14 @@ class TorneoController extends Controller
 
         if($buscar==''){
             $torneos = Torneo::join('categorias','torneos.idcategoria','=','categorias.id')
-            ->select('torneos.id','torneos.idcategoria','torneos.nombre','torneos.fecha_inicio','torneos.fecha_fin','categorias.nombre as nombre_categoria')
+            ->select('torneos.id','torneos.idcategoria','torneos.nombre','torneos.fecha_inicio',
+            'torneos.fecha_fin','torneos.estado','categorias.nombre as nombre_categoria')
             ->orderBy('torneos.id', 'desc')->paginate(5);
         }
         else{
             $torneos = Torneo::join('categorias','torneos.idcategoria','=','categorias.id')
-            ->select('torneos.id','torneos.idcategoria','torneos.nombre','torneos.fecha_inicio','torneos.fecha_fin','categorias.nombre as nombre_categoria')
+            ->select('torneos.id','torneos.idcategoria','torneos.nombre',
+            'torneos.fecha_inicio','torneos.fecha_fin','torneos.estado','categorias.nombre as nombre_categoria')
             ->where('torneos.'.$criterio, 'like', '%'. $buscar . '%')
             ->orderBy('torneos.id', 'desc')->paginate(5);           
         }
@@ -115,7 +117,7 @@ class TorneoController extends Controller
 
         $detalles = DetalleTorneo::join('equipos','detalle_torneos.idequipo','=','equipos.id')
         ->join('ramas','equipos.idrama','=','ramas.id')
-        ->select('detalle_torneos.id','equipos.nombre as equipo','ramas.nombre as rama')
+        ->select('detalle_torneos.id','equipos.nombre as equipo','equipos.logo as logo','ramas.nombre as rama')
         ->where('detalle_torneos.idtorneo','=',$id)
         ->orderBy('detalle_torneos.id','desc')->get();
 
@@ -149,15 +151,20 @@ class TorneoController extends Controller
     }
     public function desactivar(Request $request)
     {
+        if (!$request->ajax()) return redirect('/');
         $torneo = Torneo::findOrFail($request->id);
         $torneo->estado = '0';
         $torneo->save();
     }  
     public function activar(Request $request)
     {
+        if (!$request->ajax()) return redirect('/');
         $torneo = Torneo::findOrFail($request->id);
         $torneo->estado = '1';
         $torneo->save();
+    }
+    public function destroy(Request $request, $id){
+        
     }
     
 }

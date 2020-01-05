@@ -54,16 +54,12 @@ class JugadorController extends Controller
         
         if ($buscar==''){
             $personas = Jugador::join('personas','jugadores.id','=','personas.id')
-            ->select('personas.id','personas.nombre','personas.fechanac',
-            'personas.genero','personas.direccion','personas.telefono',
-            'personas.email','jugadores.estatura','jugadores.foto')
+            ->select('personas.id','personas.nombre')
             ->orderBy('personas.id', 'desc')->paginate(6);
         }
         else{
             $personas = Jugador::join('personas','jugadores.id','=','personas.id')
-            ->select('personas.id','personas.nombre','personas.fechanac',
-            'personas.genero','personas.direccion','personas.telefono',
-            'personas.email','jugadores.estatura','jugadores.foto')            
+            ->select('personas.id','personas.nombre')            
             ->where('personas.'.$criterio, 'like', '%'. $buscar . '%')
             ->orderBy('personas.id', 'desc')->paginate(6);
         }
@@ -85,7 +81,7 @@ class JugadorController extends Controller
         if($request->hasFile('foto')){
             $file = $request->file('foto');
             $name = time().$file->getClientOriginalName();
-            $file->move(public_path().'/images/',$name);
+            $file->move(public_path().'/fotos/',$name);
         }        
         
         try{
@@ -131,7 +127,7 @@ class JugadorController extends Controller
         if($request->hasFile('foto')){
             $file = $request->file('foto');
             $name = time().$file->getClientOriginalName();
-            $file->move(public_path().'/images/',$name);
+            $file->move(public_path().'/fotos/',$name);
         }     
         
         try{

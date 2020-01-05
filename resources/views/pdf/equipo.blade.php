@@ -150,15 +150,16 @@
                     <thead>
                         <tr id="fa">
                             <th>FOTO</th>                          
-                            <th>JUGADOR</th>                          
+                            <th>JUGADOR</th>  
+                            <th>POSICION</th>                        
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($detalles as $det)
                         <tr>
-                        <td><img :src="'images/' + jugador.foto" alt="Foto de jugador" width="75" height="75">{{$det->foto}}                        
-                    </td>
-                            <td>{{$det->persona}}</td>                       
+                        <td ><img src="fotos/{{ $det->foto }}" alt="No hay foto" id="imagen"></td>
+                            <td>{{$det->persona}}</td>   
+                            <td>{{$det->posicion}}</td>                       
                         </tr>
                         @endforeach
                     </tbody>

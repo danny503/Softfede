@@ -84,13 +84,13 @@ class EquipoController extends Controller
         ->orderBy('equipos.id','desc')->take(1)->get();
     
         $detalles = InscripcionJE::join('personas','inscripcionej.idjugador','=','personas.id')
-       // ->join('personas','jugadores.id','=','personas.id')
-        ->select('inscripcionej.id','personas.nombre as persona')
+        ->join('jugadores','inscripcionej.idjugador','=','jugadores.id')
+        ->select('inscripcionej.posicion','personas.nombre as persona','jugadores.foto as foto')
         ->where('inscripcionej.idequipo','=',$id)
         ->orderBy('inscripcionej.id','desc')->get();
     
         $pdf = \PDF::loadView('pdf.equipo',['equipo'=>$equipo,'detalles'=>$detalles]);
-        return $pdf->stream('equipo-'.'.pdf');
+        return $pdf->stream('equipo.pdf');
     
     }
 

@@ -115,7 +115,7 @@
         @foreach ($torneo as $t)
         <header>
             <div id="logo">
-                <img src="img/logo2.png" alt="CompartiendoCodigo" id="imagen">
+                <img src="admin/img/logo2.png" alt="CompartiendoCodigo" id="imagen">
             </div>
             <div id="datos">
                 <p id="encabezado">
@@ -152,6 +152,7 @@
                 <table id="facarticulo">
                     <thead>
                         <tr id="fa">
+                            <td>LOGO</td>
                             <th>EQUIPO</th>
                             <th>RAMA</th>                           
                         </tr>
@@ -159,6 +160,7 @@
                     <tbody>
                         @foreach ($detalles as $det)
                         <tr>
+                        <td ><img src="images/{{ $det->logo }}" alt="No hay foto" id="imagen"></td>
                             <td>{{$det->equipo}}</td>
                             <td>{{$det->rama}}</td>                        
                         </tr>

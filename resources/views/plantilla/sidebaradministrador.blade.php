@@ -91,9 +91,7 @@
                                     </a>
                                 </li>                                
                             </ul>
-                        </li>
-                        
-
+                        </li>                    
                         <li class="nav-item has-treeview">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fa fa-edit"></i>
@@ -182,6 +180,12 @@
                                     <a href="#" class="nav-link">
                                         <i class="fa fa-circle-o nav-icon"></i>
                                         <p>Puntaje</p>
+                                    </a>
+                                </li>
+                                <li @click="menu=17" class="nav-item">
+                                    <a href="#" class="nav-link">
+                                        <i class="fa fa-circle-o nav-icon"></i>
+                                        <p>Puntaje Partido</p>
                                     </a>
                                 </li>
                             </ul>
