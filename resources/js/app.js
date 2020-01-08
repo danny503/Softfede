@@ -36,6 +36,7 @@ Vue.component('equipos', require('./components/Equipos.vue').default);
 Vue.component('arbitro', require('./components/Arbitro.vue').default);
 Vue.component('propartido', require('./components/ProPartido.vue').default);
 Vue.component('puntajepartido', require('./components/PuntajePartido.vue').default);
+Vue.component('update', require('./components/Update.vue').default);
 
 //Vue.component('index', require('./views/index.vue').default);
 //Vue.component('login', require('./components/Login.vue').default);

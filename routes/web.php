@@ -42,7 +42,7 @@ Route::group(['middleware' => ['Tecnico']], function () {
     
     Route::post('/inscripcionej/registrar','InscripcionEJController@store');
     Route::delete('/inscripcionej/borrar/{id}','InscripcionEJController@destroy');
-    Route::put('/inscripcionej/actualizar','EquipoController@update');
+    Route::put('/inscripcionej/actualizar','InscripcionEJController@update');
 
     Route::get('/tipo','TipoController@index');
     Route::post('/tipo/registrar','TipoController@store');
@@ -81,10 +81,10 @@ Route::group(['middleware' => ['Administrador']], function () {
     Route::put('/categoria/actualizar','CategoriaController@update');
     Route::get('/categoria/selectCategoria','CategoriaController@selectCategoria');
 
-
     Route::get('/puntaje','PuntajePartidoController@index');
     Route::post('/puntaje/registrar','PuntajePartidoController@store');
-
+    Route::get('/puntaje/pdf/{id}', 'PuntajePartidoController@TopJugdorPdf')->name('puntaje');
+    
     Route::get('/rol','RolController@index');
     Route::get('/rol/selectRol','RolController@selectRol');
 
@@ -93,7 +93,6 @@ Route::group(['middleware' => ['Administrador']], function () {
     Route::put('/user/actualizar','UserController@update');
     Route::put('/user/activar','UserController@activar');
     Route::put('/user/desactivar','UserController@desactivar');
-
     
     Route::get('/jugador','JugadorController@index');
     Route::post('/jugador/registrar','JugadorController@store');
@@ -115,7 +114,9 @@ Route::group(['middleware' => ['Administrador']], function () {
 
     Route::post('/detalletorneo/registrar','TorneoDetalleController@store');
 
+    Route::get('/propartido/{id}','ProPartidoController@index')->name('propartido');
     Route::get('/propartido','ProPartidoController@index');
+    Route::get('/propartido/pdf/{id}', 'ProPartidoController@proPdf')->name('propartido');
     
     Route::get('/arbitro','ArbitroController@index');
     Route::post('/arbitro/registrar','ArbitroController@store');

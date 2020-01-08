@@ -41,7 +41,7 @@
             <tipo></tipo>
             </template>
             <template v-if="menu==12">
-            <h1>Contenido 12</h1>
+            <update></update>
             </template>
             <template v-if="menu==13">
             <h1>Contenido 13</h1>

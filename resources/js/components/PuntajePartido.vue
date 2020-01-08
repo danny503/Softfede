@@ -50,6 +50,9 @@
               <thead>
                 <tr>
                   <th class="text-center list-group-item-success">Opciones</th>
+                  <button type="button" @click="pdfPuntaje(puntaje.id)" class="btn btn-info btn-sm">
+                        <i class="fa fa-file"></i>
+                    </button> 
                   <th class="text-center list-group-item-success">Puntaje Equipo A</th>
                   <th class="text-center list-group-item-success">Puntaje Equipo B</th>
                   <th class="text-center list-group-item-success">Ganador</th>                  
@@ -61,7 +64,7 @@
                          <button type="button" @click="verPuntaje(puntaje.id)" class="btn btn-success btn-sm">
                             <i class="fa fa-eye"></i>
                         </button> &nbsp;                                          
-                   <button type="button" @click="pdfPuntaje(puntaje.id)" class="btn btn-info btn-sm">
+                   <button type="button" @click="pdfPuntaje()" class="btn btn-info btn-sm">
                         <i class="fa fa-file"></i>
                     </button> 
                  </td>
@@ -123,8 +126,8 @@
                 <label for>Ganador</label>
                    <select class="form-control" v-model="ganador">
                      <option value="" disabled>Seleccion el ganador</option>
-                     <option value="Femenino">Equipo A</option>
-                     <option value="Masculino">Equipo B</option>
+                     <option value="Equipo A">Equipo A</option>
+                     <option value="Equipo B">Equipo B</option>
                   </select>
               </div>
             </div>   
@@ -326,6 +329,7 @@ export default {
   data() {
     return {    
       idjugador: 0,
+      idpro_partido:0,
       idpersona:0,
       idpuntaje: 0,
       idequipo:0,
@@ -430,12 +434,11 @@ export default {
         .then(function(response) {
           me.listado=1;
           me.listarPuntaje(1, '', 'nombre');
-          me.idcategoria=0;
-          me.nombre='';
-          me.fecha_inicio='';
-          me.fecha_fin='';
-          me.idequipo=0;
-          me.equipo='';
+          me.punto_a=0;
+          me.punto_b=0;
+          me.ganador='';
+          me.idpersona=0;
+          me.persona='';
           me.arrayDetalle=[];
          // window.open('/torneo/pdf/'+ response.data.id);
         })
@@ -622,6 +625,10 @@ export default {
                     console.log(error);
                 });
             },
+             pdfPuntaje(id){
+              window.open('/puntaje/pdf/'+ id ,'_blank');
+              //window.open('/propartido/'+ id ,'_blank');
+            },
     desactivarTorneo(id) {
       swal({
         title: "Esta seguro de desactivar este torneo?",
@@ -702,7 +709,7 @@ export default {
   },
   mounted() {
     this.listarPuntaje(1, this.buscar, this.criterio);
-    this.listarPersona(1, this.buscar, this.criterio);
+    //this.listarPersona(1, this.buscar, this.criterio);
     //this.selectCategoria();
   }
 };

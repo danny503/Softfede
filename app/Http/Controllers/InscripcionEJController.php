@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use App\Equipo;
 use App\Jugador;
 use App\InscripcionJE;
+
 class InscripcionEJController extends Controller
 {
   
@@ -50,26 +51,20 @@ class InscripcionEJController extends Controller
         if(!$request->ajax()) return redirect('/');
 
         $inscripcion = InscripcionJE::findOrFail($request->id);
-        //$inscripcion->idequipo =  $request->idequipo;
-        //$inscripcion->idjugador = $request->idjugador;
-        //$inscripcion->fecha_ingreso = $det['fecha_ingreso'];
         $inscripcion->numero_camisa = $request->numero_camisa;  
         $inscripcion->posicion = $request->posicion;          
         $inscripcion->save();
     }
 
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-       // $id = $request->id;
-       // $detalle = InscripcionJE::findOrFail($request->$id);
-       // $detalle->delete();
+        $id = $request->id;
+        //$inscripcion = InscripcionJE::findOrFail($request->$id);
+        //$inscripcion->delete();
 
        InscripcionJE::findOrFail($id)->delete();
       // $inscripcion->delete();
-
-        //DB::table('inscripcionej')->where('id', $id)->delete();
-       
-               
+        DB::table('inscripcionej')->where('id', $id)->delete();                      
     }
     public function borrar(Request $request)
     {
@@ -85,11 +80,10 @@ class InscripcionEJController extends Controller
     public function obtenerDetalles(Request $request){
         if (!$request->ajax()) return redirect('/');
  
-        $id = $request->id;
-         
+        $id = $request->id;         
         $detalles = InscripcionJE::join('personas','inscripcionej.idjugador','=','personas.id')
         ->select('inscripcionej.numero_camisa','inscripcionej.posicion','personas.nombre as persona')
-        ->where('inscripcionej.idequipo','=',$id)
+        //->where('inscripcionej.idequipo','=',$id)
         ->orderBy('inscripcionej.id', 'desc')->get();                    
          
         return [

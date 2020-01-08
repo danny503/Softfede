@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class DetallePartidoTable extends Migration
+class DetallePartidosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,16 @@ class DetallePartidoTable extends Migration
      */
     public function up()
     {
-        Schema::create('detalle_partido',function (Blueprint $table){
+        Schema::create('detalle_partidos',function (Blueprint $table){
             $table->increments('id');            
             $table->integer('puntaje');
             $table->integer('falta');
             $table->integer('idpuntaje_partido')->unsigned();
-            $table->integer('idpro_partido')->unsigned();
-            $table->integer('idjugador')->unsigned();
-            $table->foreign('idjugador')->references('id')->on('jugadores');
             $table->foreign('idpuntaje_partido')->references('id')->on('puntaje_partido');
-            $table->foreign('idpro_partido')->references('id')->on('pro_partidos');
+            //$table->integer('idpro_partido')->unsigned();            
+           // $table->foreign('idpro_partido')->references('id')->on('pro_partidos');
+        $table->integer('idjugador')->unsigned();
+            $table->foreign('idjugador')->references('id')->on('jugadores');
         });
     }
 
@@ -33,6 +33,6 @@ class DetallePartidoTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('detalle_partido');
+        Schema::dropIfExists('detalle_partidos');
     }
 }

@@ -276,9 +276,9 @@
                                 <table class="table table-bordered table-striped table-sm">
                                     <thead>
                                         <tr>
-                                            <th>jugador</th>
-                                            <th>numero de camisa</th>
-                                            <th>posicion</th>
+                                            <th>Jugador</th>
+                                            <th>Número de camisa</th>
+                                            <th>Posición</th>
                                             <th>Actualizar</th>
                                             <th>Eliminar</th>
                                         </tr>
@@ -291,8 +291,8 @@
                                             </td>
                                             <td v-text="detalle.posicion">
                                             </td>
-                                            <td><a href="#!" class="btn btn-warning btn-raised btn-xs" @click="abrirModal('detalle', detalle)" ><i class="fa fa-pencil"></i></a></td>
-                                            <td><a href="#!" class="btn btn-danger btn-raised btn-xs" v-on:click.prevent="eliminarJugador(detalle)"><i class="fa fa-trash"></i></a></td>
+                                            <td><a href="#!" class="btn btn-warning btn-raised btn-xs" @click="abrirModal('equipo','actualizar', detalle)" ><i class="fa fa-pencil"></i></a></td>
+                                            <td><a href="#!" class="btn btn-danger btn-raised btn-xs" @click="eliminarEquipo(detalle)"><i class="fa fa-trash"></i></a></td>
                                         </tr>
                                     </tbody>  
                                     <tbody v-else>
@@ -447,146 +447,54 @@
       <!-- Fin ejemplo de tabla Listado -->
     </div>
     <!--Inicio del modal agregar/actualizar-->
-    <div
-      class="modal fade"
-      tabindex="-1"
-      :class="{'mostrar' : modal}"
-      role="dialog"
-      aria-labelledby="myModalLabel"
-      style="display: none;"
-      aria-hidden="true">
-      <div class="modal-dialog modal-primary modal-lg" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h4 class="modal-title" v-text="tituloModal"></h4>
-            <button type="button" class="close" @click="cerrarModal()" aria-label="Close">
-              <span aria-hidden="true">×</span>
-            </button>
-          </div>
-          <div class="modal-body">
-                <div class="form-group row">
-              <div class="col-md-6">
-              <div class="form-group">
-                <label for>Jugador</label>
-                 <select class="form-control" v-model="idjugador">
-                <option value="0" disabled>Seleccione un jugador</option>
-                <option v-for="jugador in arrayPersona" :key="jugador.id" :value="jugador.id" v-text="jugador.nombre"></option>
-                 </select>
-              </div>
+    <!--Inicio del modal agregar/actualizar-->
+    <div class="modal fade" tabindex="-1" :class="{'mostrar':modal}" role="dialog" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
+                <div class="modal-dialog modal-primary modal-lg" role="document">
+                    <div class="modal-content ">
+                        <div class="modal-header">
+                            <h4 class="modal-title" v-text="tituloModal"></h4>
+                            <button type="button" class="close"  @click="cerrarModal()" aria-label="Close">
+                              <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
+                                <div class="form-group row">
+                                    <label class="col-md-3 form-control-label" for="text-input">jugador</label>
+                                    <div class="col-md-9">
+                                        
+                                        <label class="badge badge-success" v-text="persona"></label>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-3 form-control-label" for="text-input">numero de camisa</label>
+                                    <div class="col-md-9">
+                                        <input type="text" v-model="numero_camisa" class="form-control" >
+                                        
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-3 form-control-label" for="text-input">posicion</label>
+                                    <div class="col-md-9">
+                                        <input type="text" v-model="posicion" class="form-control" placeholder="Descripcion de categoría">
+                                      
+                                    </div>
+                                </div>
+                                
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" @click="cerrarModal()">Cerrar</button>
+                            <button type="button" v-if="tipoAccion==1" class="btn btn-primary" @click="registrarCategoria()">Guardar</button>
+                            <button type="button" v-if="tipoAccion==2" class="btn btn-primary" @click="actualizarDetalle()">Actualizar</button>
+                        </div>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
             </div>
-            <div class="col-md-6">
-              <label for>Numero de camisa</label>
-              <input type="number" class="form-control" v-model="numero_camisa" />
-            </div>
-            <div class="col-md-6">
-              <label for>posicion</label>
-              <input type="text" class="form-control" v-model="posicion" />
-            </div>
-<!--
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for>Rama</label>
-                 <select class="form-control" v-model="idrama">
-                <option value="0" disabled>Seleccione una rama</option>
-                <option v-for="rama in arrayRama" :key="rama.id" :value="rama.id" v-text="rama.nombre"></option>
-                 </select>
-              </div>
-            </div>-->
-            
-           <!-- <div class="col-md-4">
-              <label for>Logo</label>
-              <input type="text" class="form-control" v-model="logo" />
-            </div>-->
-            <div class="col-md-12">
-              <div v-show="errorEquipo" class="form-group row div-error">
-                      <div class="text-center text-error">
-                       <div v-for="error in errorMostrarMsjEquipo" :key="error" v-text="error">
-                      </div>
-                  </div>
-             </div>
-              </div>            
-          </div>
-          <!--<div class="form-group row border">
-              <div class="col-md-6">
-                  <div class="form-group">
-                      <label for="">Jugadores <span style="color:red;" v-show="idpersona==0">(Seleccione)</span></label>
-                      <div class="form-inline">
-                          <input type="text" class="form-control" v-model="idjugador" placeholder="Ingrese jugador">
-                          <button @click="abrirModal()" class="btn btn-primary">...</button>
-                      </div>
-                  </div>
-              </div>
-              <div class="col-md-2">
-                  <div class="form-group">
-                      <label >Numero de camisa<span style="color:red;" v-show="ncamisa==0">(Seleccione)</span></label>
-                      <input type="number" class="form-control" v-model="ncamisa">
-                  </div>
-              </div>
-              <div class="col-md-4">
-                  <div class="form-group">
-                      <label >Posición <span style="color:red;" v-show="posicion==0">(Seleccione)</span></label>
-                      <input type="text" class="form-control" v-model="posicion">
-                  </div>
-              </div>
-              <div class="col-md-2">
-                  <div class="form-group">
-                      <button @click="agregarDetalle()" class="btn btn-success form-control btnagregar"><i class="icon-plus"></i></button>
-                  </div>
-              </div>
-          </div> -->         
-          <div class="form-group row border">
-              <div class="table-responsive">
-                  <!--table class="table table-bordered table-striped table-sm">
-                      <thead>
-                          <tr>
-                          <th>Opciones</th>
-                          <th>Jugador</th>
-                          <th>N° Camisa</th>
-                          <th>Posición</th>  
-                          </tr>                        
-                      </thead>
-                      <tbody v-if="arrayDetalle.length">
-                          <tr v-for="(detalle, index) in arrayDetalle" :key="detalle.id">
-                              <td>
-                                  <button @click="eliminarDetalle(index)" type="button" class="btn btn-danger btn-sm">
-                                      <i class="icon-close"></i>
-                                  </button>
-                              </td>
-                              <td v-text="detalle.persona" >
-                              </td>
-                              
-                              <td>
-                                  <input type="text" v-model="detalle.ncamisa" value="3" class="form-control">
-                              </td>
-                               <td>
-                                  <input type="text" v-model="detalle.posicion" value="3" class="form-control">
-                              </td>           
-                                                                                                                        
-                          </tr>                          
-                    </tbody>
-                    <tbody v-else>
-                      <tr>
-                        <td colspan="5">
-                          No hay jugadores agregados
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>-->
-              </div>
-          </div>
-          <div class="form=group row">
-              <div class="col-md-12"> 
-                  <button type="button" @click="ocultarDetalle()" class="btn btn-secondary">Cerrar</button>
-                  <button type="button" class="btn btn-primary" @click="actualizarEquipo()">Actualizar equipo</button>
-              </div>
+    <!--Fin del modal-->
 
-          </div>
-          </div>
-        </div>
-        <!-- /.modal-content -->
-      </div>
-      <!-- /.modal-dialog -->
-    </div>
     <!--Fin del modal-->
   </div>
   
@@ -942,16 +850,81 @@ export default {
     cerrarModal() {
       this.modal = 0;
       this.tituloModal = "";     
-    },
-    abrirModal( data = []) {
-     
-          this.modal = 1;
-          this.tituloModal = "Seleccion uno a vrios jugadores";  
-          this.equipo_id = data['id'];
+    },    
+ actualizarDetalle(){      
+                let me = this;
+                axios.put('/inscripcionej/actualizar',{
+                    numero_camisa: this.numero_camisa,
+                    posicion: this.posicion,
+                    id: this.detalle_id
+                }).then(function (response) {                  
+                    me.cerrarModal();
+                    me.listarEquipo(1, "", "nombre");
+                }).catch(function (error) {
+                    console.log(error);
+                }); 
+            },  
+   abrirModal(modelo, accion, data = []){
+                switch(modelo){
+                    case "equipo":
+                    {
+                        switch(accion)
+                        {
+                             case "registrar":
+                            {
+                                this.modal = 1;
+                                this.tituloModal = 'Resgistrar';
+                                
+                                this.tipoAccion = 1;
+                                break;
+                            }
+                            case "actualizar":
+                            {
+                                this.modal = 1;
+                                this.tituloModal = 'Actualizar';
+                                this.tipoAccion = 2;
+                                this.detalle_id = data['id'];
                                 this.numero_camisa= data['numero_camisa'];
-                                this.posicion = data['posicion'];    
-      
-    },
+                                this.posicion = data['posicion'];
+                                this.persona = data['persona'];
+
+                                break;
+                            }
+                        }
+                      
+
+                    }
+                }
+            },
+            eliminarEquipo(data,id){//Esta nos abrirá un alert de javascript y si aceptamos borrará la tarea que hemos elegido
+               swal({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                let me =this;
+                let id = data.id
+                if (result.value) {                    
+                axios.delete('/inscripcionej/borrar?id='+id
+                    ).then(function (response) {
+                        me.listarEquipo(1,'','nombre');
+                         swal(
+                        'Deleted!',
+                        'Your file has been deleted.',
+                        'success'
+                    )
+                    })                                        
+                     .catch(function (error) {
+                        console.log(error);
+                    });
+                }
+                })
+            },
+
     desactivarUsuario(id) {
       swal({
         title: "Esta seguro de desactivar este usuario?",
@@ -992,31 +965,24 @@ export default {
      verEquipo(id){
                 let me=this;
                 me.listado=2;
-
                 //Obtener datos del ingreso
                 var arrayEquipoT=[];
                 var url= '/equipo/obtenerCabecera?id=' + id;
-
                 axios.get(url).then(function (response) {
                     var respuesta= response.data;
-                    arrayEquipoT = respuesta.equipo;
-                    
+                    arrayEquipoT = respuesta.equipo;                    
                     me.nombre_rama = arrayEquipoT[0]['nombre_rama'];
-                    me.nombre=arrayEquipoT[0]['nombre'];
-                  
+                    me.nombre=arrayEquipoT[0]['nombre'];                  
                 })
                 .catch(function (error) {
                     console.log(error);
                 });
-
                 //obtener datos de los detalles
-                 var url= '/equipo/obtenerDetalles?id=' + id;
-                  
+                 var url= '/equipo/obtenerDetalles?id=' + id;                  
                 axios.get(url).then(function (response) {
                     //console.log(response);
                     var respuesta= response.data;
                     me.arrayDetalle = respuesta.detalles;
-
                 })
                 .catch(function (error) {
                     console.log(error);

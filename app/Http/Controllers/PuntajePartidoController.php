@@ -3,10 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+//use Illuminate\Support\Facades\DB;
 use App\ProPartido;
 use App\PuntajePartido;
 use App\Jugador;
+use App\DetallePartido;
+
+use DB;
+
 class PuntajePartidoController extends Controller
 {
    
@@ -19,12 +23,12 @@ class PuntajePartidoController extends Controller
 
         if($buscar==''){
             $puntaje_partido = DB::table('puntaje_partido AS a')
-             ->join('pro_partidos AS b','a.idpro_partido','=','b.id')
+            ->join('pro_partidos AS b','a.idpro_partido','=','b.id')
             ->join('equipos AS c','b.equipo_a','=','c.id')
             ->join('equipos AS d','b.equipo_b','=','d.id')
-            ->select('a.punto_a, a.punto_b,a.ganador, c.nombre, d.nombre');
-            //->orderBy('a.id', 'desc')->paginate(5);
-           // return response()->json($puntaje_partido, 200);
+            ->select('a.punto_a', 'a.punto_b','a.ganador', 'c.nombre', 'd.nombre')
+            ->orderBy('a.id', 'desc')->paginate(5);
+           // 
             
 
         }
@@ -34,10 +38,13 @@ class PuntajePartidoController extends Controller
             ->join('equipos AS c','b.equipo_a','=','c.id')
             ->join('equipos AS d','b.equipo_b','=','d.id')
             ->select('a.punto_a,a.punto_b, a.ganador c.nombre, d.nombre')
-            ->where('a.'.$criterio, 'like', '%'. $buscar . '%');
-            //->orderBy('a.id', 'desc')->paginate(5);  
+            ->where('a.'.$criterio, 'like', '%'. $buscar . '%')
+            ->orderBy('a.id', 'desc')->paginate(5); 
 
         }
+      /*  $puntaje_partido = PuntajePartido::all();
+        return $puntaje_partido;*/
+      //  return response()->json($puntaje_partido, 200);
         
        
     }
@@ -63,10 +70,10 @@ class PuntajePartidoController extends Controller
         {
             $detalle = new DetallePartido();
             $detalle->idpuntaje_partido = $puntaje_partido->id;
-            $detalle->idpro_partido = $det['idpro_partido'];
-            $detalle->idjugador = $det['idjugador'];
             $detalle->puntaje = $det['puntaje'];
-            $detalle->falta = $det['falta'];        
+            $detalle->falta = $det['falta'];  
+            //$detalle->idpro_partido = $det['idpro_partido'];
+            $detalle->idjugador = $det['idpersona'];                  
             $detalle->save();
         }
         DB::commit();
@@ -74,12 +81,27 @@ class PuntajePartidoController extends Controller
         DB:rollBack();
         }          
     }
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    public function TopJugdorPdf(Request $request,$id){
+        $puntaje_partido = PuntajePartido::select('puntaje_partidos.id','puntaje_partidos.ganador')
+        ->where('puntaje_partidos.id','=',$id)
+        ->orderBy('puntaje_partidos.id','desc')->take(1)->get();    
+    
+        $detalles = DB::table('detalle_partidos as a')
+        ->join('personas as b','a.idjugador','=','b.id')
+        ->join('jugadores as c','a.idjugador','=','c.id')
+        ->select('a.idjugador','c.foto','b.nombre',DB::raw('SUM(a.puntaje) as puntaje'))
+       // ->where('a.id','=',$id)
+        ->groupBy('a.idjugador','c.foto')
+        ->orderBy(DB::raw('MAX(a.puntaje)'), 'desc')
+        ->limit(5)
+        ->get();
+
+        $pdf = \PDF::loadView('pdf.top_jugador',['puntaje'=>$puntaje_partido,'detalles'=>$detalles]);
+        return $pdf->stream('puntaje_partidos.pdf');
+
+        /*SELECT a.idjugador,b.nombre, SUM(a.puntaje) FROM detalle_partidos as a INNER JOIN personas 
+        as b on a.idjugador = b.id  group by a.idjugador ORDER BY MAX(a.puntaje) DESC LIMIT 0,3*/
+    }
     public function show($id)
     {
         //
