@@ -512,4 +512,8 @@
         color: red !important;
         font-weight: bold;
     }
+    .modal-body{
+        max-height: calc(100vh - 210px);
+        overflow-y: auto;
+    }
 </style>

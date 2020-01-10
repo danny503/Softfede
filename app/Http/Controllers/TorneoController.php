@@ -166,5 +166,12 @@ class TorneoController extends Controller
     public function destroy(Request $request, $id){
         
     }
+    public function selectTorneo(Request $request){
+        if (!$request->ajax()) return redirect('/');
+        $torneo = Torneo:://where('condicion','=','1')
+        select('id','nombre')->get();
+        return ['torneos' => $torneo];
+
+    }   
     
 }

@@ -295,7 +295,7 @@
                         <div class="form-group row">
                             <div class="col-md-12">
                                 <button type="button" @click="ocultarDetalle()" class="btn btn-secondary">Cerrar</button>                                
-                                <button type="button" @click="abrirModal('equipo','actualizar', equipo)" class="btn btn-warning">Editar</button>
+                                <!--<button type="button" @click="abrirModal('equipo','actualizar', equipo)" class="btn btn-warning">Editar</button>-->
                             </div>
                         </div>
                     </div>
@@ -589,9 +589,7 @@ export default {
       if (this.validarTorneo()) {
         return;
       }
-
       let me = this;
-
       axios.post('/torneo/registrar', {
           'nombre': this.nombre,
           'idcategoria': this.idcategoria,
@@ -983,5 +981,9 @@ export default {
   .btnagregar {
     margin-top: 2rem;
   }
-}
+
+    .modal-body{
+        max-height: calc(100vh - 210px);
+        overflow-y: auto;
+    }}
 </style>

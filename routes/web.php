@@ -54,6 +54,7 @@ Route::group(['middleware' => ['Tecnico']], function () {
     Route::get('/cuerpotecnico','CuerpoTecnicoController@index');
     Route::post('/cuerpotecnico/registrar','CuerpoTecnicoController@store');
     Route::put('/cuerpotecnico/actualizar','CuerpoTecnicoController@update');
+    Route::delete('/cuerpotecnico/borrar/{id}','CuerpoTecnicoController@destroy');
 
     Route::get('/jugador','JugadorController@index');
     Route::post('/jugador/registrar','JugadorController@store');
@@ -111,12 +112,14 @@ Route::group(['middleware' => ['Administrador']], function () {
     Route::get('/torneo/obtenerCabecera', 'TorneoController@obtenerCabecera');
     Route::get('/torneo/obtenerDetalles', 'TorneoController@obtenerDetalles');
     Route::get('/torneo/pdf/{id}', 'TorneoController@pdf')->name('torneo_pdf');
+    Route::get('/torneo/selectTorneo','TorneoController@selectTorneo');
 
     Route::post('/detalletorneo/registrar','TorneoDetalleController@store');
 
     Route::get('/propartido/{id}','ProPartidoController@index')->name('propartido');
     Route::get('/propartido','ProPartidoController@index');
     Route::get('/propartido/pdf/{id}', 'ProPartidoController@proPdf')->name('propartido');
+    Route::post('/propartido/registrar','ProPartidoController@store');
     
     Route::get('/arbitro','ArbitroController@index');
     Route::post('/arbitro/registrar','ArbitroController@store');

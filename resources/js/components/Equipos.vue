@@ -301,23 +301,23 @@
             },
            eliminarEquipo(data){//Esta nos abrirá un alert de javascript y si aceptamos borrará la tarea que hemos elegido
                swal({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
+                title: '¿Estás seguro?',
+                text: "¡No podrás revertir esto!",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
+                confirmButtonText: 'Si, eliminarlo!'
                 }).then((result) => {
                 let me =this;
-                let equipo_id = data.id
+                let equipo_id= data.id
                 if (result.value) {                    
                 axios.delete('/equipo/borrar/'+equipo_id
                     ).then(function (response) {
                         me.listarEquipo(1,'','nombre');
                          swal(
-                        'Deleted!',
-                        'Your file has been deleted.',
+                        'Eliminado!',
+                        'Se ha eliminado el equipo.',
                         'success'
                     )
                     })                                        

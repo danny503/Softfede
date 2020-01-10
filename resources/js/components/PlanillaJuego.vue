@@ -65,7 +65,7 @@
                         <td>1</td>
                         <td>Adonay Pérez</td>
                         <td> <input type="number" value="0" step="any" class="form-control" v-model="precio"></td>
-                         <td>
+                         <td >
                          <button type="button" @click="abrirModal('articulo','actualizar',articulo)" class="btn btn-warning btn-sm">
                           <i class="icon-pencil"></i>
                                         </button> &nbsp;

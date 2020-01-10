@@ -6,14 +6,24 @@
           <button type="button" @click="abrirModal()" class="btn btn-primary">
             <i class="icon-plus"></i>&nbsp;Nuevo
           </button>
+          <div class="form-group row">
+                   <label class="col-md-3 form-control-label" for="text-input">Torneo</label>
+                        <div class="col-md-9">
+                           <select class="form-control" v-model="idtorneo">
+                            <option value="0" disabled>Seleccione</option>
+                            <option v-for="torneo in arrayTorneo" :key="torneo.id" :value="torneo.id" v-text="torneo.nombre"></option>
+                            </select>
+                            <span class="help-block"></span>
+                          </div>
+              </div>
           </div>           
         <div class="card-header">  
             <div class="table-responsive">
                <form action="propartido" method="post" enctype="multipart/form-data">
                <h1>Generar partidos aleatorios</h1>
-               <button type="button" @click="pdfProPartido()" class="btn btn-info btn-sm">
+               <button type="button" @click="listarPartido()" class="btn btn-info btn-sm">
                         <i class="fa fa-life-ring"></i>
-                    </button> 
+                </button> 
                     <div class="table-responsive">
             <table class="table table-hover text-center">
               <thead>
@@ -26,11 +36,24 @@
               </thead>
               <tbody>
                 <tr v-for="propartido in arrayProPartido" :key="propartido.id">
-                  <td v-text="propartido.jornada"></td>
-                  <td v-text="propartido.eq1"></td>
+                  <!--<td v-text="propartido.jornada"></td>-->
+                  <td>
+                  <input type="text" v-model="propartido.jornada" class="form-control" disabled/>
+                  </td>
+                  <td>
+                  <input type="text" v-model="propartido.eq1" class="form-control" disabled />
+                  </td>
+                  <!--<td v-text="propartido.eq1"></td>-->
                   <td>Vs</td>
-                  <td v-text="propartido.eq2"></td>              
+                  <td>
+                  <input type="text" v-model="propartido.eq2" class="form-control" disabled />
+                  </td>
+                  <!--<td v-text="propartido.eq2"></td>                                   -->
                 </tr>
+                   
+                <button type="button" @click="registrarProPartido() " class="btn btn-primary">
+                      <i class="fa fa-add"></i>&nbsp;Guardar
+                </button>
               </tbody>
             </table>
           </div>
@@ -45,32 +68,81 @@ export default {
     data(){
         return{
             propartido:'',
-            nombre:'',           
-            equipo_id:0, 
-            arrayProPartido:[]
+            nombre:'',
+            equipo_a:0,
+            equipo_b:0,
+            equipo:'',
+            torneo:''           ,
+            equipo_id:0,
+            idtorneo:0, 
+            arrayProPartido:[],
+            arrayTorneo:[]
         }
     },              
     methods:{
         listarPartido() {
-      let me = this;
-      //var url = '/sede?page=' + page + '&buscar='+ buscar + '&criterio='+ criterio;
-      axios.get('/propartido').then(function(response) {
-          //me.arrayProPartido = response.data;
-          var x = response.data;
-          var l = x.length;
-          for(var index=0; index < l; index++){
-           // x[index][0] ,'vs', x[index][1];
-           me.arrayProPartido.push({'eq1': x[index][0],'eq2': x[index][1],'jornada': x[index][2]});
-
-          }
-          console.log(x);
-
-          console.log('ok');
-          console.log(response.data);
-          //alert('')
+          //console.log(this.idtorneo);
+          this.arrayProPartido = [];
+          let me = this;
+            //var url = '/sede?page=' + page + '&buscar='+ buscar + '&criterio='+ criterio;
+            axios.get('/propartido',{params: {idtorneo:this.idtorneo}}).then(function(response) {
+              //me.arrayProPartido = response.data;
+              var x = response.data;
+              var l = x.length;
+              for(var index=0; index < l; index++){
+              // x[index][0] ,'vs', x[index][1];
+              me.arrayProPartido.push({'eq1': x[index][0],'eq2': x[index][1],'jornada': x[index][2]});
+              }
+          //console.log('ok');
+         // console.log(response.data);
         })
         .catch(function(error) {
           // handle error
+          console.log(error);
+        });
+    },
+    selectTorneo(){
+      //console.log('ok');
+      let me=this;
+                var url = '/torneo/selectTorneo';
+                axios.get(url).then(function (response) {
+                   // consolo.log(response);
+                    var respuesta= response.data;
+                    me.arrayTorneo = respuesta.torneos;                    
+                })
+                .catch(function (error) {
+                    // handle error
+                    console.log(error);
+                });     
+            },
+     registrarProPartido() {
+      /*if (this.validarTorneo()) {
+        return;
+      }*/
+      
+      let me = this;      
+      axios.post('/propartido/registrar', {
+          'jornada': this.jornada,
+          'equipo_a': this.eq1,
+          'equipo_b': this.equ2,
+          'iddetalle_torneo':this.idtorneo,
+          //'data' : this.arrayDetalle         
+        })
+        .then(function(response) {
+          console.log(jornada);
+          //me.listado=1;
+          me.listarPartido();
+          me.jornada='';
+          me.equipo_a=0;
+          me.equipo='';
+          me.equipo_b=0;
+          me.equipo='';
+          me.iddetalle_torneo=0;
+          me.torneo=''
+          //me.arrayDetalle=[];
+         // window.open('/torneo/pdf/'+ response.data.id);
+        })
+        .catch(function(error) {
           console.log(error);
         });
     },
@@ -80,7 +152,8 @@ export default {
             },
   },
      mounted() {
-        this.listarPartido();
+        //this.listarPartido();
+        this.selectTorneo();
   }
 }
 </script>

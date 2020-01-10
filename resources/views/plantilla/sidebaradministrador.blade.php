@@ -36,13 +36,7 @@
                                         <i class="fa fa-circle-o nav-icon"></i>
                                         <p>Registrarse</p>
                                     </a>
-                                </li>
-                                <li @click="menu=2" class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="fa fa-circle-o nav-icon"></i>
-                                        <p>Inicio de sesi&oacute;n</p>
-                                    </a>
-                                </li>
+                                </li>                            
                             </ul>
                         </li>
                          <li class="nav-item has-treeview">

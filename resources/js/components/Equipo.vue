@@ -146,13 +146,25 @@
               </div>
             </div>
             <div class="col-md-6">
-              <label for>Numero de camisa</label>
+              <label for>Número de camisa</label>
               <input type="number" class="form-control" v-model="numero_camisa" />
             </div>
-            <div class="col-md-6">
+                  <div class="col-md-6">
+            <div class="form-group row">
+              <label  for="text-input">Posición</label>                
+                  <select class="form-control" v-model="posicion">
+                    <option value="" disabled>Seleccione la Posición</option>
+                      <option value="Escolta">Escolta</option>
+                        <option value="Pivote">Pivote</option>
+                          <option value="Alero">Alero</option>
+                            <option value="Alero">Base</option>
+                  </select>
+                </div>
+            </div>
+            <!--<div class="col-md-6">
               <label for>posicion</label>
               <input type="text" class="form-control" v-model="posicion" />
-            </div>
+            </div>-->
 <!--
             <div class="col-md-6">
               <div class="form-group">
@@ -326,20 +338,31 @@
             <div class="col-md-6">
               <div class="form-group">
                 <label for>Jugador</label>
-                 <select class="form-control" v-model="idjugador">
-                
+                 <select class="form-control" v-model="idjugador">                
                 <input v-for="jugador in arrayPersona" :key="jugador.id" :value="jugador.id" v-text="jugador.nombre">
                  </select>
               </div>
             </div>
             <div class="col-md-6">
-              <label for>Numero de camisa</label>
+              <label for>Número de camisa</label>
               <input type="number" class="form-control" v-model="numero_camisa" />
             </div>
             <div class="col-md-6">
+            <div class="form-group row">
+              <label  for="text-input">Posición</label>                
+                  <select class="form-control" v-model="posicion">
+                    <option value="" disabled>Seleccione la Posición</option>
+                      <option value="Escolta">Escolta</option>
+                        <option value="Pivote">Pivote</option>
+                          <option value="Alero">Alero</option>
+                            <option value="Alero">Base</option>
+                  </select>
+                </div>
+            </div>
+           <!-- <div class="col-md-6">
               <label for>posicion</label>
               <input type="text" class="form-control" v-model="posicion" />
-            </div>
+            </div>-->
 <!--
             <div class="col-md-6">
               <div class="form-group">
@@ -473,14 +496,18 @@
                                         
                                     </div>
                                 </div>
-                                <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="text-input">posicion</label>
-                                    <div class="col-md-9">
-                                        <input type="text" v-model="posicion" class="form-control" placeholder="Descripcion de categoría">
-                                      
-                                    </div>
+                      <div class="form-group row">
+                              <label class="col-md-3 form-control-label" for="text-input">Posición</label>
+                                <div class="col-md-9">
+                                  <select class="form-control" v-model="posicion">
+                                    <option value="" disabled>Seleccione la Posición</option>
+                                      <option value="Escolta">Escolta</option>
+                                        <option value="Pivote">Pivote</option>
+                                          <option value="Alero">Alero</option>
+                                          <option value="Alero">Base</option>
+                                  </select>
                                 </div>
-                                
+                            </div>
                             </form>
                         </div>
                         <div class="modal-footer">
@@ -705,18 +732,18 @@ export default {
     },
      eliminarJugador(data){//Esta nos abrirá un alert de javascript y si aceptamos borrará la tarea que hemos elegido
                swal({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
+                title: '¿Estás seguro?',
+                text: "¡No podrás revertir esto!",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
+                confirmButtonText: 'Si, eliminarlo!'
                 }).then((result) => {
                 let me =this;
-                let id = data.id
+                let detalle_id = data.id
                 if (result.value) {                    
-                axios.delete('/inscripcionej/borrar/'+ id
+                axios.delete('/inscripcionej/borrar/'+ detalle_id
                     ).then(function (response) {
                       console.log(response);
                         //me.arrayDetalle();
@@ -845,8 +872,7 @@ export default {
         .catch(function(error) {
           console.log(error);
         });
-    },
-   
+    },   
     cerrarModal() {
       this.modal = 0;
       this.tituloModal = "";     
@@ -896,25 +922,26 @@ export default {
                     }
                 }
             },
-            eliminarEquipo(data,id){//Esta nos abrirá un alert de javascript y si aceptamos borrará la tarea que hemos elegido
+            eliminarEquipo(data){//Esta nos abrirá un alert de javascript y si aceptamos borrará la tarea que hemos elegido
                swal({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
+                title: '¿Estás seguro?',
+                text: "¡No podrás revertir esto!",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
+                confirmButtonText: 'Si, eliminarlo!'
                 }).then((result) => {
                 let me =this;
-                let id = data.id
+                let detalle_id = data.id
+                console.log(detalle_id);
                 if (result.value) {                    
-                axios.delete('/inscripcionej/borrar?id='+id
+                axios.delete('/inscripcionej/borrar/'+detalle_id
                     ).then(function (response) {
                         me.listarEquipo(1,'','nombre');
                          swal(
-                        'Deleted!',
-                        'Your file has been deleted.',
+                        'Eliminado!',
+                        'Tu jugador ha sido eliminado.',
                         'success'
                     )
                     })                                        
@@ -1058,5 +1085,9 @@ export default {
   .btnagregar {
     margin-top: 2rem;
   }
-}
+
+    .modal-body{
+        max-height: calc(100vh - 210px);
+        overflow-y: auto;
+    }}
 </style>

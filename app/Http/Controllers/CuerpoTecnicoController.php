@@ -102,8 +102,6 @@ class CuerpoTecnicoController extends Controller
             $persona->telefono = $request->telefono;
             $persona->email = $request->email;
             $persona->save();
- 
-             
             
             $cuerpoT->idtipo = $request->idtipo;
             $cuerpoT->save();

@@ -93,9 +93,7 @@ class EquipoController extends Controller
         return $pdf->stream('equipo.pdf');
     
     }
-
-
-    
+        
     public function update(Request $request)
     {
         if (!$request->ajax()) return redirect('/');

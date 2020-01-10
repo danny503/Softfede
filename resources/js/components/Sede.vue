@@ -89,15 +89,7 @@
     <!-- Main content -->
     <section class="content">
       <!-- SELECT2 EXAMPLE -->
-      <div
-        class="modal fade"
-        tabindex="-1"
-        :class="{'mostrar' : modal}"
-        role="dialog"
-        aria-labelledby="myModalLabel"
-        style="display: none;"
-        aria-hidden="true"
-      >
+      <div class="modal fade" tabindex="-1" :class="{'mostrar' : modal}" role="dialog" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
         <div class="modal-dialog modal-primary modal-lg" role="document">
           <div class="modal-content">
             <div class="modal-header">
@@ -118,12 +110,7 @@
                 <div class="form-group row">
                   <label class="col-md-3 form-control-label" for="email-input">Direccion</label>
                   <div class="col-md-9">
-                    <input
-                      type="text"
-                      v-model="direccion"
-                      class="form-control"
-                      placeholder="Escriba la dirección"
-                    />
+                    <input type="text" v-model="direccion" class="form-control" placeholder="Escriba la dirección"/>
                   </div>
                 </div>
                 <div v-show="errorSede" class="form-group row div-error">
@@ -187,8 +174,7 @@ export default {
 
       let me = this;
 
-      axios
-        .post("/sede/registrar", {
+      axios.post("/sede/registrar", {
           nombre: this.nombre,
           direccion: this.direccion
         })

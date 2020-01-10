@@ -115,11 +115,11 @@
         @foreach ($torneo as $t)
         <header>
             <div id="logo">
-                <img src="admin/img/logo2.png" alt="CompartiendoCodigo" id="imagen">
+                <img src="admin/img/baloncesto.jpg" alt="CompartiendoCodigo" id="imagen">
             </div>
             <div id="datos">
                 <p id="encabezado">
-                    <b>Compartiendo Códigos</b><br>Arequipa, Perú<br>Telefono:(+51)999999999<br>Email: compartiendocodigos@gmail.com
+                    <b>Sub federación de baloncesto</b><br>Chalatenango, Chalatenango<br>
                 </p>
             </div>          
         </header>

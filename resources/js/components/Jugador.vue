@@ -110,7 +110,7 @@
                         class="form-control"
                         id="exampleInputNombre"
                         v-model="email"
-                        placeholder="Ingrese su correo" />
+                        placeholder="nombre@dominio.com" />
                         <span v-if="errors.email" class="badge badge-danger">{{errors.email[0]}}</span>
                     </div>
                     <div class="form-group">
@@ -120,7 +120,7 @@
                         class="form-control"
                         id="exampleInputNombre"
                         v-model="estatura"
-                        placeholder="Ingrese su estatura"
+                        placeholder="Estatura en metros 1.75 mt"
                       />
                     </div>
                     <div class="form-group">
@@ -415,6 +415,11 @@ export default {
          .then(response=>{
            me.cerrarModal();
           me.listarPersona(1, "", "nombre");
+          swal(
+                "Registrado!",
+                "Se ha registrado con éxito.",
+                "success"
+              );
            //console.log(response.data);  
            }).catch(error => {
                     if (error.response.status == 422){
@@ -535,23 +540,24 @@ export default {
     },
     eliminarJugador(data){//Esta nos abrirá un alert de javascript y si aceptamos borrará la tarea que hemos elegido
                swal({
-                title: 'Are you sure?',
+                title: '¿Estas seguro?',
                 text: "You won't be able to revert this!",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
+                confirmButtonText: 'Si, eliminarlo!'
                 }).then((result) => {
                 let me =this;
                 let persona_id = data.id
+                console.log(persona_id);
                 if (result.value) {                    
                 axios.delete('/jugador/borrar/'+persona_id
                     ).then(function (response) {
                         me.listarPersona(1,'','nombre');
                          swal(
-                        'Deleted!',
-                        'Your file has been deleted.',
+                        'Eliminado!',
+                        'Tu registro ha sido eliminado.',
                         'success'
                     )
                     })                                        
@@ -649,5 +655,9 @@ export default {
 .text-error {
   color: red !important;
   font-weight: bold;
+}
+.modal-body{
+  max-height: calc(100vh - 210px);
+  overflow-y: auto;
 }
 </style>

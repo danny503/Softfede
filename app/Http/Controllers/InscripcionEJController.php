@@ -31,8 +31,7 @@ class InscripcionEJController extends Controller
        //$inscripcion->fecha_ingreso = $det['fecha_ingreso'];
         $inscripcion->numero_camisa = $request->numero_camisa;  
         $inscripcion->posicion = $request->posicion;          
-        $inscripcion->save();
-             
+        $inscripcion->save();             
     }
     
     public function show($id)
@@ -52,19 +51,23 @@ class InscripcionEJController extends Controller
 
         $inscripcion = InscripcionJE::findOrFail($request->id);
         $inscripcion->numero_camisa = $request->numero_camisa;  
-        $inscripcion->posicion = $request->posicion;          
+        $inscripcion->posicion = $request->posicion; 
         $inscripcion->save();
+        /*DB::table('inscripcionej')
+            ->where('id', 19)
+            ->update(['numero_camisa' => 12]);*/               
     }
 
-    public function destroy(Request $request, $id)
+    public function destroy(Request $request)
     {
-        $id = $request->id;
-        //$inscripcion = InscripcionJE::findOrFail($request->$id);
-        //$inscripcion->delete();
-
-       InscripcionJE::findOrFail($id)->delete();
+        //$id = $request->id;
+       /* $inscripcion = new InscripcionJE();
+        $inscripcion = InscripcionJE::findOrFail($request->$id);
+        $inscripcion->delete();*/
+        DB::table('inscripcionej')->where('id','=',$request->id)->delete();        
+       //InscripcionJE::findOrFail($id)->delete();
       // $inscripcion->delete();
-        DB::table('inscripcionej')->where('id', $id)->delete();                      
+       // DB::table('inscripcionej')->where('id', $id)->delete();                      
     }
     public function borrar(Request $request)
     {
