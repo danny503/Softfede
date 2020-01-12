@@ -15,7 +15,8 @@ class ProPartidoController extends Controller
 {
     public function index(Request $request)
     {
-       $eq = array();              
+       $eq = array();      
+              
        // $equipo = Equipo::select('nombre')->get();
        //$id = 9;//$request->idtorneo;
        $equipo = DB::table('equipos as a')
@@ -24,11 +25,13 @@ class ProPartidoController extends Controller
        ->select('a.id','c.nombre as torneo','a.nombre as nombre')
        ->where('c.id','=',$request->idtorneo)       
        ->get();
+       //$id = id; 
        //select a.id, c.nombre, a.nombre as equipo from equipos as a inner join detalle_torneos as b on a.id = b.idequipo 
        //inner join torneos as c on b.idtorneo = c.id where c.id = 1
       // $array = array();
        foreach($equipo as $t ){
-            $eq[] = $t->nombre;
+            $eq[] = $t ;
+            //$eq[]= $t->id;
             //$tor[] = $torneo->torneo;
          //->orderBy('equipos.id', 'desc')->paginate(6);
         // $tde: total de equipos
@@ -156,21 +159,26 @@ class ProPartidoController extends Controller
         }
         // return  $eq;         
         //$a[]= array('D','F');
-       // return json_encode($a);
+       return json_encode($a);
        return $a;
        // $eq[] = $array;               
     }
 
     public function store(Request $request)
     {
+        try{
+            DB::beginTransaction();
         if (!$request->ajax()) return redirect('/'); 
-        $pro_partido = new Programacion();
-        $pro_partido->equipo_a =  $request->equipo_a;
-        $pro_partido->equipo_b = $request->equipo_b;
-        $pro_partido->jornada = $request->jornada;  
-        $pro_partido->iddetalle_torneo = $request->iddetalle_torneo;          
-        $pro_partido->save();           
-       
+        $programacion = new Programacion();
+        $programacion->jornada = $request->jornada; 
+        $programacion->equipo_a =  $request->equipo_a;
+        $programacion->equipo_b = $request->equipo_b; 
+        $programacion->idtorneo = $request->idtorneo;          
+        $programacion->save();
+        DB::commit();
+    } catch (Exception $e){
+        DB:rollBack();
+        }               
     }
 
     public function proPdf(Request $request,$id){

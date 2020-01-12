@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Jugador;
 use App\Persona;
+use App\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 class JugadorController extends Controller
 {
@@ -17,9 +19,11 @@ class JugadorController extends Controller
         
         if ($buscar==''){
             $personas = Jugador::join('personas','jugadores.id','=','personas.id')
+            ->join('users','jugadores.idusuario','=','users.id')
             ->select('personas.id','personas.nombre','personas.fechanac',
             'personas.genero','personas.direccion','personas.telefono',
-            'personas.email','jugadores.estatura','jugadores.foto')
+            'personas.email','jugadores.idusuario','users.usuario as nombre_usuario','jugadores.estatura','jugadores.foto')
+            ->where('users.id','=',Auth::id())
             ->orderBy('personas.id', 'desc')->paginate(5);
         }
         else{
@@ -54,7 +58,9 @@ class JugadorController extends Controller
         
         if ($buscar==''){
             $personas = Jugador::join('personas','jugadores.id','=','personas.id')
+            ->join('users','jugadores.idusuario','=','users.id')
             ->select('personas.id','personas.nombre')
+            ->where('users.id','=',Auth::id())
             ->orderBy('personas.id', 'desc')->paginate(6);
         }
         else{
@@ -99,6 +105,7 @@ class JugadorController extends Controller
             $jugador->estatura = $request->estatura;
             $jugador->foto = $name;
             $jugador->id = $persona->id;
+            $jugador->idusuario = \Auth::user()->id;
             $jugador->save();
 
             DB::commit();

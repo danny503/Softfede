@@ -232,11 +232,11 @@
                 me.listarEquipo(page,buscar,criterio);
 
             },
-             obtenerImagen(e){
+             obtenerImagen(e){                 
                 let file = e.target.files[0];
                 //console.log(file);
                 this.logo = file;
-
+                //this.logo = '';
                 this.cargarImagen(file);
 
                 },
@@ -266,13 +266,16 @@
                 .then(response=>{
                 me.cerrarModal();
                 me.listarEquipo(1, "", "nombre");
-                //console.log(response.data);  
+                //console.log(response.data);
+                this.logo=[];
+                 
                 }).catch(error => {
                             if (error.response.status == 422){
                                 this.errors = error.response.data.errors
                             }
                             //console.log(error);
                         });
+                        this.logo=''; 
             },
          actualizarEquipo(){
             this.errors = []
@@ -294,10 +297,6 @@
                     );
                 //console.log(response.data);  
                 })
-            },
-            eliminar1(){
-                let me = this;
-                axios.delete('/equipo/delete')                                 
             },
            eliminarEquipo(data){//Esta nos abrirá un alert de javascript y si aceptamos borrará la tarea que hemos elegido
                swal({

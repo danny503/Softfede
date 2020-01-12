@@ -1,22 +1,21 @@
 <template>
-    <div class="content-wrapper">
-        <section class="content-header">            
-            <div class="card-header"> 
-                <i class="fa fa-align-justify"></i> x
+  <div class="content-wrapper">
+    <section class="content-header">            
+      <div class="card-header"> 
+        <i class="fa fa-align-justify"></i> x
           <button type="button" @click="abrirModal()" class="btn btn-primary">
             <i class="icon-plus"></i>&nbsp;Nuevo
           </button>
-          <div class="form-group row">
-                   <label class="col-md-3 form-control-label" for="text-input">Torneo</label>
-                        <div class="col-md-9">
-                           <select class="form-control" v-model="idtorneo">
-                            <option value="0" disabled>Seleccione</option>
-                            <option v-for="torneo in arrayTorneo" :key="torneo.id" :value="torneo.id" v-text="torneo.nombre"></option>
-                            </select>
-                            <span class="help-block"></span>
-                          </div>
-              </div>
-          </div>           
+      <div class="form-group row">
+        <label class="col-md-3 form-control-label" for="text-input">Torneo</label>
+          <div class="col-md-9">
+            <select class="form-control" v-model="idtorneo">
+              <option value="0" disabled>Seleccione</option>
+                <option v-for="torneo in arrayTorneo" :key="torneo.id" :value="torneo.id" v-text="torneo.nombre"></option>
+            </select>
+          </div>
+      </div>
+    </div>           
         <div class="card-header">  
             <div class="table-responsive">
                <form action="propartido" method="post" enctype="multipart/form-data">
@@ -41,12 +40,12 @@
                   <input type="text" v-model="propartido.jornada" class="form-control" disabled/>
                   </td>
                   <td>
-                  <input type="text" v-model="propartido.eq1" class="form-control" disabled />
+                  <input type="text" v-model="propartido.eq1" class="form-control"  disabled/>
                   </td>
                   <!--<td v-text="propartido.eq1"></td>-->
                   <td>Vs</td>
                   <td>
-                  <input type="text" v-model="propartido.eq2" class="form-control" disabled />
+                  <input type="text" v-model="propartido.eq2" class="form-control"  disabled/>
                   </td>
                   <!--<td v-text="propartido.eq2"></td>                                   -->
                 </tr>
@@ -68,8 +67,11 @@ export default {
     data(){
         return{
             propartido:'',
+            id:0,
             nombre:'',
             equipo_a:0,
+            eq1:0,
+            eq2:0,
             equipo_b:0,
             equipo:'',
             torneo:''           ,
@@ -91,10 +93,10 @@ export default {
               var l = x.length;
               for(var index=0; index < l; index++){
               // x[index][0] ,'vs', x[index][1];
-              me.arrayProPartido.push({'eq1': x[index][0],'eq2': x[index][1],'jornada': x[index][2]});
+              me.arrayProPartido.push({'eq1': x[index][0].nombre,'eq2': x[index][1].nombre,'jornada': x[index][2]});
               }
-          //console.log('ok');
-         // console.log(response.data);
+          //console.log('eq1');
+         console.log(response.data);
         })
         .catch(function(error) {
           // handle error
@@ -122,10 +124,10 @@ export default {
       
       let me = this;      
       axios.post('/propartido/registrar', {
-          'jornada': this.jornada,
-          'equipo_a': this.eq1,
-          'equipo_b': this.equ2,
-          'iddetalle_torneo':this.idtorneo,
+          'jornada': this.propartido.jornada,
+          'equipo_a': this.propartido.eq1,
+          'equipo_b': this.propartido.equ2,
+          'idtorneo':this.propartido.idtorneo,
           //'data' : this.arrayDetalle         
         })
         .then(function(response) {

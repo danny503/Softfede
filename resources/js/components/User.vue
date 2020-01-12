@@ -110,7 +110,7 @@
                                 <div class="form-group row">
                                     <label class="col-md-3 form-control-label" for="email-input">Teléfono</label>
                                     <div class="col-md-9">
-                                        <input type="text" class="form-control" data-inputmask="'mask': ['9999-9999 []', '+099 99 99 9999[9]-9999']" data-mask v-model="telefono">
+                                        <input type="text" class="form-control" data-inputmask="'mask': ['9999-9999 []', '+099 99 99 9999[9]-9999']" data-mask v-model="telefono" placeholder="Télefono">
                                         <span v-if="errors.telefono" class="badge badge-danger">{{errors.telefono[0]}}</span>
                                     </div>
                                 </div>
@@ -139,14 +139,28 @@
                                         <span v-if="errors.usuario" class="badge badge-danger">{{errors.usuario[0]}}</span>
                                     </div>
                                 </div>
-                                <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="email-input">Password (*)</label>
-                                    <div class="col-md-9">
-                                        <input type="password" v-model="password" class="form-control" placeholder="Password de acceso">
-                                        <span v-if="errors.password" class="badge badge-danger">{{errors.password[0]}}</span>
-                                    </div>
+                               <div class="form-group row">
+                            <label class="col-md-3 form-control-label">Password</label>
+                                 <div class="col-md-9">
+                            <input v-model="password"
+                                   type="password"
+                                   class="form-control"
+                                   v-bind:class="{ 'is-invalid': errorPassword }"
+                                   placeholder="Password">                              
+                            <div class="invalid-feedback">
+                                {{ errorPassword }}
+                            </div>
+                            </div>
+                        </div>
+                             <div class="form-group row">
+                                <label class="col-md-3 form-control-label">Contraseña de nuevo</label>
+                                <div class="col-md-9">
+                                <input v-model="passwordConf" type="password" class="form-control" v-bind:class="{ 'is-invalid': errorPasswordConf }" placeholder="Password Again">
+                                <div class="invalid-feedback">
+                                    {{ errorPasswordConf }}
                                 </div>
-
+                                </div>
+                            </div>                                
                                     <div v-show="errorPersona" class="form-group row div-error">
                                     <div class="text-center text-error">
                                         <div v-for="error in errorMostrarMsjPersona" :key="error" v-text="error">
@@ -170,8 +184,13 @@
         </section><!-- /.content -->
       </div><!-- /.content-wrapper -->
 </template>
+
 <script>
+//import Vue from 'vue';
+//import VeeValidate from 'vee-validate';
+//Vue.use(VeeValidate);
     export default {
+        
         data (){
             return{
                 persona_id : 0,              
@@ -183,6 +202,9 @@
                 email : '',
                 usuario : '',
                 password : '',
+                passwordConf: '',
+                errorPasswordConf: null,
+                errorPassword: null,
                 idrol : 0,
                 arrayPersona : [],
                 arrayRol : [],
@@ -268,10 +290,36 @@
                 me.listarPersona(page,buscar,criterio);
             },
             registrarPersona(){
-               if (this.validarPersona()){
+                this.errors = [];
+                let $this = this;
+
+                if (!this.password && this.password.length < 5)
+                {
+                    this.errorPassword = 'La contraseña debe tener al menos 5 caracteres de longitud.';
+                    this.errors.push(this.errorPassword);
+                }
+                else
+                {
+                    this.errorPassword = null;
+                }
+                if (!this.passwordConf && this.passwordConf.length < 5)
+                {
+                    this.errorPasswordConf = 'La confirmación de la contraseña debe tener al menos 5 caracteres de longitud.';
+                    this.errors.push(this.errorPasswordConf);
+                }
+                else if (this.password !== this.passwordConf)
+                {
+                    this.errorPasswordConf = 'Las contraseñas no coinciden.';
+                    this.errors.push(this.errorPasswordConf);
+                }
+                else
+                {
+                    this.errorPasswordConf = null;
+                }
+               if (!this.errors.length, this.validarPersona()){
                     return;
                 }
-               this.errors = []
+                this.errors = []
                 
                 let me = this;
 
@@ -291,6 +339,7 @@
                      this.email=''
                      this.usuario=''
                      this.password=''
+                     this.passwordConf=''
                     me.cerrarModal();
                     me.listarPersona(1,'','nombre');
 
@@ -361,6 +410,7 @@
                 this.email='';
                 this.usuario='';
                 this.password='';
+                this.passwordConf='';
                 this.idrol=0;
                 this.errorPersona=0;
 
@@ -383,6 +433,7 @@
                                 this.email='';
                                 this.usuario='';
                                 this.password='';
+                                this.passwordConf='';
                                 this.idrol=0;
                                 this.tipoAccion = 1;
                                 break;
@@ -493,6 +544,7 @@
         }
     }
 </script>
+
 <style>    
     .modal-content{
         width: 100% !important;

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateJugadoresTable extends Migration
+class JugadoresTable extends Migration
 {
     /**
      * Run the migrations.
@@ -16,9 +16,10 @@ class CreateJugadoresTable extends Migration
         Schema::create('jugadores', function (Blueprint $table) {
             $table->integer('id')->unsigned();
             $table->double('estatura')->nullable();
-            $table->string('foto',100)->nullable(); 
-             
+            $table->string('foto',100)->nullable();              
             $table->foreign('id')->references('id')->on('personas')->onDelete('cascade'); 
+            $table->integer('idusuario')->unsigned();
+            $table->foreign('idusuario')->references('id')->on('users');
         });
     }
 

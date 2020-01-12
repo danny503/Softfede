@@ -65,6 +65,7 @@ class UserController extends Controller
             //'usuario' => 'required|alpha',
            // 'usuario' => 'min:4|max:50|required',
             'password' => 'min:5|max:250|required',
+           // 'password' => ['required', 'string', 'min:8', 'confirmed'],
         
         ]);
 

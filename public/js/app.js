@@ -4099,7 +4099,8 @@ __webpack_require__.r(__webpack_exports__);
     obtenerImagen: function obtenerImagen(e) {
       var file = e.target.files[0]; //console.log(file);
 
-      this.logo = file;
+      this.logo = file; //this.logo = '';
+
       this.cargarImagen(file);
     },
     cargarImagen: function cargarImagen(file) {
@@ -4130,13 +4131,16 @@ __webpack_require__.r(__webpack_exports__);
       formData.append('logo', this.logo);
       axios.post("/equipo/registrar", formData).then(function (response) {
         me.cerrarModal();
-        me.listarEquipo(1, "", "nombre"); //console.log(response.data);  
+        me.listarEquipo(1, "", "nombre"); //console.log(response.data);
+
+        _this3.logo = [];
       })["catch"](function (error) {
         if (error.response.status == 422) {
           _this3.errors = error.response.data.errors;
         } //console.log(error);
 
       });
+      this.logo = '';
     },
     actualizarEquipo: function actualizarEquipo() {
       this.errors = [];
@@ -4151,10 +4155,6 @@ __webpack_require__.r(__webpack_exports__);
         me.listarEquipo(1, "", "nombre");
         swal("Actualizado!", "Se ha actualizado con éxito.", "success"); //console.log(response.data);  
       });
-    },
-    eliminar1: function eliminar1() {
-      var me = this;
-      axios["delete"]('/equipo/delete');
     },
     eliminarEquipo: function eliminarEquipo(data) {
       var _this4 = this;
@@ -4998,13 +4998,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       propartido: '',
+      id: 0,
       nombre: '',
       equipo_a: 0,
+      eq1: 0,
+      eq2: 0,
       equipo_b: 0,
       equipo: '',
       torneo: '',
@@ -5032,13 +5034,14 @@ __webpack_require__.r(__webpack_exports__);
         for (var index = 0; index < l; index++) {
           // x[index][0] ,'vs', x[index][1];
           me.arrayProPartido.push({
-            'eq1': x[index][0],
-            'eq2': x[index][1],
+            'eq1': x[index][0].nombre,
+            'eq2': x[index][1].nombre,
             'jornada': x[index][2]
           });
-        } //console.log('ok');
-        // console.log(response.data);
+        } //console.log('eq1');
 
+
+        console.log(response.data);
       })["catch"](function (error) {
         // handle error
         console.log(error);
@@ -5063,10 +5066,10 @@ __webpack_require__.r(__webpack_exports__);
       }*/
       var me = this;
       axios.post('/propartido/registrar', {
-        'jornada': this.jornada,
-        'equipo_a': this.eq1,
-        'equipo_b': this.equ2,
-        'iddetalle_torneo': this.idtorneo //'data' : this.arrayDetalle         
+        'jornada': this.propartido.jornada,
+        'equipo_a': this.propartido.eq1,
+        'equipo_b': this.propartido.equ2,
+        'idtorneo': this.propartido.idtorneo //'data' : this.arrayDetalle         
 
       }).then(function (response) {
         console.log(jornada); //me.listado=1;
@@ -7890,6 +7893,24 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//import Vue from 'vue';
+//import VeeValidate from 'vee-validate';
+//Vue.use(VeeValidate);
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -7902,6 +7923,9 @@ __webpack_require__.r(__webpack_exports__);
       email: '',
       usuario: '',
       password: '',
+      passwordConf: '',
+      errorPasswordConf: null,
+      errorPassword: null,
       idrol: 0,
       arrayPersona: [],
       arrayRol: [],
@@ -7988,7 +8012,27 @@ __webpack_require__.r(__webpack_exports__);
     registrarPersona: function registrarPersona() {
       var _this = this;
 
-      if (this.validarPersona()) {
+      this.errors = [];
+      var $this = this;
+
+      if (!this.password && this.password.length < 5) {
+        this.errorPassword = 'La contraseña debe tener al menos 5 caracteres de longitud.';
+        this.errors.push(this.errorPassword);
+      } else {
+        this.errorPassword = null;
+      }
+
+      if (!this.passwordConf && this.passwordConf.length < 5) {
+        this.errorPasswordConf = 'La confirmación de la contraseña debe tener al menos 5 caracteres de longitud.';
+        this.errors.push(this.errorPasswordConf);
+      } else if (this.password !== this.passwordConf) {
+        this.errorPasswordConf = 'Las contraseñas no coinciden.';
+        this.errors.push(this.errorPasswordConf);
+      } else {
+        this.errorPasswordConf = null;
+      }
+
+      if (!this.errors.length, this.validarPersona()) {
         return;
       }
 
@@ -8009,6 +8053,7 @@ __webpack_require__.r(__webpack_exports__);
         _this.email = '';
         _this.usuario = '';
         _this.password = '';
+        _this.passwordConf = '';
         me.cerrarModal();
         me.listarPersona(1, '', 'nombre');
       })["catch"](function (error) {
@@ -8073,6 +8118,7 @@ __webpack_require__.r(__webpack_exports__);
       this.email = '';
       this.usuario = '';
       this.password = '';
+      this.passwordConf = '';
       this.idrol = 0;
       this.errorPersona = 0;
     },
@@ -8096,6 +8142,7 @@ __webpack_require__.r(__webpack_exports__);
                   this.email = '';
                   this.usuario = '';
                   this.password = '';
+                  this.passwordConf = '';
                   this.idrol = 0;
                   this.tipoAccion = 1;
                   break;
@@ -50683,7 +50730,7 @@ var render = function() {
     _c("section", { staticClass: "content-header" }, [
       _c("div", { staticClass: "card-header" }, [
         _c("i", { staticClass: "fa fa-align-justify" }),
-        _vm._v(" x\n      "),
+        _vm._v(" x\n        "),
         _c(
           "button",
           {
@@ -50695,7 +50742,7 @@ var render = function() {
               }
             }
           },
-          [_c("i", { staticClass: "icon-plus" }), _vm._v(" Nuevo\n      ")]
+          [_c("i", { staticClass: "icon-plus" }), _vm._v(" Nuevo\n        ")]
         ),
         _vm._v(" "),
         _c("div", { staticClass: "form-group row" }, [
@@ -50753,9 +50800,7 @@ var render = function() {
                 })
               ],
               2
-            ),
-            _vm._v(" "),
-            _c("span", { staticClass: "help-block" })
+            )
           ])
         ])
       ]),
@@ -50898,7 +50943,7 @@ var render = function() {
                         },
                         [
                           _c("i", { staticClass: "fa fa-add" }),
-                          _vm._v(" Guardar\n            ")
+                          _vm._v(" Guardar\n              ")
                         ]
                       )
                     ],
@@ -55800,7 +55845,8 @@ var render = function() {
                               type: "text",
                               "data-inputmask":
                                 "'mask': ['9999-9999 []', '+099 99 99 9999[9]-9999']",
-                              "data-mask": ""
+                              "data-mask": "",
+                              placeholder: "Télefono"
                             },
                             domProps: { value: _vm.telefono },
                             on: {
@@ -55977,11 +56023,8 @@ var render = function() {
                       _c("div", { staticClass: "form-group row" }, [
                         _c(
                           "label",
-                          {
-                            staticClass: "col-md-3 form-control-label",
-                            attrs: { for: "email-input" }
-                          },
-                          [_vm._v("Password (*)")]
+                          { staticClass: "col-md-3 form-control-label" },
+                          [_vm._v("Password")]
                         ),
                         _vm._v(" "),
                         _c("div", { staticClass: "col-md-9" }, [
@@ -55995,9 +56038,10 @@ var render = function() {
                               }
                             ],
                             staticClass: "form-control",
+                            class: { "is-invalid": _vm.errorPassword },
                             attrs: {
                               type: "password",
-                              placeholder: "Password de acceso"
+                              placeholder: "Password"
                             },
                             domProps: { value: _vm.password },
                             on: {
@@ -56010,13 +56054,57 @@ var render = function() {
                             }
                           }),
                           _vm._v(" "),
-                          _vm.errors.password
-                            ? _c(
-                                "span",
-                                { staticClass: "badge badge-danger" },
-                                [_vm._v(_vm._s(_vm.errors.password[0]))]
-                              )
-                            : _vm._e()
+                          _c("div", { staticClass: "invalid-feedback" }, [
+                            _vm._v(
+                              "\n                            " +
+                                _vm._s(_vm.errorPassword) +
+                                "\n                        "
+                            )
+                          ])
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "form-group row" }, [
+                        _c(
+                          "label",
+                          { staticClass: "col-md-3 form-control-label" },
+                          [_vm._v("Contraseña de nuevo")]
+                        ),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "col-md-9" }, [
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.passwordConf,
+                                expression: "passwordConf"
+                              }
+                            ],
+                            staticClass: "form-control",
+                            class: { "is-invalid": _vm.errorPasswordConf },
+                            attrs: {
+                              type: "password",
+                              placeholder: "Password Again"
+                            },
+                            domProps: { value: _vm.passwordConf },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.passwordConf = $event.target.value
+                              }
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "invalid-feedback" }, [
+                            _vm._v(
+                              "\n                                " +
+                                _vm._s(_vm.errorPasswordConf) +
+                                "\n                            "
+                            )
+                          ])
                         ])
                       ]),
                       _vm._v(" "),
@@ -68285,24 +68373,9 @@ module.exports = function(module) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-/**
- * First we will load all of this project's JavaScript dependencies which
- * includes Vue and other libraries. It is a great starting point when
- * building robust, powerful web applications using Vue and Laravel.
- */
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
 window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
-/**
- * The following block of code may be used to automatically register your
- * Vue components. It will recursively scan this directory for the Vue
- * components and automatically register them with their "basename".
- *
- * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
- */
-// const files = require.context('./', true, /\.vue$/i);
-// files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
-
 Vue.component('equipo-component', __webpack_require__(/*! ./components/Equipo.vue */ "./resources/js/components/Equipo.vue")["default"]);
 Vue.component('categoria', __webpack_require__(/*! ./components/Categoria.vue */ "./resources/js/components/Categoria.vue")["default"]);
 Vue.component('sede-component', __webpack_require__(/*! ./components/Sede.vue */ "./resources/js/components/Sede.vue")["default"]);
