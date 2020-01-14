@@ -129,6 +129,9 @@ class TorneoController extends Controller
     public function update(Request $request)
     {
         if (!$request->ajax()) return redirect('/');
+       // $detalle = DetalleTorneo::findOrFail($request->id);
+       try{
+        DB::beginTransaction();
         $torneo = Torneo::findOrFail($request->id);
         $torneo->nombre = $request->nombre;
         $torneo->idcategoria = $request->idcategoria;
@@ -142,12 +145,17 @@ class TorneoController extends Controller
         
         foreach($inscripciones as $ep=>$det)
         {
-            $inscripcion = new DetalleTorneo();
+            //$inscripcion = new DetalleTorneo();
             $inscripcion = DetalleTorneo::findOrFail($request->id);
-            $inscripcion->idtorneo = $torneo->id;
-            $inscripcion->idequipo = $det['idequipo'];                    
+            $inscripcion->idtorneo = $request->id;
+            $inscripcion->idequipo = $request->id;                    
             $inscripcion->save();
         }
+        DB::commit();
+ 
+    } catch (Exception $e){
+        DB::rollBack();
+    }
     }
     public function desactivar(Request $request)
     {

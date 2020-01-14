@@ -66,13 +66,10 @@ class CuerpoTecnicoController extends Controller
             $persona->telefono = $request->telefono;
             $persona->email = $request->email;
             $persona->save();
- 
-             
+              
             $cuerpoT = new CuerpoTecnico();
             $cuerpoT->idtipo = $request->idtipo;
             $cuerpoT->idusuario = \Auth::user()->id;
-           // $cuerpoT->condicion = $request->condicion=1;
-
             $cuerpoT->id = $persona->id;
             $cuerpoT->save();
             DB::commit();
@@ -89,7 +86,6 @@ class CuerpoTecnicoController extends Controller
          
         try{
             DB::beginTransaction();
- 
             //Buscar primero el cuerpotec a modificar
             $cuerpoT = CuerpoTecnico::findOrFail($request->id);
  
@@ -105,7 +101,6 @@ class CuerpoTecnicoController extends Controller
             
             $cuerpoT->idtipo = $request->idtipo;
             $cuerpoT->save();
- 
  
             DB::commit();
  

@@ -741,9 +741,9 @@ export default {
                 confirmButtonText: 'Si, eliminarlo!'
                 }).then((result) => {
                 let me =this;
-                let detalle_id = data.id
+                let id = data.id
                 if (result.value) {                    
-                axios.delete('/inscripcionej/borrar/'+ detalle_id
+                axios.delete('/inscripcionej/borrar/'+ id
                     ).then(function (response) {
                       console.log(response);
                         //me.arrayDetalle();
@@ -936,7 +936,7 @@ export default {
                 let detalle_id = data.id
                 console.log(detalle_id);
                 if (result.value) {                    
-                axios.delete('/inscripcionej/borrar/'+detalle_id
+                axios.get('/inscripcionej/destroy/'+detalle_id
                     ).then(function (response) {
                         me.listarEquipo(1,'','nombre');
                          swal(

@@ -28,28 +28,27 @@
               <thead>
                 <tr>
                   <th class="text-center list-group-item-success">Jornadas</th>
-                  <th class="text-center list-group-item-success">Nombre</th>
+                  <th class="text-center list-group-item-success">Equipo A</th>
                   <th class="text-center list-group-item-success">Vs</th>
-                  <th class="text-center list-group-item-success">Nombre</th>                  
+                  <th class="text-center list-group-item-success">Equipo B</th>                  
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="propartido in arrayProPartido" :key="propartido.id">
-                  <!--<td v-text="propartido.jornada"></td>-->
-                  <td>
-                  <input type="text" v-model="propartido.jornada" class="form-control" disabled/>
-                  </td>
+                <tr v-for="propartido in arrayProPartido" :key="propartido.id">                  
+                  <td v-text="propartido.jornada"></td> 
+                 <!-- <td>
+                  <input type="text" v-model="jornada" class="form-control"/>
+                  </td>-->                            
                   <td>
                   <input type="text" v-model="propartido.eq1" class="form-control"  disabled/>
-                  </td>
+                  </td>                  
                   <!--<td v-text="propartido.eq1"></td>-->
                   <td>Vs</td>
                   <td>
                   <input type="text" v-model="propartido.eq2" class="form-control"  disabled/>
-                  </td>
+                  </td>                  
                   <!--<td v-text="propartido.eq2"></td>                                   -->
-                </tr>
-                   
+                </tr>                   
                 <button type="button" @click="registrarProPartido() " class="btn btn-primary">
                       <i class="fa fa-add"></i>&nbsp;Guardar
                 </button>
@@ -69,9 +68,12 @@ export default {
             propartido:'',
             id:0,
             nombre:'',
+            jornada:0,
             equipo_a:0,
             eq1:0,
             eq2:0,
+           // ideq1:0,
+            ideq2:0,
             equipo_b:0,
             equipo:'',
             torneo:''           ,
@@ -93,10 +95,11 @@ export default {
               var l = x.length;
               for(var index=0; index < l; index++){
               // x[index][0] ,'vs', x[index][1];
-              me.arrayProPartido.push({'eq1': x[index][0].nombre,'eq2': x[index][1].nombre,'jornada': x[index][2]});
+              me.arrayProPartido.push({'eq1': x[index][0].nombre,'eq2': x[index][1].nombre,'jornada': x[index][2],'ideq1': x[index][0].id,'ideq2': x[index][1].id});
+              //console.log('eq1');
               }
           //console.log('eq1');
-         console.log(response.data);
+         //console.log(response.data);
         })
         .catch(function(error) {
           // handle error
@@ -117,30 +120,20 @@ export default {
                     console.log(error);
                 });     
             },
-     registrarProPartido() {
-      /*if (this.validarTorneo()) {
-        return;
-      }*/
-      
-      let me = this;      
+     registrarProPartido() {       
+      let me = this;        
+      //console.log(this.arrayProPartido[0].ideq1);
       axios.post('/propartido/registrar', {
-          'jornada': this.propartido.jornada,
-          'equipo_a': this.propartido.eq1,
-          'equipo_b': this.propartido.equ2,
-          'idtorneo':this.propartido.idtorneo,
-          //'data' : this.arrayDetalle         
+          'idtorneo':this.idtorneo,              
+          'programaciones': this.arrayProPartido                
         })
-        .then(function(response) {
-          console.log(jornada);
+        .then(function(response) {         
           //me.listado=1;
           me.listarPartido();
-          me.jornada='';
-          me.equipo_a=0;
-          me.equipo='';
-          me.equipo_b=0;
-          me.equipo='';
-          me.iddetalle_torneo=0;
+          me.arrayProPartido=[];
+          me.idtorneo=0;
           me.torneo=''
+          //console.log(this.idtorneo);
           //me.arrayDetalle=[];
          // window.open('/torneo/pdf/'+ response.data.id);
         })

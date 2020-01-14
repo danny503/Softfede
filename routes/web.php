@@ -42,6 +42,8 @@ Route::group(['middleware' => ['Tecnico']], function () {
     
     Route::post('/inscripcionej/registrar','InscripcionEJController@store');
     Route::delete('/inscripcionej/borrar/{id}','InscripcionEJController@destroy');
+    Route::get('inscripcionej/destroy/{id}', ['as' => 'inscripcionej/destroy', 'uses'=>'InscripcionEJController@destroy']);
+
     Route::put('/inscripcionej/actualizar','InscripcionEJController@update');
 
     Route::get('/tipo','TipoController@index');

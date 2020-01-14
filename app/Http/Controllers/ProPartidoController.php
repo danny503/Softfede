@@ -30,7 +30,7 @@ class ProPartidoController extends Controller
        //inner join torneos as c on b.idtorneo = c.id where c.id = 1
       // $array = array();
        foreach($equipo as $t ){
-            $eq[] = $t ;
+            $eq[] = $t;
             //$eq[]= $t->id;
             //$tor[] = $torneo->torneo;
          //->orderBy('equipos.id', 'desc')->paginate(6);
@@ -166,15 +166,20 @@ class ProPartidoController extends Controller
 
     public function store(Request $request)
     {
+        if (!$request->ajax()) return redirect('/'); 
         try{
             DB::beginTransaction();
-        if (!$request->ajax()) return redirect('/'); 
-        $programacion = new Programacion();
-        $programacion->jornada = $request->jornada; 
-        $programacion->equipo_a =  $request->equipo_a;
-        $programacion->equipo_b = $request->equipo_b; 
-        $programacion->idtorneo = $request->idtorneo;          
-        $programacion->save();
+                            
+        $programaciones = $request->programaciones;
+
+        foreach($programaciones as $item=>$pro){
+            $programacion = new Programacion();
+            $programacion->jornada = $pro['jornada'];
+            $programacion->equipo_a = $pro['ideq1'];
+            $programacion->equipo_b = $pro['ideq2']; 
+            $programacion->idtorneo = $request->idtorneo;          
+            $programacion->save();     
+        }
         DB::commit();
     } catch (Exception $e){
         DB:rollBack();

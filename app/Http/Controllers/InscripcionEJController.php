@@ -58,12 +58,12 @@ class InscripcionEJController extends Controller
             ->update(['numero_camisa' => 12]);*/               
     }
 
-    public function destroy(Request $request)
+    public function destroy(Request $request, $id)
     {
         //$id = $request->id;
-       /* $inscripcion = new InscripcionJE();
-        $inscripcion = InscripcionJE::findOrFail($request->$id);
-        $inscripcion->delete();*/
+       // $inscripcion = new InscripcionJE();
+        //$inscripcion = InscripcionJE::findOrFail($request->$id);
+        //$inscripcion->delete();
         DB::table('inscripcionej')->where('id','=',$request->id)->delete();        
        //InscripcionJE::findOrFail($id)->delete();
       // $inscripcion->delete();

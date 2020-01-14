@@ -3556,10 +3556,10 @@ __webpack_require__.r(__webpack_exports__);
         confirmButtonText: 'Si, eliminarlo!'
       }).then(function (result) {
         var me = _this2;
-        var detalle_id = data.id;
+        var id = data.id;
 
         if (result.value) {
-          axios["delete"]('/inscripcionej/borrar/' + detalle_id).then(function (response) {
+          axios["delete"]('/inscripcionej/borrar/' + id).then(function (response) {
             console.log(response); //me.arrayDetalle();
 
             swal('Deleted!', 'Your file has been deleted.', 'success');
@@ -3743,7 +3743,7 @@ __webpack_require__.r(__webpack_exports__);
         console.log(detalle_id);
 
         if (result.value) {
-          axios["delete"]('/inscripcionej/borrar/' + detalle_id).then(function (response) {
+          axios.get('/inscripcionej/destroy/' + detalle_id).then(function (response) {
             me.listarEquipo(1, '', 'nombre');
             swal('Eliminado!', 'Tu jugador ha sido eliminado.', 'success');
           })["catch"](function (error) {
@@ -4997,16 +4997,18 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       propartido: '',
       id: 0,
       nombre: '',
+      jornada: 0,
       equipo_a: 0,
       eq1: 0,
       eq2: 0,
+      // ideq1:0,
+      ideq2: 0,
       equipo_b: 0,
       equipo: '',
       torneo: '',
@@ -5036,12 +5038,13 @@ __webpack_require__.r(__webpack_exports__);
           me.arrayProPartido.push({
             'eq1': x[index][0].nombre,
             'eq2': x[index][1].nombre,
-            'jornada': x[index][2]
-          });
+            'jornada': x[index][2],
+            'ideq1': x[index][0].id,
+            'ideq2': x[index][1].id
+          }); //console.log('eq1');
         } //console.log('eq1');
+        //console.log(response.data);
 
-
-        console.log(response.data);
       })["catch"](function (error) {
         // handle error
         console.log(error);
@@ -5061,27 +5064,18 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     registrarProPartido: function registrarProPartido() {
-      /*if (this.validarTorneo()) {
-        return;
-      }*/
-      var me = this;
+      var me = this; //console.log(this.arrayProPartido[0].ideq1);
+
       axios.post('/propartido/registrar', {
-        'jornada': this.propartido.jornada,
-        'equipo_a': this.propartido.eq1,
-        'equipo_b': this.propartido.equ2,
-        'idtorneo': this.propartido.idtorneo //'data' : this.arrayDetalle         
-
+        'idtorneo': this.idtorneo,
+        'programaciones': this.arrayProPartido
       }).then(function (response) {
-        console.log(jornada); //me.listado=1;
-
+        //me.listado=1;
         me.listarPartido();
-        me.jornada = '';
-        me.equipo_a = 0;
-        me.equipo = '';
-        me.equipo_b = 0;
-        me.equipo = '';
-        me.iddetalle_torneo = 0;
-        me.torneo = ''; //me.arrayDetalle=[];
+        me.arrayProPartido = [];
+        me.idtorneo = 0;
+        me.torneo = ''; //console.log(this.idtorneo);
+        //me.arrayDetalle=[];
         // window.open('/torneo/pdf/'+ response.data.id);
       })["catch"](function (error) {
         console.log(error);
@@ -6996,7 +6990,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -7005,6 +6998,7 @@ __webpack_require__.r(__webpack_exports__);
       idequipo: 0,
       idcategoria: 0,
       nombre_categoria: "",
+      categoria: "",
       nombre: "",
       logo: "",
       equipo: "",
@@ -7081,23 +7075,6 @@ __webpack_require__.r(__webpack_exports__);
         console.log(error);
       });
     },
-
-    /*listarEquipo(page, buscar, criterio) {
-      let me = this;
-      var url =
-        "/equipo?page=" + page + "&buscar=" + buscar + "&criterio=" + criterio;
-      axios
-        .get(url)
-        .then(function(response) {
-          var respuesta = response.data;
-          me.arrayEquipo = respuesta.equipos.data;
-          me.pagination = respuesta.pagination;
-        })
-        .catch(function(error) {
-          // handle error
-          console.log(error);
-        });
-    },*/
     selectRama: function selectRama() {
       var me = this;
       var url = "/rama/selectRama";
@@ -7114,7 +7091,7 @@ __webpack_require__.r(__webpack_exports__);
       var me = this;
       var url = "/categoria/selectCategoria";
       axios.get(url).then(function (response) {
-        console.log(response);
+        // console.log(response);
         var respuesta = response.data;
         me.arrayCategoria = respuesta.categorias;
       })["catch"](function (error) {
@@ -7155,21 +7132,27 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     actualizarTorneo: function actualizarTorneo() {
-      if (this.validarTorneo()) {
-        return;
-      }
+      var me = this; //console.log(response.data);
 
-      var me = this;
       axios.put("/torneo/actualizar", {
-        nombre: this.nombre,
-        idcategoria: this.idcategoria,
-        fecha_inicio: this.fecha_inicio,
-        fecha_fin: this.fecha_fin,
-        data: this.arrayDetalle,
-        id: this.idtorneo
+        'nombre': this.nombre,
+        'idcategoria': this.idcategoria,
+        'fecha_inicio': this.fecha_inicio,
+        'fecha_fin': this.fecha_fin,
+        'data': this.arrayDetalle,
+        'id': this.idtorneo
       }).then(function (response) {
         me.cerrarModal();
-        me.listarTorneo(1, "", "nombre");
+        me.listado = 1;
+        me.listarTorneo(1, '', 'nombre');
+        me.idcategoria = 0;
+        me.nombre = '';
+        me.fecha_inicio = '';
+        me.fecha_fin = '';
+        me.idequipo = 0;
+        me.equipo = '';
+        me.arrayDetalle = [];
+        console.log(response.data);
       })["catch"](function (error) {
         console.log(error);
       });
@@ -7184,36 +7167,6 @@ __webpack_require__.r(__webpack_exports__);
       return this.errorTorneo;
     },
     mostrarDetalle: function mostrarDetalle() {
-      /*this.selectCategoria();
-      switch (modelo) {
-        case "torneo": {
-          switch (accion) {
-            case "mostraDetalle": {
-              this.modal = 1;
-              this.tituloModal = "Registrar sede";
-              this.nombre = "";
-              this.idcategoria = 0;
-              this.fecha_inicio = "";
-              this.fecha_fin = "";
-              this.tipoAccion = 1;
-              break;
-            }
-            case "actualizar": {
-              //console.log(data);
-              this.modal = 1;
-              this.tituloModal = "Actualizar torneo";
-              this.tipoAccion = 2;
-              this.idtorneo = data["id"];
-              this.nombre = data["nombre"];
-              this.idcategoria = data["idcategoria"];
-              this.fecha_inicio = data["fecha_inicio"];
-              this.fecha_fin = data["fecha_fin"];
-              this.arrayDetalle = data["arrayDetalle"];
-              break;
-            }
-          }
-        }
-      }*/
       var me = this;
       this.listado = 0;
       me.idcategoria = 0;
@@ -7387,7 +7340,7 @@ __webpack_require__.r(__webpack_exports__);
 
       var url = '/torneo/obtenerDetalles?id=' + id;
       axios.get(url).then(function (response) {
-        console.log(response);
+        // console.log(response);
         var respuesta = response.data;
         me.arrayDetalle = respuesta.detalles;
       })["catch"](function (error) {
@@ -7899,18 +7852,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//import Vue from 'vue';
-//import VeeValidate from 'vee-validate';
-//Vue.use(VeeValidate);
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -7923,9 +7864,7 @@ __webpack_require__.r(__webpack_exports__);
       email: '',
       usuario: '',
       password: '',
-      passwordConf: '',
-      errorPasswordConf: null,
-      errorPassword: null,
+      password_confirmation: '',
       idrol: 0,
       arrayPersona: [],
       arrayRol: [],
@@ -8012,27 +7951,7 @@ __webpack_require__.r(__webpack_exports__);
     registrarPersona: function registrarPersona() {
       var _this = this;
 
-      this.errors = [];
-      var $this = this;
-
-      if (!this.password && this.password.length < 5) {
-        this.errorPassword = 'La contraseña debe tener al menos 5 caracteres de longitud.';
-        this.errors.push(this.errorPassword);
-      } else {
-        this.errorPassword = null;
-      }
-
-      if (!this.passwordConf && this.passwordConf.length < 5) {
-        this.errorPasswordConf = 'La confirmación de la contraseña debe tener al menos 5 caracteres de longitud.';
-        this.errors.push(this.errorPasswordConf);
-      } else if (this.password !== this.passwordConf) {
-        this.errorPasswordConf = 'Las contraseñas no coinciden.';
-        this.errors.push(this.errorPasswordConf);
-      } else {
-        this.errorPasswordConf = null;
-      }
-
-      if (!this.errors.length, this.validarPersona()) {
+      if (this.validarPersona()) {
         return;
       }
 
@@ -8047,13 +7966,14 @@ __webpack_require__.r(__webpack_exports__);
         'email': this.email,
         'usuario': this.usuario,
         'password': this.password,
+        'password_confirmation': this.password_confirmation,
         'idrol': this.idrol
       }).then(function (response) {
         _this.telefono = '';
         _this.email = '';
         _this.usuario = '';
         _this.password = '';
-        _this.passwordConf = '';
+        _this.password_confirmation = '';
         me.cerrarModal();
         me.listarPersona(1, '', 'nombre');
       })["catch"](function (error) {
@@ -8081,6 +8001,7 @@ __webpack_require__.r(__webpack_exports__);
         'email': this.email,
         'usuario': this.usuario,
         'password': this.password,
+        'password_confirmation': this.password_confirmation,
         'idrol': this.idrol,
         'id': this.persona_id
       }).then(function (response) {
@@ -8118,8 +8039,7 @@ __webpack_require__.r(__webpack_exports__);
       this.email = '';
       this.usuario = '';
       this.password = '';
-      this.passwordConf = '';
-      this.idrol = 0;
+      this.password_confirmation = '', this.idrol = 0;
       this.errorPersona = 0;
     },
     abrirModal: function abrirModal(modelo, accion) {
@@ -8142,7 +8062,7 @@ __webpack_require__.r(__webpack_exports__);
                   this.email = '';
                   this.usuario = '';
                   this.password = '';
-                  this.passwordConf = '';
+                  this.password_confirmation = '';
                   this.idrol = 0;
                   this.tipoAccion = 1;
                   break;
@@ -12904,7 +12824,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.modal-content{\n    width: 100% !important;\n    position: absolute !important;\n}\n.mostrar{\n    display: list-item !important;\n    opacity: 1 !important;\n    position: absolute !important;\n    background-color: #3c29297a !important;\n}\n.div-error{\n    display: flex;\n    justify-content: center;\n}\n.text-error{\n    color: red !important;\n    font-weight: bold;\n}\n.modal-body{\n    max-height: calc(100vh - 210px);\n    overflow-y: auto;\n}\n", ""]);
+exports.push([module.i, "\n.modal-content{\n    width: 100% !important;\n    position: absolute !important;\n}\n.mostrar{\n    display: list-item !important;\n    opacity: 1 !important;\n    position: absolute !important;\n    background-color: #3c29297a !important;\n}\n.div-error{\n    display: flex;\n    justify-content: center;\n}\n.text-error{\n    color: red !important;\n    font-weight: bold;\n}\n", ""]);
 
 // exports
 
@@ -50842,33 +50762,11 @@ var render = function() {
                     [
                       _vm._l(_vm.arrayProPartido, function(propartido) {
                         return _c("tr", { key: propartido.id }, [
-                          _c("td", [
-                            _c("input", {
-                              directives: [
-                                {
-                                  name: "model",
-                                  rawName: "v-model",
-                                  value: propartido.jornada,
-                                  expression: "propartido.jornada"
-                                }
-                              ],
-                              staticClass: "form-control",
-                              attrs: { type: "text", disabled: "" },
-                              domProps: { value: propartido.jornada },
-                              on: {
-                                input: function($event) {
-                                  if ($event.target.composing) {
-                                    return
-                                  }
-                                  _vm.$set(
-                                    propartido,
-                                    "jornada",
-                                    $event.target.value
-                                  )
-                                }
-                              }
-                            })
-                          ]),
+                          _c("td", {
+                            domProps: {
+                              textContent: _vm._s(propartido.jornada)
+                            }
+                          }),
                           _vm._v(" "),
                           _c("td", [
                             _c("input", {
@@ -50970,7 +50868,7 @@ var staticRenderFns = [
         ]),
         _vm._v(" "),
         _c("th", { staticClass: "text-center list-group-item-success" }, [
-          _vm._v("Nombre")
+          _vm._v("Equipo A")
         ]),
         _vm._v(" "),
         _c("th", { staticClass: "text-center list-group-item-success" }, [
@@ -50978,7 +50876,7 @@ var staticRenderFns = [
         ]),
         _vm._v(" "),
         _c("th", { staticClass: "text-center list-group-item-success" }, [
-          _vm._v("Nombre")
+          _vm._v("Equipo B")
         ])
       ])
     ])
@@ -54004,8 +53902,26 @@ var render = function() {
                         _c("div", { staticClass: "form-group" }, [
                           _c("label", [_vm._v("Fecha inicio")]),
                           _vm._v(" "),
-                          _c("p", {
-                            domProps: { textContent: _vm._s(_vm.fecha_inicio) }
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.fecha_inicio,
+                                expression: "fecha_inicio"
+                              }
+                            ],
+                            staticClass: "form-control",
+                            attrs: { type: "date" },
+                            domProps: { value: _vm.fecha_inicio },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.fecha_inicio = $event.target.value
+                              }
+                            }
                           })
                         ])
                       ]),
@@ -54014,8 +53930,26 @@ var render = function() {
                         _c("div", { staticClass: "form-group" }, [
                           _c("label", [_vm._v("Fecha fin")]),
                           _vm._v(" "),
-                          _c("p", {
-                            domProps: { textContent: _vm._s(_vm.fecha_fin) }
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.fecha_fin,
+                                expression: "fecha_fin"
+                              }
+                            ],
+                            staticClass: "form-control",
+                            attrs: { type: "date" },
+                            domProps: { value: _vm.fecha_fin },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.fecha_fin = $event.target.value
+                              }
+                            }
                           })
                         ])
                       ]),
@@ -54174,6 +54108,20 @@ var render = function() {
                             }
                           },
                           [_vm._v("Cerrar")]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "button",
+                          {
+                            staticClass: "btn btn-warning",
+                            attrs: { type: "button" },
+                            on: {
+                              click: function($event) {
+                                return _vm.actualizarTorneo()
+                              }
+                            }
+                          },
+                          [_vm._v("Editar")]
                         )
                       ])
                     ])
@@ -54426,7 +54374,7 @@ var render = function() {
                             attrs: { type: "button" },
                             on: {
                               click: function($event) {
-                                return _vm.actualizarTorneo()
+                                return _vm.actualizarTorneo1()
                               }
                             }
                           },
@@ -54694,7 +54642,7 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("ol", { staticClass: "breadcrumb" }, [
       _c("li", { staticClass: "breadcrumb-item" }, [
-        _c("a", { attrs: { href: "/" } }, [_vm._v("Escritorio")])
+        _c("a", { attrs: { href: "#" } }, [_vm._v("Escritorio")])
       ])
     ])
   },
@@ -55845,8 +55793,7 @@ var render = function() {
                               type: "text",
                               "data-inputmask":
                                 "'mask': ['9999-9999 []', '+099 99 99 9999[9]-9999']",
-                              "data-mask": "",
-                              placeholder: "Télefono"
+                              "data-mask": ""
                             },
                             domProps: { value: _vm.telefono },
                             on: {
@@ -56023,8 +55970,11 @@ var render = function() {
                       _c("div", { staticClass: "form-group row" }, [
                         _c(
                           "label",
-                          { staticClass: "col-md-3 form-control-label" },
-                          [_vm._v("Password")]
+                          {
+                            staticClass: "col-md-3 form-control-label",
+                            attrs: { for: "email-input" }
+                          },
+                          [_vm._v("Password (*)")]
                         ),
                         _vm._v(" "),
                         _c("div", { staticClass: "col-md-9" }, [
@@ -56038,10 +55988,9 @@ var render = function() {
                               }
                             ],
                             staticClass: "form-control",
-                            class: { "is-invalid": _vm.errorPassword },
                             attrs: {
                               type: "password",
-                              placeholder: "Password"
+                              placeholder: "Password de acceso"
                             },
                             domProps: { value: _vm.password },
                             on: {
@@ -56054,21 +56003,24 @@ var render = function() {
                             }
                           }),
                           _vm._v(" "),
-                          _c("div", { staticClass: "invalid-feedback" }, [
-                            _vm._v(
-                              "\n                            " +
-                                _vm._s(_vm.errorPassword) +
-                                "\n                        "
-                            )
-                          ])
+                          _vm.errors.password
+                            ? _c(
+                                "span",
+                                { staticClass: "badge badge-danger" },
+                                [_vm._v(_vm._s(_vm.errors.password[0]))]
+                              )
+                            : _vm._e()
                         ])
                       ]),
                       _vm._v(" "),
                       _c("div", { staticClass: "form-group row" }, [
                         _c(
                           "label",
-                          { staticClass: "col-md-3 form-control-label" },
-                          [_vm._v("Contraseña de nuevo")]
+                          {
+                            staticClass: "col-md-3 form-control-label",
+                            attrs: { for: "email-input" }
+                          },
+                          [_vm._v("Confirmar contraseña")]
                         ),
                         _vm._v(" "),
                         _c("div", { staticClass: "col-md-9" }, [
@@ -56077,34 +56029,37 @@ var render = function() {
                               {
                                 name: "model",
                                 rawName: "v-model",
-                                value: _vm.passwordConf,
-                                expression: "passwordConf"
+                                value: _vm.password_confirmation,
+                                expression: "password_confirmation"
                               }
                             ],
                             staticClass: "form-control",
-                            class: { "is-invalid": _vm.errorPasswordConf },
                             attrs: {
                               type: "password",
-                              placeholder: "Password Again"
+                              placeholder: "Confirmar contraseña"
                             },
-                            domProps: { value: _vm.passwordConf },
+                            domProps: { value: _vm.password_confirmation },
                             on: {
                               input: function($event) {
                                 if ($event.target.composing) {
                                   return
                                 }
-                                _vm.passwordConf = $event.target.value
+                                _vm.password_confirmation = $event.target.value
                               }
                             }
                           }),
                           _vm._v(" "),
-                          _c("div", { staticClass: "invalid-feedback" }, [
-                            _vm._v(
-                              "\n                                " +
-                                _vm._s(_vm.errorPasswordConf) +
-                                "\n                            "
-                            )
-                          ])
+                          _vm.errors.password_confirmation
+                            ? _c(
+                                "span",
+                                { staticClass: "badge badge-danger" },
+                                [
+                                  _vm._v(
+                                    _vm._s(_vm.errors.password_confirmation[0])
+                                  )
+                                ]
+                              )
+                            : _vm._e()
                         ])
                       ]),
                       _vm._v(" "),

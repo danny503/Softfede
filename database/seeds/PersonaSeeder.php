@@ -21,7 +21,7 @@ class PersonaSeeder extends Seeder
             'genero' => 'Masculino',
             'direccion' => 'Chalatenango',
             'telefono'=> '78963652',
-            'correo'=> 'angel@gmail.com',
+            'email'=> 'angel@gmail.com',
             ]);
     }
 }

@@ -105,7 +105,6 @@ class EquipoController extends Controller
             $file->move(public_path().'/images/',$name);
         } 
         $equipo = Equipo::findOrFail($request->id);
-   
         $equipo->idrama = $request->idrama;
         $equipo->nombre = $request->nombre;
         $equipo->logo = $name;

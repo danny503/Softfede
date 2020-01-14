@@ -15,13 +15,13 @@ class ProgramacionsTable extends Migration
     {
         Schema::create('programacions', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('jornada');
-            $table->integer('equipo_a')->unsigned();
-            $table->integer('equipo_b')->unsigned();
-            $table->foreign('equipo_a')->references('id')->on('detalle_torneos');
-            $table->foreign('equipo_b')->references('id')->on('detalle_torneos');        
-            $table->integer('idtorneo')->unsigned();
-            $table->foreign('idtorneo')->references('id')->on('detalle_torneos'); 
+            $table->integer('jornada')->nullable();
+            $table->integer('equipo_a')->unsigned()->nullable();
+            $table->integer('equipo_b')->unsigned()->nullable();
+            $table->foreign('equipo_a')->references('id')->on('detalle_torneos')->nullable();
+            $table->foreign('equipo_b')->references('id')->on('detalle_torneos')->nullable();        
+            $table->integer('idtorneo')->unsigned()->nullable();
+            $table->foreign('idtorneo')->references('id')->on('detalle_torneos')->nullable(); 
             $table->timestamps();
             });      
     }

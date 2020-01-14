@@ -6,7 +6,7 @@
     <!-- Breadcrumb -->
     <ol class="breadcrumb">
       <li class="breadcrumb-item">
-        <a href="/">Escritorio</a>
+        <a href="#">Escritorio</a>
       </li>
     </ol>
     <div class="container-fluid">
@@ -237,29 +237,29 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label>Fecha inicio</label>
-                                    <p v-text="fecha_inicio"></p>
+                                    <input type="date" class="form-control" v-model="fecha_inicio" />
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label>Fecha fin</label>
-                                    <p v-text="fecha_fin"></p>
+                                    <input type="date" class="form-control" v-model="fecha_fin" />
                                 </div>
                             </div>                               
-              <div class="col-md-8">
-                  <div class="form-group">
-                      <label for="">Equipos <span style="color:red;" v-show="idequipo==0">(Seleccione)</span></label>
-                      <div class="form-inline">
-                          <input type="text" class="form-control" v-model="idequipo" placeholder="Ingrese equipos">
-                          <button @click="abrirModal()" class="btn btn-primary">...</button>
-                      </div>
-                  </div>
-              </div>
-              <div class="col-md-2">
-                  <div class="form-group">
-                      <button @click="agregarDetalle()" class="btn btn-success form-control btnagregar"><i class="fa fa-plus"></i></button>
-                  </div>
-              </div>                     
+                        <div class="col-md-8">
+                          <div class="form-group">
+                            <label for="">Equipos <span style="color:red;" v-show="idequipo==0">(Seleccione)</span></label>
+                              <div class="form-inline">
+                                <input type="text" class="form-control" v-model="idequipo" placeholder="Ingrese equipos">
+                                  <button @click="abrirModal()" class="btn btn-primary">...</button>
+                              </div>
+                          </div>
+                        </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <button @click="agregarDetalle()" class="btn btn-success form-control btnagregar"><i class="fa fa-plus"></i></button>
+                        </div>
+                    </div>                     
                     </div>
                         <div class="form-group row border">
                             <div class="table-responsive col-md-12">
@@ -295,13 +295,12 @@
                         <div class="form-group row">
                             <div class="col-md-12">
                                 <button type="button" @click="ocultarDetalle()" class="btn btn-secondary">Cerrar</button>                                
-                                <!--<button type="button" @click="abrirModal('equipo','actualizar', equipo)" class="btn btn-warning">Editar</button>-->
+                                <button type="button" @click="actualizarTorneo()" class="btn btn-warning">Editar</button>
                             </div>
                         </div>
                     </div>
                     </template>
                     <!--Fin ver ingreso-->
-
                     <!--Ver detalle actuazalizar-->
                      <template v-else-if="listado==3">
                     <div class="card-body">
@@ -377,7 +376,7 @@
                          <div class="form-group row">
                             <div class="col-md-12">
                                 <button type="button" @click="ocultarDetalle2()" class="btn btn-secondary">Cerrar</button>
-                                <button type="button" @click="actualizarTorneo()" class="btn btn-primary">Guardar cambios</button>                                
+                                <button type="button" @click="actualizarTorneo1()" class="btn btn-primary">Guardar cambios</button>                                
                             </div>
                         </div>
                     </div>
@@ -457,6 +456,7 @@ export default {
       idequipo:0,
       idcategoria:0,
       nombre_categoria: "",
+      categoria:"",
       nombre: "",
       logo: "",
       equipo: "",
@@ -533,22 +533,6 @@ export default {
           console.log(error);
         });
     },
-    /*listarEquipo(page, buscar, criterio) {
-      let me = this;
-      var url =
-        "/equipo?page=" + page + "&buscar=" + buscar + "&criterio=" + criterio;
-      axios
-        .get(url)
-        .then(function(response) {
-          var respuesta = response.data;
-          me.arrayEquipo = respuesta.equipos.data;
-          me.pagination = respuesta.pagination;
-        })
-        .catch(function(error) {
-          // handle error
-          console.log(error);
-        });
-    },*/
     selectRama() {
       let me = this;
       var url = "/rama/selectRama";
@@ -564,13 +548,13 @@ export default {
           console.log(error);
         });
     },
-       selectCategoria() {
+    selectCategoria() {
       let me = this;
       var url = "/categoria/selectCategoria";
       axios
         .get(url)
         .then(function(response) {
-           console.log(response);
+          // console.log(response);
           var respuesta = response.data;
           me.arrayCategoria = respuesta.categorias;
         })
@@ -595,8 +579,7 @@ export default {
           'idcategoria': this.idcategoria,
           'fecha_inicio': this.fecha_inicio,
           'fecha_fin': this.fecha_fin,
-          'data' : this.arrayDetalle
-         
+          'data' : this.arrayDetalle         
         })
         .then(function(response) {
           me.listado=1;
@@ -614,22 +597,29 @@ export default {
           console.log(error);
         });
     },
-    actualizarTorneo() {
-      if (this.validarTorneo()) {
-        return;
-      }
+    actualizarTorneo() {     
       let me = this;
-      axios.put("/torneo/actualizar", {
-          nombre: this.nombre,
-          idcategoria: this.idcategoria,
-          fecha_inicio: this.fecha_inicio,
-          fecha_fin: this.fecha_fin,
-          data: this.arrayDetalle,
-          id: this.idtorneo
+      //console.log(response.data);
+      axios.put("/torneo/actualizar",{          
+          'nombre': this.nombre,
+          'idcategoria': this.idcategoria,
+          'fecha_inicio': this.fecha_inicio,
+          'fecha_fin': this.fecha_fin,
+          'data': this.arrayDetalle,
+          'id': this.idtorneo          
         })
         .then(function(response) {
           me.cerrarModal();
-          me.listarTorneo(1, "", "nombre");
+          me.listado=1;
+          me.listarTorneo(1, '', 'nombre');
+          me.idcategoria=0;
+          me.nombre='';
+          me.fecha_inicio='';
+          me.fecha_fin='';
+          me.idequipo=0;
+          me.equipo='';
+          me.arrayDetalle=[];
+          console.log(response.data);
         })
         .catch(function(error) {
           console.log(error);
@@ -647,36 +637,7 @@ export default {
       return this.errorTorneo;
     },
     mostrarDetalle(){
-      /*this.selectCategoria();
-      switch (modelo) {
-        case "torneo": {
-          switch (accion) {
-            case "mostraDetalle": {
-              this.modal = 1;
-              this.tituloModal = "Registrar sede";
-              this.nombre = "";
-              this.idcategoria = 0;
-              this.fecha_inicio = "";
-              this.fecha_fin = "";
-              this.tipoAccion = 1;
-              break;
-            }
-            case "actualizar": {
-              //console.log(data);
-              this.modal = 1;
-              this.tituloModal = "Actualizar torneo";
-              this.tipoAccion = 2;
-              this.idtorneo = data["id"];
-              this.nombre = data["nombre"];
-              this.idcategoria = data["idcategoria"];
-              this.fecha_inicio = data["fecha_inicio"];
-              this.fecha_fin = data["fecha_fin"];
-              this.arrayDetalle = data["arrayDetalle"];
-              break;
-            }
-          }
-        }
-      }*/
+     
       let me = this;
       this.listado=0;
           me.idcategoria=0;
@@ -843,7 +804,6 @@ export default {
     verTorneo(id){
                 let me=this;
                 me.listado=2;
-
                 //Obtener datos del ingreso
                 var arrayTorneoT=[];
                 var url= '/torneo/obtenerCabecera?id=' + id;
@@ -860,12 +820,11 @@ export default {
                 .catch(function (error) {
                     console.log(error);
                 });
-
                 //obtener datos de los detalles
                  var url= '/torneo/obtenerDetalles?id=' + id;
 
                 axios.get(url).then(function (response) {
-                    console.log(response);
+                   // console.log(response);
                     var respuesta= response.data;
                     me.arrayDetalle = respuesta.detalles;
 

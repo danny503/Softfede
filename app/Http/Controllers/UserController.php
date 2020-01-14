@@ -49,7 +49,7 @@ class UserController extends Controller
             ],
             'personas' => $personas
         ];
-    }
+    }    
  
     public function store(Request $request)
     {
@@ -62,14 +62,11 @@ class UserController extends Controller
             //{9} $ /',
             'telefono'=> 'max:8|min:8|regex:([0-9])',
             'usuario' => 'min:4|max:250|required|unique:users',
-            //'usuario' => 'required|alpha',
+            'password' => 'min:5|required_with:password_confirmation|same:password_confirmation',
+            'password_confirmation' => 'min:5',
            // 'usuario' => 'min:4|max:50|required',
-            'password' => 'min:5|max:250|required',
-           // 'password' => ['required', 'string', 'min:8', 'confirmed'],
-        
-        ]);
-
-         
+            //'password' => 'min:5|max:250|required',        
+        ]);         
         try{
             DB::beginTransaction();
             $persona = new Persona();
@@ -91,15 +88,11 @@ class UserController extends Controller
  
             $user->save();
            // return "Usuario Creado";
- 
             DB::commit();
  
         } catch (Exception $e){
             DB::rollBack();
-        }
- 
-         
-         
+        }                  
     }
  
     public function update(Request $request)
@@ -111,19 +104,15 @@ class UserController extends Controller
             //'usuario' => 'required|usuario|unique:users',
             //'usuario' => 'required|alpha',
             'usuario' => 'min:4|max:50|required',
-            'password' => 'min:5|max:250|required',
-            
-          
-
+            'password' => 'min:5|required_with:password_confirmation|same:password_confirmation',
+            'password_confirmation' => 'min:5',
         ]);
         if (!$request->ajax()) return redirect('/');
          
         try{
-            DB::beginTransaction();
- 
-            //Buscar primero el proveedor a modificar
+            DB::beginTransaction(); 
+            //Buscar primero el usuario a modificar
             $user = User::findOrFail($request->id);
- 
             $persona = Persona::findOrFail($user->id);
  
             $persona->nombre = $request->nombre;
@@ -133,14 +122,12 @@ class UserController extends Controller
             $persona->telefono = $request->telefono;
             $persona->email = $request->email;
             $persona->save();
- 
-             
+              
             $user->usuario = $request->usuario;
             $user->password = bcrypt( $request->password);
             $user->estado = '1';
             $user->idrol = $request->idrol;
             $user->save();
- 
  
             DB::commit();
  
