@@ -18,8 +18,8 @@ class PuntajePartidosTable extends Migration
             $table->integer('punto_a');
             $table->integer('punto_b');
             $table->string('ganador');
-            //$table->integer('idpro_partido')->unsigned();
-            //$table->foreign('idpro_partido')->references('id')->on('pro_partidos');
+            $table->integer('idpro_partido')->unsigned();
+            $table->foreign('idpro_partido')->references('id')->on('programacions');
         });
     }
 

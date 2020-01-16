@@ -115,14 +115,18 @@ Route::group(['middleware' => ['Administrador']], function () {
     Route::get('/torneo/obtenerDetalles', 'TorneoController@obtenerDetalles');
     Route::get('/torneo/pdf/{id}', 'TorneoController@pdf')->name('torneo_pdf');
     Route::get('/torneo/selectTorneo','TorneoController@selectTorneo');
+    Route::post('/torneo/insertarEquipo', 'TorneoController@insertarEquipo');
 
     Route::post('/detalletorneo/registrar','TorneoDetalleController@store');
 
-    Route::get('/propartido/{id}','ProPartidoController@index')->name('propartido');
     Route::get('/propartido','ProPartidoController@index');
-    Route::get('/propartido/pdf/{id}', 'ProPartidoController@proPdf')->name('propartido');
     Route::post('/propartido/registrar','ProPartidoController@store');
-    
+    Route::get('/propartido/programacionPdf/{idtorneo}', 'ProPartidoController@programacionPdf')->name('programacion_pdf');   
+    Route::get('/propartido/verprogramacion/{idtorneo}', 'ProPartidoController@verProgramacion');
+    Route::get('/propartido/selectPro','ProPartidoController@selectPro');
+
+    Route::get('/programacion/selecPro','ProgramacionController@selectPro');
+
     Route::get('/arbitro','ArbitroController@index');
     Route::post('/arbitro/registrar','ArbitroController@store');
     Route::put('/arbitro/actualizar','ArbitroController@update');

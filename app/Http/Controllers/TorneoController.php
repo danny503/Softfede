@@ -181,5 +181,26 @@ class TorneoController extends Controller
         return ['torneos' => $torneo];
 
     }   
+    public function insertarEquipo(Request $request){
+       /*DB::table('detalle_torneos')
+       ->insert([
+       'idequipo' => $request->idequipo,
+       'idtorneo' => $request->idtorneo,
+       ]);*/
+       $torneo = new Torneo();       
+       $inscripciones = $request->data;
+       foreach($inscripciones as $ep=>$det)
+       {           
+           $inscripcion = new DetalleTorneo();
+           //$inscripcion->idtorneo = $det['idtorneo'];
+           $inscripcion->idtorneo = 7;// $torneo->id;           
+           $inscripcion->idequipo = 4;//$det['idequipo'];
+          // $inscripcion->fecha_ingreso = $det['fecha_ingreso'];         
+           $inscripcion->save();
+       }
+        //DB::insert( 'INSERT INTO detalle_torneos (idequipo, idtorneo) VALUES ( $request.idequipo, $request.idtorneo)');
+       
+    }
+    
     
 }

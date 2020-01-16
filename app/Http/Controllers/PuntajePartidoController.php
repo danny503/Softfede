@@ -3,13 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-//use Illuminate\Support\Facades\DB;
-use App\ProPartido;
+use Illuminate\Support\Facades\DB;
+use App\Programacion;
 use App\PuntajePartido;
 use App\Jugador;
+use App\Equipo;
 use App\DetallePartido;
-
-use DB;
+//use DB;
 
 class PuntajePartidoController extends Controller
 {
@@ -22,31 +22,26 @@ class PuntajePartidoController extends Controller
         $criterio = $request->criterio;
 
         if($buscar==''){
-            $puntaje_partido = DB::table('puntaje_partido AS a')
-            ->join('pro_partidos AS b','a.idpro_partido','=','b.id')
+            $puntaje_partido = DB::table('puntaje_partidos AS a')
+            ->join('programacions AS b','a.idpro_partido','=','b.id')
             ->join('equipos AS c','b.equipo_a','=','c.id')
             ->join('equipos AS d','b.equipo_b','=','d.id')
             ->select('a.punto_a', 'a.punto_b','a.ganador', 'c.nombre', 'd.nombre')
-            ->orderBy('a.id', 'desc')->paginate(5);
-           // 
-            
-
+            ->orderBy('a.id', 'desc');        
         }
         else{
-            $puntaje_partido = DB::table('puntaje_partido AS a')
+            $puntaje_partido = DB::table('puntaje_partidos AS a')
              ->join('pro_partidos AS b','a.idpro_partido','=','b.id')
             ->join('equipos AS c','b.equipo_a','=','c.id')
             ->join('equipos AS d','b.equipo_b','=','d.id')
-            ->select('a.punto_a,a.punto_b, a.ganador c.nombre, d.nombre')
-            ->where('a.'.$criterio, 'like', '%'. $buscar . '%')
-            ->orderBy('a.id', 'desc')->paginate(5); 
+            ->select('a.punto_a','a.punto_b', 'a.ganador',' c.nombre', 'd.nombre')
+            //->where('a.'.$criterio, 'like', '%'. $buscar . '%')
+            ->orderBy('a.id', 'desc'); 
 
         }
       /*  $puntaje_partido = PuntajePartido::all();
         return $puntaje_partido;*/
-      //  return response()->json($puntaje_partido, 200);
-        
-       
+      //  return response()->json($puntaje_partido, 200);               
     }
    
     public function store(Request $request)
@@ -56,7 +51,7 @@ class PuntajePartidoController extends Controller
         try{
             DB::beginTransaction();
         $puntaje_partido = new PuntajePartido();
-        //$puntaje_partido->idpro_partido = $request->idpro_partido;
+        $puntaje_partido->idpro_partido = $request->idpro_partido;
         $puntaje_partido->punto_a = $request->punto_a;
         $puntaje_partido->punto_b = $request->punto_b;
         $puntaje_partido->ganador = $request->ganador;

@@ -35,12 +35,8 @@
                   class="form-control"
                   placeholder="Texto a buscar"
                 />
-                <button
-                  type="submit"
-                  @click="listarPuntaje(1,buscar,criterio)"
-                  class="btn btn-primary"
-                >
-                  <i class="fa fa-search"></i> Buscar
+                <button type="submit" @click="listarPuntaje(1,buscar,criterio)" class="btn btn-primary">
+                  <i class="fa fa-search"></i>Buscar
                 </button>
               </div>
             </div>
@@ -112,11 +108,19 @@
         <template v-else-if="listado==0">
         <div class="card-body">
           <div class="form-group row border">
+          <div class="form-group row">
+                  <label class="col-md-3 form-control-label" for="text-input">N° Partido</label>
+                    <div class="col-md-9">
+                      <select class="form-control" v-model="idpro_partido">
+                        <option value="0" disabled>Seleccione</option>
+                          <option v-for="pro in arrayPro" :key="pro.id" :value="pro.id" v-text="pro.id"></option>
+                      </select>
+                    </div>
+                </div>          
             <div class="col-md-3">
               <label for>Puntaje Equipo A</label>
               <input type="number" class="form-control" v-model="punto_a" />
             </div>
-
              <div class="col-md-3">
               <label for>Puntaje Equipo B</label>
               <input type="text" class="form-control" v-model="punto_b" />
@@ -176,10 +180,10 @@
                               </td>
                               <td v-text="detalle.persona" ></td>
                                    <td>
-                                                <input v-model="detalle.puntaje" type="number" value="3" class="form-control">
-                                            </td>
-                                            <td>
-                                                <input v-model="detalle.falta" type="number" value="2" class="form-control">
+                                <input v-model="detalle.puntaje" type="number" value="3" class="form-control">
+                                    </td>
+                                    <td>
+                                   <input v-model="detalle.falta" type="number" value="2" class="form-control">
                               </td>                                                                                                                                                          
                           </tr>                          
                     </tbody>
@@ -343,9 +347,11 @@ export default {
       ganador:"",
       fecha_fin:"",      
       arrayJugador: [],
+        arrayPro: [],
       arrayPuntaje: [],
       arrayDetalle: [],
       arrayPersona:[],
+      arrayTorneo:[],
       listado:1,
       modal: 0,
       tituloModal: "",
@@ -398,21 +404,31 @@ export default {
     }
   },
   methods: {
-    listarPuntaje(page, buscar, criterio){
+    listarPuntaje(){
         let me = this;
-      var url =
-        '/puntaje?page=' + page + '&buscar='+ buscar + '&criterio='+ criterio;
-      axios.get(url)
-        .then(function(response) {
-          var respuesta = response.data;
+        axios.get('/puntaje').then(function(response){
+          var respuesta= response.data;
           me.arrayPuntaje = respuesta.puntajes.data;
           me.pagination = respuesta.pagination;
-        })
+        })        
         .catch(function(error) {
           // handle error
           console.log(error);
-        });
+        });      
     },
+        selectTorneo(){
+      let me=this;
+                var url = '/torneo/selectTorneo';
+                axios.get(url).then(function (response) {
+                   // consolo.log(response);
+                    var respuesta= response.data;
+                    me.arrayTorneo = respuesta.torneos;                    
+                })
+                .catch(function (error) {
+                    // handle error
+                    console.log(error);
+                });     
+            },
     cambiarPagina(page, buscar, criterio) {
       let me = this;
       //actualiza la pagina actual
@@ -426,6 +442,7 @@ export default {
       let me = this;
 
       axios.post('/puntaje/registrar', {
+        'idpro_partido': this.idpro_partido,
           'punto_a': this.punto_a,
           'punto_b': this.punto_b,
           'ganador': this.ganador,          
@@ -556,38 +573,6 @@ export default {
           this.tituloModal = "Seleccion uno a varios jugadores";  
           //this.selectCategoria();         
     },
-    verTorneoActualizar(id){
-                let me=this;
-                me.listado=3;
-
-                //Obtener datos del ingreso
-                var arrayTorneoT=[];
-                var url= '/torneo/obtenerCabecera?id=' + id;
-
-                axios.get(url).then(function (response) {
-                    var respuesta= response.data;
-                    arrayTorneoT = respuesta.torneo;
-                    
-                    me.nombre = arrayTorneoT[0]['nombre'];
-                    me.categoria = arrayTorneoT[0]['categoria'];
-                    me.fecha_inicio=arrayTorneoT[0]['fecha_inicio'];
-                    me.fecha_fin=arrayTorneoT[0]['fecha_fin'];                   
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
-                //obtener datos de los detalles
-                 var url= '/torneo/obtenerDetalles?id=' + id;
-                axios.get(url).then(function (response) {
-                   // console.log(response);
-                    var respuesta= response.data;
-                    me.arrayDetalle = respuesta.detalles;
-
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
-            },
             pdfTorneo(id){
               window.open('/torneo/pdf/'+ id ,'_blank');
             },
@@ -624,6 +609,19 @@ export default {
                 .catch(function (error) {
                     console.log(error);
                 });
+            },
+            selectPro(){
+                 let me=this;
+                var url = '/propartido/selectPro';
+                axios.get(url).then(function (response) {
+                    console.log(response);
+                    var respuesta= response.data;
+                    me.arrayPro = respuesta.programacions;
+                })
+                .catch(function (error) {
+                    // handle error
+                    console.log(error);
+                });     
             },
              pdfPuntaje(id){
               window.open('/puntaje/pdf/'+ id ,'_blank');
@@ -708,9 +706,9 @@ export default {
     }
   },
   mounted() {
-    this.listarPuntaje(1, this.buscar, this.criterio);
+    this.listarPuntaje();
     //this.listarPersona(1, this.buscar, this.criterio);
-    //this.selectCategoria();
+    this.selectPro();
   }
 };
 </script>

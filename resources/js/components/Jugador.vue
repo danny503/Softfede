@@ -591,6 +591,7 @@ export default {
       this.email = "";
       this.estatura = "";
       this.foto = ""; 
+      this.imagenMiniatura="";
       this.errorPersona = 0;
     },
     abrirModal(modelo, accion, data = []) {
@@ -608,6 +609,7 @@ export default {
               this.email = "";
               this.estatura = "";
               this.foto = "";
+              this.imagenMiniatura="";
               this.tipoAccion = 1;
               break;
             }

@@ -295,12 +295,12 @@
                         <div class="form-group row">
                             <div class="col-md-12">
                                 <button type="button" @click="ocultarDetalle()" class="btn btn-secondary">Cerrar</button>                                
-                                <button type="button" @click="actualizarTorneo()" class="btn btn-warning">Editar</button>
+                                <button type="button" @click="insertEquipo()" class="btn btn-warning">Editar</button>
                             </div>
                         </div>
                     </div>
                     </template>
-                    <!--Fin ver ingreso-->
+                    <!--Fin ver torneo-->
                     <!--Ver detalle actuazalizar-->
                      <template v-else-if="listado==3">
                     <div class="card-body">
@@ -597,6 +597,20 @@ export default {
           console.log(error);
         });
     },
+    insertEquipo(){
+      let me = this;
+      console.log(this.idequipo, this.idtorneo)
+      axios.post('/torneo/insertarEquipo',{
+        'idequipo': this.idequipo,
+        'idtorneo': this.idtorneo
+      })
+        .then(function(response){
+          me.listarTorneo(1, '', 'nombre');
+        })
+        .catch(function(error){
+
+        });              
+    },    
     actualizarTorneo() {     
       let me = this;
       //console.log(response.data);

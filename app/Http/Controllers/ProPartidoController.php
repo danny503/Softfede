@@ -152,7 +152,7 @@ class ProPartidoController extends Controller
                     }else{
                         //mostrar($eq[$pdp[$i][0]]  . " descansa","p");
                             //$a[]= array($eq[$pdp[$i][0]] . $eq[$pdp[$i][0]]);
-                                $a[]= array($eq[$pdp[$i][0]] , "Este equipo descansa",$j);
+                                $a[]= array($eq[$pdp[$i][0]] , "",$j);
                     }
                 }
             }
@@ -166,7 +166,7 @@ class ProPartidoController extends Controller
 
     public function store(Request $request)
     {
-        if (!$request->ajax()) return redirect('/'); 
+        //if (!$request->ajax()) return redirect('/'); 
         try{
             DB::beginTransaction();
                             
@@ -176,7 +176,11 @@ class ProPartidoController extends Controller
             $programacion = new Programacion();
             $programacion->jornada = $pro['jornada'];
             $programacion->equipo_a = $pro['ideq1'];
-            $programacion->equipo_b = $pro['ideq2']; 
+            $programacion->equipo_b = $pro['ideq2'];
+            /*if ($programacion->equipo_b = $pro['ideq2'])
+            $pro['ideq2'];
+            else
+                $pro['ideq2']== NULL;*/
             $programacion->idtorneo = $request->idtorneo;          
             $programacion->save();     
         }
@@ -333,7 +337,45 @@ class ProPartidoController extends Controller
         $pdf = \PDF::loadView('pdf.propartido',['eq'=>$eq]);
         return $pdf->stream('programacion.pdf');
     }
+    public function selectPro(Request $request){
+        //if (!$request->ajax()) return redirect('/');
+        /*$proPartido = Programacion:://where('condicion','=','1')
+        select('a.id')->orderBy('id','asc')->get();
+        return ['programacions' => $proPartido];*/
+        $Progra = DB::table('programacions')->select('id')->get();
+        return['programacions' => $Progra];
+    }
 
-   
+    public function programacionPdf(Request $request, $idtorneo){    
+        $programacion = DB::table('programacions as a')
+        ->join('equipos as equipoa','a.equipo_a','=','equipoa.id')
+        ->join('equipos as equipob', 'a.equipo_b','=','equipob.id')        
+        ->join('torneos as c','a.idtorneo','=','c.id')
+        ->select('a.id','a.jornada','equipoa.nombre as equipoA','equipob.nombre as equipoB','c.nombre as torneo')       
+        ->where('c.id','=',$idtorneo)
+        ->orderBy('a.id','asc')
+        ->get();
+        $pdf = \PDF::loadView('pdf.programacion',['propartido'=>$programacion]);
+        return $pdf->stream('programacion.pdf');
+    /*SELECT a.id, a.jornada, equipoa.nombre, equipob.nombre,c.nombre from programacions as a 
+    INNER JOIN equipos as equipoa on a.equipo_a =equipoa.id 
+    INNER JOIN equipos  as equipob ON a.equipo_b=equipob.id
+    inner JOIN torneos as c on a.idtorneo= c.id*/
+    }
+    public function verProgramacion(Request $request){
+        $idtorneo = $request->idtorneo;
+        $programacion = DB::table('programacions as a')
+        ->join('equipos as equipoa','a.equipo_a','=','equipoa.id')
+        ->join('equipos as equipob', 'a.equipo_b','=','equipob.id')        
+        ->join('torneos as c','a.idtorneo','=','c.id')
+        ->select('a.id','a.jornada','equipoa.nombre as equipoA','equipob.nombre as equipoB','c.nombre as torneo')       
+        ->where('c.id','=',$idtorneo)
+        ->orderBy('a.id','asc')
+        ->get();
+        return [
+           
+            'proo' => $programacion
+        ];
+    }   
 
 }

@@ -56,7 +56,7 @@
             <propartido></propartido>
             </template>
             <template v-if="menu==17">
-            <puntajepartido></puntajepartido>
+            <partidosprogramados></partidosprogramados>
             </template>
             <template v-if="menu==18">
             <rol></rol>

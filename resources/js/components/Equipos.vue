@@ -86,7 +86,7 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
+                            <form id="myForm" action="" method="post" enctype="multipart/form-data" class="form-horizontal">
                                <div class="form-group row">
                                     <label class="col-md-3 form-control-label" for="text-input">Rama</label>
                                     <div class="col-md-9">
@@ -105,14 +105,14 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                <label for="exampleInputFile">Logo</label>
+                                <label >Logo</label>
                                  <div>
                                 <img :src="'images/' + logo" alt="Foto de equipo" width="75" height="75"> 
                                 </div> 
-                                <input type="file" @change="obtenerImagen" id="exampleInputFile" />
+                                <input type="file" @change="obtenerImagen" />
                                 <span v-if="errors.logo" class="badge badge-danger">{{errors.logo[0]}}</span>
                                 </div>
-                                <figure>
+                                <figure v-if="mostrarImagen == 1">
                                    <img :src="imagen" alt="Logo del equipo" width="75" height="75">
                                 </figure>
                                  <div v-show="errorEquipo" class="form-group row div-error">
@@ -166,13 +166,14 @@
                 offset : 3,
                 criterio : 'nombre',
                 buscar : '',
-                arrayRama : []
+                arrayRama : [],
+                mostrarImagen : null
                 
             }
         },
         computed:{
-               imagen(){
-            return this.imagenMiniatura;
+            imagen(){
+                return this.imagenMiniatura;
             },
             isActived: function(){
                 return this.pagination.current_page;
@@ -199,6 +200,25 @@
             }
         },
         methods :{
+           /* formSubmit: function(event) {
+            this.submitted.nombre_rama = this.nombre_rama;
+            this.submitted.idrama = this.idrama;
+            this.submitted.nombre = this.nombre;
+            this.submitted.logo = this.logo;
+            this.logo='';
+            this.idrama = '';
+            this.nombre_rama = '';
+            this.nombre = '';
+            
+            event.target.reset();
+            },*/
+            resetForm: function(e) {
+            e.preventDefault()
+            this.$data.logo = ""
+        },
+         myFunction() {
+         document.getElementById("myForm").reset();
+        },
             listarEquipo(page,buscar,criterio){
                 let me=this;
                 var url = '/equipo?page=' + page + '&buscar='+ buscar + '&criterio='+ criterio;
@@ -232,42 +252,37 @@
                 me.listarEquipo(page,buscar,criterio);
 
             },
-             obtenerImagen(e){                 
+             obtenerImagen(e){ 
                 let file = e.target.files[0];
                 //console.log(file);
                 this.logo = file;
-                //this.logo = '';
                 this.cargarImagen(file);
-
+                this.file='';                
                 },
                 cargarImagen(file){
                 let reader = new FileReader();
                 reader.onload = (e) =>{
+                    this.mostrarImagen = 1;
                     this.imagenMiniatura = e.target.result;
-
                 }
                 reader.readAsDataURL(file);
-
                 },
-               everImagen:function(){
-                var _this = this;
-                _this.file = _this.$refs.logo.file[0];
-                _this.url = URL.createObjectURL(_this.file);
-            },
             registrarEquipo(){
             let me = this;
             this.errors = []
+            //this.logo = '';
             let formData = new FormData();
             formData.append('nombre',this.nombre);
             formData.append('idrama',this.idrama);
             formData.append('logo',this.logo);
-
                 axios.post("/equipo/registrar",formData)
                 .then(response=>{
                 me.cerrarModal();
                 me.listarEquipo(1, "", "nombre");
                 //console.log(response.data);
-                this.logo=[];
+                this.imagenMiniatura='';
+                this.logo='';
+                this.file='';
                  
                 }).catch(error => {
                             if (error.response.status == 422){
@@ -275,11 +290,12 @@
                             }
                             //console.log(error);
                         });
-                        this.logo=''; 
+                        //this.logo=''; 
             },
          actualizarEquipo(){
             this.errors = []
-            let me = this;      
+            let me = this;  
+            this.imagenMiniatura='';    
             let formData = new FormData();
             formData.append('id',this.equipo_id);
             formData.append('nombre',this.nombre);
@@ -420,7 +436,10 @@
                 this.idrama=0,
                 this.nombre_rama='',
                 this.nombre='';
+                this.imagenMiniatura='';
                 this.logo='';
+                this.file='';
+                this.mostrarImagen = 0;
                 this.errorEquipo=0
             },
 
@@ -436,6 +455,9 @@
                         this.idrama=0,
                         this.nombre_rama ='',
                         this.nombre ='';
+                        this.imagenMiniatura = '';
+                        this.mostrarImagen = 0;
+                        this.file='';                        
                         this.logo='';
                         this.tipoAccion = 1;
                         break;
@@ -449,6 +471,8 @@
                         this.equipo_id=data['id'];
                         this.idrama=data['idrama'];
                         this.nombre = data['nombre'];
+                        this.imagenMiniatura = '';
+                        this.mostrarImagen = 0;                        
                         this.logo = data["logo"];
                         break;
                     }

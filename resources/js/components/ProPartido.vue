@@ -22,7 +22,10 @@
                <h1>Generar partidos aleatorios</h1>
                <button type="button" @click="listarPartido()" class="btn btn-info btn-sm">
                         <i class="fa fa-life-ring"></i>
-                </button> 
+                </button> &nbsp; 
+                   <button type="button" @click="pdfProPartido(idtorneo)" class="btn btn-info btn-sm">
+                        <i class="fa fa-file"></i>
+                    </button>                 
                     <div class="table-responsive">
             <table class="table table-hover text-center">
               <thead>
@@ -31,6 +34,7 @@
                   <th class="text-center list-group-item-success">Equipo A</th>
                   <th class="text-center list-group-item-success">Vs</th>
                   <th class="text-center list-group-item-success">Equipo B</th>                  
+                  <th class="text-center list-group-item-success">Opciones</th>
                 </tr>
               </thead>
               <tbody>
@@ -46,8 +50,13 @@
                   <td>Vs</td>
                   <td>
                   <input type="text" v-model="propartido.eq2" class="form-control"  disabled/>
-                  </td>                  
-                  <!--<td v-text="propartido.eq2"></td>                                   -->
+                  </td>
+                  <td>
+                 <button type="button" @click="listarPartido()" class="btn btn-info btn-sm">
+                          <i class="fa fa-eye"></i>
+                  </button> 
+                  </td>                                    
+                  <!--<td v-text="propartido.eq2"></td> -->
                 </tr>                   
                 <button type="button" @click="registrarProPartido() " class="btn btn-primary">
                       <i class="fa fa-add"></i>&nbsp;Guardar
@@ -88,7 +97,6 @@ export default {
           //console.log(this.idtorneo);
           this.arrayProPartido = [];
           let me = this;
-            //var url = '/sede?page=' + page + '&buscar='+ buscar + '&criterio='+ criterio;
             axios.get('/propartido',{params: {idtorneo:this.idtorneo}}).then(function(response) {
               //me.arrayProPartido = response.data;
               var x = response.data;
@@ -98,7 +106,6 @@ export default {
               me.arrayProPartido.push({'eq1': x[index][0].nombre,'eq2': x[index][1].nombre,'jornada': x[index][2],'ideq1': x[index][0].id,'ideq2': x[index][1].id});
               //console.log('eq1');
               }
-          //console.log('eq1');
          //console.log(response.data);
         })
         .catch(function(error) {
@@ -107,7 +114,6 @@ export default {
         });
     },
     selectTorneo(){
-      //console.log('ok');
       let me=this;
                 var url = '/torneo/selectTorneo';
                 axios.get(url).then(function (response) {
@@ -133,17 +139,14 @@ export default {
           me.arrayProPartido=[];
           me.idtorneo=0;
           me.torneo=''
-          //console.log(this.idtorneo);
-          //me.arrayDetalle=[];
-         // window.open('/torneo/pdf/'+ response.data.id);
         })
         .catch(function(error) {
           console.log(error);
         });
     },
-     pdfProPartido(id){
+     pdfProPartido(idtorneo){
               //window.open('/puntaje/pdf/'+ id ,'_blank');
-              window.open('/propartido/'+ id ,'_blank');
+              window.open('/propartido/programacionPdf/' + idtorneo,'_blank');
             },
   },
      mounted() {

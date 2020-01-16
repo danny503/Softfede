@@ -989,7 +989,7 @@ export default {
         }
       });
     },
-     verEquipo(id){
+   verEquipo(id){
                 let me=this;
                 me.listado=2;
                 //Obtener datos del ingreso
@@ -1014,7 +1014,7 @@ export default {
                 .catch(function (error) {
                     console.log(error);
                 });
-            },
+            },  
     activarUsuario(id) {
       swal({
         title: "Esta seguro de activar este usuario?",
