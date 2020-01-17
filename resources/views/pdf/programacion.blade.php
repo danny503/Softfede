@@ -149,8 +149,10 @@
                             <th>TORNEO</th>   
                             <th>JORNADA</th>                       
                             <th>EQUIPO A</th>
+                            <th>PUNTAJE A</th>
                             <th>Vs</th>  
-                            <th>EQUIPO B</th>                        
+                            <th>EQUIPO B</th> 
+                            <th>PUNTAJE B</th>                       
                         </tr>
                     </thead>
                     <tbody>
@@ -159,8 +161,10 @@
                             <td>{{$pro->torneo}}</td>   
                             <td>{{$pro->jornada}}</td>
                             <td>{{$pro->equipoA}}</td> 
+                            <td>{{$pro->puntaje_a}}</td>
                             <td>Vs</td>  
-                            <td>{{$pro->equipoB}}</td>                       
+                            <td>{{$pro->equipoB}}</td>  
+                            <td>{{$pro->puntaje_b}}</td>                     
                         </tr>
                         @endforeach
                     </tbody>

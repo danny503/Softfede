@@ -2,8 +2,7 @@
 @section('contenido')
 
 @if(Auth::check())
-            @if (Auth::user()->idrol == 1)
-                            
+            @if (Auth::user()->idrol == 1)                            
             <template v-if="menu==0">
             <index></index>
             </template>
@@ -50,7 +49,7 @@
             <h1>Contenido 14</h1>
             </template>
             <template v-if="menu==15">
-            <planilla></planilla>
+            <puntajepartido></puntajepartido>
             </template>
             <template v-if="menu==16">
             <propartido></propartido>
@@ -96,7 +95,24 @@
             </template>
            
              @elseif (Auth::user()->idrol == 4)
-                
+             <template v-if="menu==0">
+            <index></index>
+            </template>
+            <template v-if="menu==4">
+            <cuerpotecnico></cuerpotecnico>
+            </template>
+            <template v-if="menu==5">
+            <equipo-component></equipo-component>
+            </template>
+            <template v-if="menu==3">
+            <jugador></jugador>
+            </template>
+            <template v-if="menu==15">
+            <puntajepartido></puntajepartido>
+            </template>
+            <template v-if="menu==17">
+            <partidosprogramados></partidosprogramados>
+            </template>
             @else
            
  

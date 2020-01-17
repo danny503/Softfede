@@ -155,7 +155,7 @@ class EquipoController extends Controller
         $detalles = InscripcionJE::join('personas','inscripcionej.idjugador','=','personas.id')
         ->select('inscripcionej.numero_camisa','inscripcionej.posicion','personas.nombre as persona')
         ->where('inscripcionej.idequipo','=',$id)
-        ->orderBy('inscripcionej.id', 'desc')->get();                    
+        ->orderBy('inscripcionej.detalle_id', 'desc')->get();                    
          
         return [
            

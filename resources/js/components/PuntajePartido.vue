@@ -207,63 +207,7 @@
         </template>
         <!--Fin detalle -->
          <!--Ver torneo-->
-                    <template v-else-if="listado==2">
-                    <div class="card-body">
-                        <div class="form-group row border">
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label for="">Puntaje A</label>
-                                    <p v-text="punto_a"></p>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label for="">Puntaje B</label>
-                                    <p v-text="punto_b"></p>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <label for="">Ganador</label>
-                                <p v-text="ganador"></p>
-                            </div>                                                                                          
-                    </div>
-                        <div class="form-group row border">
-                            <div class="table-responsive col-md-12">
-                                <table class="table table-bordered table-striped table-sm">
-                                    <thead>
-                                        <tr>
-                                            <th>Jugadores</th>
-                                            <th>Puntos</th>
-                                            <th>Faltas</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody v-if="arrayDetalle.length">
-                                        <tr v-for="(detalle) in arrayDetalle" :key="detalle.id">                                        
-                                            <td v-text="detalle.jugador">
-                                            </td>
-                                            <td v-text="detalle.punto">
-                                            </td>
-                                            <td v-text="detalle.falta">
-                                            </td>
-                                        </tr>
-                                    </tbody>  
-                                    <tbody v-else>
-                                        <tr>
-                                            <td colspan="4">
-                                                No hay jugadores agregados
-                                            </td>
-                                        </tr>
-                                    </tbody>                                  
-                                </table>
-                            </div>
-                        </div>                        
-                        <div class="form-group row">
-                            <div class="col-md-12">
-                                <button type="button" @click="ocultarDetalle()" class="btn btn-secondary">Cerrar</button>                                
-                            </div>
-                        </div>
-                    </div>
-                    </template>
+
                     <!--Fin ver ingreso-->                                                   
       </div>
       <!-- Fin ejemplo de tabla Listado -->

@@ -11,8 +11,7 @@
             </select>
           </div>
       </div>
-    </div>    
-    <template v-if="listado==1">       
+    </div>           
         <div class="card-header">  
             <div class="table-responsive">
                <form action="propartido" method="post" enctype="multipart/form-data">
@@ -22,7 +21,7 @@
                 </button> &nbsp; 
                    <button type="button" @click="pdfProPartido(idtorneo)" class="btn btn-info btn-sm">
                         <i class="fa fa-file"></i>
-                    </button>                 
+                    </button>                                    
                     <div class="table-responsive">
             <table class="table table-hover text-center">
               <thead>
@@ -30,27 +29,44 @@
                   <th class="text-center list-group-item-success">Jornadas</th>
                   <th class="text-center list-group-item-success">Equipo A</th>
                   <th class="text-center list-group-item-success">Vs</th>
-                  <th class="text-center list-group-item-success">Equipo B</th>                  
+                  <th class="text-center list-group-item-success">Equipo B</th>      
+                  <th class="text-center list-group-item-success">Puntaje A</th>      
+                  <th class="text-center list-group-item-success">Puntaje B</th>      
                   <th class="text-center list-group-item-success">Opciones</th>
                 </tr>
               </thead>
             <tbody>
                 <tr v-for="propartido in arrayProPartido" :key="propartido.id">                  
                   <td v-text="propartido.jornada"></td>                          
-                  <td>
+                  <!--<td>
                   <input type="text" v-model="propartido.equipoA" class="form-control"  disabled/>
-                  </td>                  
-                  <!--<td v-text="propartido.eq1"></td>-->
+                  </td>   -->               
+                  <td v-text="propartido.equipoA"></td>
                   <td>Vs</td>
-                  <td>
+                  <!--<td>
                   <input type="text" v-model="propartido.equipoB" class="form-control"  disabled/>
-                  </td>
-                  <td>
-                 <button type="button" @click="mostrarDetalle()" class="btn btn-info btn-sm">
-                          <i class="fa fa-eye"></i>
+                  </td>-->
+                  <td v-text="propartido.equipoB"></td>
+                  <td v-text="propartido.puntaje_a"></td>
+                  <td v-text="propartido.puntaje_b"></td>
+
+                  <td v-if="!propartido.puntaje_a && propartido.puntaje_b == null ">
+                 <button type="button" @click="abrirModal('categoria','actualizar', propartido)" class="btn btn-info btn-sm">
+                     <i class="fa fa-plus"></i>
+                  </button>
+                 <button type="button" @click="puntaje()" disabled class="btn btn-info btn-sm">
+                      <i class="fa fa-eye"></i>
                   </button> 
-                  </td>                                    
-                  <!--<td v-text="propartido.eq2"></td> -->
+                  </td>  
+                  <td v-else="">
+
+                 <button type="button" disabled @click="abrirModal('categoria','actualizar', propartido)" class="btn btn-info btn-sm">
+                     <i class="fa fa-plus"></i>
+                  </button>
+                 <button type="button" @click="mostrarDetalle()" disabled class="btn btn-info btn-sm">
+                      <i class="fa fa-eye"></i>
+                  </button>                   
+                  </td> 
                 </tr> 
               </tbody>               
             </table>
@@ -58,145 +74,41 @@
                </form> 
             </div>      
         </div>
-    </template>
- 
- <template v-if="listado==0"> 
-<div class="card-body">
-          <div class="form-group row border">                   
-            <div class="col-md-3">
-              <label for>Puntaje Equipo A</label>
-              <input type="number" class="form-control" v-model="punto_a" />
-            </div>
-             <div class="col-md-3">
-              <label for>Puntaje Equipo B</label>
-              <input type="text" class="form-control" v-model="punto_b" />
-            </div>        
-            <div class="col-md-4">
-              <div class="form-group">
-                <label for>Ganador</label>
-                  <input type="text" class="form-control" v-model="ganador" />
-              </div>
-            </div>   
-                   
-          </div>
-          <div class="form-group row border">
-              <div class="col-md-8">
-                  <div class="form-group">
-                      <label for="">Jugadores <span style="color:red;" v-show="idpersona==0">(Seleccione)</span></label>
-                      <div class="form-inline">
-                          <input type="text" class="form-control" v-model="idpersona" placeholder="Ingrese jugadores">
-                          <button @click="abrirModal()" class="btn btn-primary">...</button>
-                      </div>
-                  </div>
-              </div>
-              <div class="col-md-2">
-                  <div class="form-group">
-                      <button @click="agregarDetalle()" class="btn btn-success form-control btnagregar"><i class="fa fa-plus"></i></button>
-                  </div>
-              </div>
-          </div>          
-          <div class="form-group row border">
-              <div class="table-responsive">
-                  <table class="table table-bordered table-striped table-sm">
-                      <thead>
-                          <tr>
-                          <th>Opciones</th>
-                          <th>Jugadores</th> 
-                          <th>Puntos</th> 
-                          <th>Faltas</th> 
-                          </tr>                        
-                      </thead>
-                      <tbody v-if="arrayDetalle.length">
-                          <tr v-for="(detalle, index) in arrayDetalle" :key="detalle.id">
-                              <td>
-                                  <button @click="eliminarDetalle(index)" type="button" class="btn btn-danger btn-sm">
-                                      <i class="fa fa-close"></i>
-                                  </button>
-                              </td>
-                              <td v-text="detalle.persona" ></td>
-                                   <td>
-                                <input v-model="detalle.puntaje" type="number" value="3" class="form-control">
-                                    </td>
-                                    <td>
-                                   <input v-model="detalle.falta" type="number" value="2" class="form-control">
-                              </td>                                                                                                                                                          
-                          </tr>                          
-                    </tbody>
-                    <tbody v-else>
-                      <tr>
-                        <td colspan="5">
-                          No hay jugadores agregados
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-              </div>
-          </div>
-          <div class="form=group row">
-              <div class="col-md-12"> 
-                  <button type="button" @click="ocultarDetalle()" class="btn btn-secondary">Cerrar</button>
-                  <button type="button" class="btn btn-primary" @click="registrarPuntaje()">Registrar puntaje</button>
-              </div>
-          </div>
-        </div>
- </template>
-
-     <!--Inicio del modal agregar/actualizar-->
-    <div
-      class="modal fade" tabindex="-1" :class="{'mostrar' : modal}" role="dialog" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
-      <div class="modal-dialog modal-primary modal-lg" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h4 class="modal-title" v-text="tituloModal"></h4>
-            <button type="button" class="close" @click="cerrarModal()" aria-label="Close">
-              <span aria-hidden="true">×</span>
-            </button>
-          </div>
-          <div class="modal-body">
-                <div class="form-group row">
-              <div class="col-md-6">
-                <div>
-                  <select class="col-md-3" v-model="criterioJ">
-                    <option value="nombre">Nombre</option>
-                  </select>
-                  <input type="text" v-model="buscarJ" @keyup.enter="listarPersona(buscarJ,criterioJ)" placeholder="Buscar"/>
-                  <button type="submit" @click="listarPersona(buscarJ,criterioJ)" class="btn btn-primary">
-                    <i class="fa fa-search"></i>
-                  </button>
+              <div class="modal fade" tabindex="-1" :class="{'mostrar':modal}" role="dialog" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
+                <div class="modal-dialog modal-primary modal-lg" role="document">
+                    <div class="modal-content ">
+                        <div class="modal-header">
+                            <h4 class="modal-title" v-text="tituloModal"></h4>
+                            <button type="button" class="close"  @click="cerrarModal()" aria-label="Close">
+                              <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
+                                <div class="form-group row">
+                                    <label class="col-md-3 form-control-label" for="text-input">Puntaje Equipo A</label>
+                                    <div class="col-md-9">
+                                        <input type="number" v-model="puntaje_a" class="form-control" placeholder="">                                        
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-3 form-control-label" for="text-input">Puntaje Equipo B</label>
+                                    <div class="col-md-9">
+                                        <input type="number" v-model="puntaje_b" class="form-control" placeholder="">                                      
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" @click="cerrarModal()">Cerrar</button>
+                            <button type="button" v-if="tipoAccion==1" class="btn btn-primary" @click="registrarCategoria()">Guardar</button>
+                            <button type="button" v-if="tipoAccion==2" class="btn btn-primary" @click="actualizarProgramacion(id)">Actualizar</button>
+                        </div>
+                    </div>
+                    <!-- /.modal-content -->
                 </div>
-              </div>
+                <!-- /.modal-dialog -->
             </div>
-            <div class="table-responseve">
-              <table class="table table-hover text-center">
-                <thead>
-                  <tr>
-                    <th class="text-center">Opciones</th>
-                    <th class="text-center">Nombre</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="persona in arrayPersona" :key="persona.id">
-                    <td>          
-                      <button type="button" @click="agregarDetalleModal(persona)" class="btn btn-success btn-sm">
-                       <i class="fa fa-check"></i>
-                      </button>
-                      </td>
-                    <td v-text="persona.nombre"></td>
-                  </tr>
-                </tbody>               
-              </table>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" @click="cerrarModal()">Cerrar</button>
-            <button type="button" v-if="tipoAccion==1" class="btn btn-primary" @click="registrarTorneo()">Guardar</button>
-          </div>
-        </div>
-        <!-- /.modal-content -->
-      </div>
-      <!-- /.modal-dialog -->
-    </div>
-    <!--Fin del modal-->
         </section>
     </div>
 </template>
@@ -213,7 +125,8 @@ export default {
             eq2:0,
             numero_camisa:0,
             posicion:0,
-           // ideq1:0,
+            puntaje_a:0,
+            puntaje_b:0,
             arrayVerp:[],
             ideq2:0,
             equipo_b:0,
@@ -223,57 +136,22 @@ export default {
             idtorneo:0, 
             arrayProPartido:[],
             arrayTorneo:[],
-            listado:1,
-             idjugador: 0,
-      idpro_partido:0,
-      idpersona:0,
-      idpuntaje: 0,
-      idequipo:0,
-      idcategoria:0,
-      punto_a: 0,
-      punto_b: 0,
-      puntaje: 0,   
-      falta: 0,
-      persona:"",
-      jugador: "",
-      ganador:"",
-      fecha_fin:"",      
-      arrayJugador: [],
-        arrayPro: [],
-      arrayPuntaje: [],
-      arrayDetalle: [],
-      arrayPersona:[],
-      arrayTorneo:[],
- 
-      modal: 0,
-      tituloModal: "",
-      tipoAccion: 0,
-      offset: 3,
-      criterio: "",
-      buscar: "",
-      criterioJ: 'nombre',
-      buscarJ: '',
-      arrayRama: [],
-      arrayCategoria: []
+            arrayCategoria : [],
+                modal : 0,
+                tituloModal : '',
+                tipoAccion : 0,
+            listado:1,      
         }
-    },              
+    },  
     methods:{
         listarPartido(idtorneo) {
           //console.log(this.idtorneo);
           this.arrayProPartido = [];
           let me = this;
             axios.get('/propartido/verprogramacion/' + idtorneo).then(function(response) {
-              //me.arrayProPartido = response.data;
-              /*var x = response.data;
-              var l = x.length;
-              for(var index=0; index < l; index++){
-              // x[index][0] ,'vs', x[index][1];
-              me.arrayProPartido.push({'eq1': x[index][0].equipoA,'eq2': x[index][1].equipoB,jornada: x[index][2]});
-              console.log('eq1');
-              }*/
                var respuesta= response.data;
                     me.arrayProPartido = respuesta.proo;
-         console.log(response.data);
+         //console.log(response.data);
         })
         .catch(function(error) {
           // handle error
@@ -304,7 +182,22 @@ export default {
                     // always executed
                 });
 
-            },        
+            }, 
+     actualizarProgramacion(id){
+                let me = this;
+               
+                axios.post('/propartido/actualizar/'+id,{
+                    'puntaje_a': this.puntaje_a,
+                    'puntaje_b': this.puntaje_b,
+                    
+                    'id': this.id
+                }).then(function (response) {
+                    me.cerrarModal();
+                    me.listarPartido();
+                }).catch(function (error) {
+                    console.log(error);
+                }); 
+            },                               
     mostrarDetalle(){
       let me = this;
       this.listado=0;
@@ -316,6 +209,20 @@ export default {
           me.ncamisa=0;
           me.posicion='';
           me.arrayDetalle=[];
+    },
+    puntaje(){
+            let me=this;
+                var url = '/propartido/obtenerpunto';
+                axios.get(url).then(function (response) {
+                    console.log(response.data);
+                    var respuesta= response.data;
+                    //me.arrayTorneo = respuesta.torneos;                    
+                })
+                .catch(function (error) {
+                    // handle error
+                    console.log(error);
+                });
+
     },
     selectTorneo(){
       let me=this;
@@ -332,6 +239,34 @@ export default {
             },
      ocultarDetalle(){
       this.listado=1;
+    },
+    agregarDetalle(){
+    let me=this;
+      if(me.idpersona==0 || me.puntaje==0 || me.falta==0 ){        
+      }
+      else{
+        if(me.encuentra(me.idpersona)){
+          swal({
+            type: 'error',
+            title: 'Error',
+            text : 'Este jugador ya esta agregado',
+          })
+        }
+        else{
+          me.arrayDetalle.push({
+          idpersona: me.idpersona,
+          persona: me.persona,
+          puntaje : me.puntaje,
+          falta : me.falta,
+        });      
+        me.idpersona=0;
+        me.persona='';
+        me.puntaje=0;
+        me.falta='';
+        }
+          
+      }
+    
     },
         agregarDetalleModal(data =[]){
                  let me=this;
@@ -350,18 +285,11 @@ export default {
                     });
                  }
             }, 
-            abrirModal() {  
-        this.arrayPersona=[];   
-          this.modal = 1;
-          this.tituloModal = "Seleccion uno a varios jugadores";  
-          //this.selectCategoria();         
-    },
      pdfProPartido(idtorneo){
               //window.open('/puntaje/pdf/'+ id ,'_blank');
               window.open('/propartido/programacionPdf/' + idtorneo,'_blank');
             },
-  },
-      listarPersona(buscar, criterio) {
+                  listarPersona(buscar, criterio) {
       let me = this;
       var url = "/jugador/listarJugador?buscar=" + buscar + "&criterio=" + criterio;
       axios.get(url).then(function(response) {
@@ -372,14 +300,84 @@ export default {
           console.log(error);
         });
     },
-   
+    encuentra(id){
+      var sw=0;
+      for(var i=0;i<this.arrayDetalle.length;i++){
+        if(this.arrayDetalle[i].idequipo==id){
+          sw = true;
+        }
+      }
+      return sw;
+    },
+    eliminarDetalle(index){
+      let me =this;
+      me.arrayDetalle.splice(index,1 );
+    },    
+      abrirModal(modelo, accion, data = []){
+                switch(modelo){
+                    case "categoria":
+                    {
+                        switch(accion)
+                        {
+                             case "registrar":
+                            {
+                                this.modal = 1;
+                                this.tituloModal = 'Resgistrar Categoria';
+                                this.puntaje_a= 0;
+                                this.puntaje_b = 0;
+                                this.tipoAccion = 1;
+                                break;
+                            }
+                            case "actualizar":
+                            {
+                                this.modal = 1;
+                                this.tituloModal = 'Ingrasar puntajes';
+                                this.tipoAccion = 2;
+                                this.id = data['id'];
+                                this.puntaje_a= data['puntaje_a'];
+                                this.puntaje_b = data['puntaje_b'];
+
+                                break;
+                            }
+                        }
+                      
+
+                    }
+                }
+            },
     cerrarModal() {
       this.modal = 0;
       this.tituloModal = "";     
-    },
+    }
+  },
      mounted() {
         //this.listarPartido();
         this.selectTorneo();
   }
 }
 </script>
+<style>
+.modal-content {
+  width: 100% !important;
+  position: absolute !important;
+}
+.mostrar {
+  display: list-item !important;
+  opacity: 1 !important;
+  position: absolute !important;
+  background-color: #3c29297a !important;
+}
+.div-error {
+  display: flex;
+  justify-content: center;
+}
+.text-error {
+  color: red !important;
+  font-weight: bold;
+}
+@media (min-width: 600px) {
+  .btnagregar {
+    margin-top: 2rem;
+  }
+}
+</style>

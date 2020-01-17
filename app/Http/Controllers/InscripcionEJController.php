@@ -47,15 +47,12 @@ class InscripcionEJController extends Controller
 
     public function update(Request $request)
     {
-        if(!$request->ajax()) return redirect('/');
-
-        $inscripcion = InscripcionJE::findOrFail($request->id);
-        $inscripcion->numero_camisa = $request->numero_camisa;  
-        $inscripcion->posicion = $request->posicion; 
-        $inscripcion->save();
-        /*DB::table('inscripcionej')
-            ->where('id', 19)
-            ->update(['numero_camisa' => 12]);*/               
+        //if(!$request->ajax()) return redirect('/');
+        $detalle_id = $request->detalle_id;
+        $inscripcion = DB::table('inscripcionej')->where('detalle_id','=', $detalle_id )
+        ->update(['numero_camisa'=> $request->numero_camisa,'posicion' =>$request->posicion]);
+        /*UPDATE `inscripcionej` SET `numero_camisa` = '5', `posicion` = 'Basa'
+         WHERE `inscripcionej`.`id` = 1;*/
     }
 
     public function destroy(Request $request, $id)
@@ -64,7 +61,7 @@ class InscripcionEJController extends Controller
        // $inscripcion = new InscripcionJE();
         //$inscripcion = InscripcionJE::findOrFail($request->$id);
         //$inscripcion->delete();
-        DB::table('inscripcionej')->where('id','=',$request->id)->delete();        
+        DB::table('inscripcionej')->where('detalle_id','=',$request->id)->delete();        
        //InscripcionJE::findOrFail($id)->delete();
       // $inscripcion->delete();
        // DB::table('inscripcionej')->where('id', $id)->delete();                      

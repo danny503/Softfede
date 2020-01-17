@@ -43,8 +43,7 @@ Route::group(['middleware' => ['Tecnico']], function () {
     Route::post('/inscripcionej/registrar','InscripcionEJController@store');
     Route::delete('/inscripcionej/borrar/{id}','InscripcionEJController@destroy');
     Route::get('inscripcionej/destroy/{id}', ['as' => 'inscripcionej/destroy', 'uses'=>'InscripcionEJController@destroy']);
-
-    Route::put('/inscripcionej/actualizar','InscripcionEJController@update');
+    Route::post('/inscripcionej/actualizar','InscripcionEJController@update');
 
     Route::get('/tipo','TipoController@index');
     Route::post('/tipo/registrar','TipoController@store');
@@ -121,9 +120,11 @@ Route::group(['middleware' => ['Administrador']], function () {
 
     Route::get('/propartido','ProPartidoController@index');
     Route::post('/propartido/registrar','ProPartidoController@store');
+    Route::post('/propartido/actualizar/{id}','ProPartidoController@update');
     Route::get('/propartido/programacionPdf/{idtorneo}', 'ProPartidoController@programacionPdf')->name('programacion_pdf');   
     Route::get('/propartido/verprogramacion/{idtorneo}', 'ProPartidoController@verProgramacion');
     Route::get('/propartido/selectPro','ProPartidoController@selectPro');
+    Route::get('/propartido/obtenerpunto','ProPartidoController@obtenerPunto');
 
     Route::get('/programacion/selecPro','ProgramacionController@selectPro');
 

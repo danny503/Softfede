@@ -768,7 +768,7 @@ export default {
                                 this.tituloModal='Actualizar detalle';
                                 this.tipoAccion=2;
                                 this.idtorneo=data['id'];
-                                this.idequipo=data['ideuipo'];
+                                this.idequipo=data['idequipo'];
                                 this.nombre = data['nombre'];
                                 this.idcategoria = data['idcategoria'];
                                 this.fecha_inicio = data['fecha_inicio'];

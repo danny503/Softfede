@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Programacion extends Model
 {
-    protected $fillable = ['id','jornada','equipo_a','equipo_b','idtorneo'
+    protected $fillable = ['jornada','equipo_a','equipo_b','idtorneo','puntaje_a','puntaje_b'
 
 ];
 

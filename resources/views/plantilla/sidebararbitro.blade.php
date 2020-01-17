@@ -30,100 +30,7 @@
                                     <i class="fa fa-angle-left right"></i>
                                 </p>
                             </a>
-                            <ul class="nav nav-treeview">
-                                <li @click="menu=1" class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="fa fa-circle-o nav-icon"></i>
-                                        <p>Registrarse</p>
-                                    </a>
-                                </li>
-                                <li @click="menu=2" class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="fa fa-circle-o nav-icon"></i>
-                                        <p>Inicio de sesi&oacute;n</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                         <li class="nav-item has-treeview">
-                            <a href="#" class="nav-link">
-                                <i class="fa fa-fw fa-check-square-o"></i>
-                                <p>
-                                    Inscripciones
-                                    <i class="right fa fa-angle-left"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li @click="menu=3" class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="fa fa-circle-o nav-icon"></i>
-                                        <p>Jugadores</p>
-                                    </a>
-                                </li>
-                                <li @click="menu=4" class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="fa fa-circle-o nav-icon"></i>
-                                        <p>Cuerpo t&eacute;cnico</p>
-                                    </a>
-                                </li>
-                                <li @click="menu=5" class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="fa fa-circle-o nav-icon"></i>
-                                        <p>Equipos</p>
-                                    </a>
-                                </li>
-                                <li @click="menu=6" class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="fa fa-circle-o nav-icon"></i>
-                                        <p>&Aacute;rbitros</p>
-                                    </a>
-                                </li>
-                                <li @click="menu=7" class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="fa fa-circle-o nav-icon"></i>
-                                        <p>Torneos</p>
-                                    </a>
-                                </li>                                
-                            </ul>
-                        </li>
-                        
-
-                        <li class="nav-item has-treeview">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fa fa-edit"></i>
-                                <p>
-                                    Registros
-                                    <i class="fa fa-angle-left right"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                              <li @click="menu=8" class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="fa fa-circle-o nav-icon"></i>
-                                        <p>Categor&iacute;as</p>
-                                    </a>
-                                </li>
-                                <li @click="menu=9" class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="fa fa-circle-o nav-icon"></i>
-                                        <p>Ramas</p>
-                                    </a>
-                                </li>
-                                <li @click="menu=10" class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="fa fa-circle-o nav-icon"></i>
-                                        <p>Sede</p>
-                                    </a>
-                                </li>
-                                <li @click="menu=11" class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="fa fa-circle-o nav-icon"></i>
-                                        <p>Tipos</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-
+                        </li>                                                
                         <li class="nav-item has-treeview">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fa fa-edit"></i>
@@ -137,28 +44,6 @@
                                     <a href="#" class="nav-link">
                                         <i class="fa fa-circle-o nav-icon"></i>
                                         <p>Inscribirse</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="nav-item has-treeview">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fa fa-table"></i>
-                                <p>Tabla
-                                    <i class="fa fa-angle-left right"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li @click="menu=13" class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="fa fa-circle-o nav-icon"></i>
-                                        <p>Tabla posiciones</p>
-                                    </a>
-                                </li>
-                                <li @click="menu=14" class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="fa fa-circle-o nav-icon"></i>
-                                        <p>Jugador destacado</p>
                                     </a>
                                 </li>
                             </ul>
@@ -189,12 +74,6 @@
                                 </p>
                             </a>
                             <ul class="nav nav-treeview">
-                                <li @click="menu=16" class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="fa fa-circle-o nav-icon"></i>
-                                        <p>Programaci&oacute;n de partidos</p>
-                                    </a>
-                                </li>
                                 <li @click="menu=17" class="nav-item">
                                     <a href="#" class="nav-link">
                                         <i class="fa fa-circle-o nav-icon"></i>
@@ -202,43 +81,7 @@
                                     </a>
                                 </li>
                             </ul>
-                        </li>
-                        <li class="nav-header">Administración</li>
-                        <li class="nav-item has-treeview">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fa fa-plus-square-o"></i>
-                                <p>
-                                    Sistema
-                                    <i class="fa fa-angle-left right"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                              <li @click="menu=18" class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="fa fa-circle-o nav-icon"></i>
-                                        <p>Roles</p>
-                                    </a>
-                                </li>
-                                <li @click="menu=19" class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="fa fa-circle-o nav-icon"></i>
-                                        <p>Respaldo de la base de datos.</p>
-                                    </a>
-                                </li>
-                                <li @click="menu=20" class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="fa fa-circle-o nav-icon"></i>
-                                        <p>Restauración de la base de datos.</p>
-                                    </a>
-                                </li>
-                                <li @click="menu=21" class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="fa fa-circle-o nav-icon"></i>
-                                        <p>Registro de auditorías</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
+                        </li>                        
                         <li class="nav-header">Acerca de</li>
                         <li class="nav-item">
                             <a href="https://adminlte.io/docs" class="nav-link">

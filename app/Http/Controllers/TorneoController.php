@@ -176,18 +176,21 @@ class TorneoController extends Controller
     }
     public function selectTorneo(Request $request){
         if (!$request->ajax()) return redirect('/');
-        $torneo = Torneo:://where('condicion','=','1')
-        select('id','nombre')->get();
+        $torneo = Torneo:://
+        select('id','nombre')
+        ->where('estado','=','1')->get();
         return ['torneos' => $torneo];
 
     }   
     public function insertarEquipo(Request $request){
-       /*DB::table('detalle_torneos')
+        //$idequipo = $request->idequipo;
+        //$idtorneo = $request->idtorneo;
+      $torneo= DB::table('detalle_torneos')
        ->insert([
-       'idequipo' => $request->idequipo,
-       'idtorneo' => $request->idtorneo,
-       ]);*/
-       $torneo = new Torneo();       
+       'idequipo' => 6,//$request->idequipo,
+       'idtorneo' => 3]//$request->idequipo]
+        );
+       /*$torneo = new Torneo();       
        $inscripciones = $request->data;
        foreach($inscripciones as $ep=>$det)
        {           
@@ -197,7 +200,7 @@ class TorneoController extends Controller
            $inscripcion->idequipo = 4;//$det['idequipo'];
           // $inscripcion->fecha_ingreso = $det['fecha_ingreso'];         
            $inscripcion->save();
-       }
+       }*/
         //DB::insert( 'INSERT INTO detalle_torneos (idequipo, idtorneo) VALUES ( $request.idequipo, $request.idtorneo)');
        
     }
