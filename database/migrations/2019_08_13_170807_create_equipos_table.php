@@ -16,11 +16,13 @@ class CreateEquiposTable extends Migration
         Schema::create('equipos', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('idrama')->unsigned();
+            $table->integer('idcategoria')->unsigned();
             $table->integer('idusuario')->unsigned();
             $table->foreign('idusuario')->references('id')->on('users');
             $table->string('nombre',50);
             $table->string('logo',50)->nullable();
             $table->foreign('idrama')->references('id')->on('ramas');
+            $table->foreign('idcategoria')->references('id')->on('categorias');
             $table->timestamps();
         });
     }

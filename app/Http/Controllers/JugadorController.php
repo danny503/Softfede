@@ -20,9 +20,10 @@ class JugadorController extends Controller
         if ($buscar==''){
             $personas = Jugador::join('personas','jugadores.id','=','personas.id')
             ->join('users','jugadores.idusuario','=','users.id')
+            ->join('ramas','personas.idrama','=','ramas.id')
             ->select('personas.id','personas.nombre','personas.fechanac',
             'personas.genero','personas.direccion','personas.telefono',
-            'personas.email','jugadores.idusuario','users.usuario as nombre_usuario','jugadores.estatura','jugadores.foto')
+            'personas.email','jugadores.idusuario','ramas.nombre as nombre_rama','users.usuario as nombre_usuario','jugadores.estatura','jugadores.foto')
             ->where('users.id','=',Auth::id())
             ->orderBy('personas.id', 'desc')->paginate(5);
         }
@@ -55,12 +56,15 @@ class JugadorController extends Controller
 
         $buscar = $request->buscar;
         $criterio = $request->criterio;
+        $idrama = $request->idrama;
         
         if ($buscar==''){
             $personas = Jugador::join('personas','jugadores.id','=','personas.id')
             ->join('users','jugadores.idusuario','=','users.id')
-            ->select('personas.id','personas.nombre')
-            ->where('users.id','=',Auth::id())
+            ->join('ramas','personas.idrama','=','ramas.id')
+            ->select('personas.id','personas.nombre', 'ramas.nombre as nombre_rama')
+            ->where('personas.idrama','=', $idrama)
+            ->orWhere('users.id','=',Auth::id())
             ->orderBy('personas.id', 'desc')->paginate(6);
         }
         else{
@@ -96,6 +100,7 @@ class JugadorController extends Controller
             $persona->nombre = $request->nombre;
             $persona->fechanac = $request->fechanac;
             $persona->genero = $request->genero;
+            $persona->idrama = $request->idrama;
             $persona->direccion = $request->direccion;
             $persona->telefono = $request->telefono;
             $persona->email = $request->email;

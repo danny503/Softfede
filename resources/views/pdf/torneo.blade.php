@@ -138,7 +138,7 @@
                             CATEGORIA: {{$t->nombre_categoria}}<br>
                             FECHA INICIO: {{$t->fecha_inicio}}<br>
                             FECHA FIN: {{$t->fecha_fin}}<br>
-                            ESTADO: {{$t->estado}}</</p></th>
+                            RAMA: {{$t->rama}}</br>
                         </tr>
                     </tbody>
                 </table>
@@ -153,16 +153,14 @@
                     <thead>
                         <tr id="fa">
                             <td>LOGO</td>
-                            <th>EQUIPO</th>
-                            <th>RAMA</th>                           
+                            <th>EQUIPO</th>                          
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($detalles as $det)
                         <tr>
                         <td ><img src="images/{{ $det->logo }}" alt="No hay foto" id="imagen"></td>
-                            <td>{{$det->equipo}}</td>
-                            <td>{{$det->rama}}</td>                        
+                            <td>{{$det->equipo}}</td>                       
                         </tr>
                         @endforeach
                     </tbody>
@@ -173,9 +171,6 @@
         <br>
         <br>
         <footer>
-            <div id="gracias">
-                <p><b>Gracias!</b></p>
-            </div>
         </footer>
     </body>
 </html>

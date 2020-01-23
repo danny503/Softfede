@@ -135,7 +135,8 @@
                     <tbody>
                         <tr>
                             <th><p id="cliente">EQUIPO: {{$t->nombre}}<br>
-                            RAMA: {{$t->nombre_rama}}<br>                            
+                            RAMA: {{$t->nombre_rama}}<br> 
+                            CATEGORIA: {{$t->nombre_categoria}}<br>
                         </tr>
                     </tbody>
                 </table>
@@ -170,9 +171,7 @@
         <br>
         <br>
         <footer>
-            <div id="gracias">
-                <p><b>Gracias!</b></p>
-            </div>
+
         </footer>
     </body>
 </html>

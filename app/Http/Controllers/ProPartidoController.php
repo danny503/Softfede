@@ -195,15 +195,21 @@ class ProPartidoController extends Controller
     }
 
     public function programacionPdf(Request $request, $idtorneo){    
+        $protorneo = DB::table('programacions as a')
+        ->join('torneos as b','a.idtorneo','=','b.id')
+        ->select('b.nombre as torneo')
+        ->where('b.id', '=', $idtorneo)
+        ->orderBy('a.id','asc')->take(1)->get();
+
         $programacion = DB::table('programacions as a')
         ->join('equipos as equipoa','a.equipo_a','=','equipoa.id')
         ->join('equipos as equipob', 'a.equipo_b','=','equipob.id')        
         ->join('torneos as c','a.idtorneo','=','c.id')
-        ->select('a.id','a.jornada','equipoa.nombre as equipoA','equipob.nombre as equipoB','a.puntaje_a','a.puntaje_b','c.nombre as torneo')       
+        ->select('a.id','a.jornada','equipoa.nombre as equipoA','equipob.nombre as equipoB','a.puntaje_a','a.puntaje_b')       
         ->where('c.id','=',$idtorneo)
         ->orderBy('a.id','asc')
         ->get();
-        $pdf = \PDF::loadView('pdf.programacion',['propartido'=>$programacion]);
+        $pdf = \PDF::loadView('pdf.programacion',['protorneo'=>$protorneo, 'propartido'=>$programacion]);
         return $pdf->stream('programacion.pdf');
     /*SELECT a.id, a.jornada, equipoa.nombre, equipob.nombre,c.nombre from programacions as a 
     INNER JOIN equipos as equipoa on a.equipo_a =equipoa.id 

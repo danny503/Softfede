@@ -19,6 +19,7 @@ Vue.component('arbitro', require('./components/Arbitro.vue').default);
 Vue.component('propartido', require('./components/ProPartido.vue').default);
 Vue.component('puntajepartido', require('./components/PuntajePartido.vue').default);
 Vue.component('partidosprogramados', require('./components/PartidosProgramados.vue').default);
+Vue.component('tablaposicion', require('./components/TablaPosicion.vue').default);
 
 //Vue.component('index', require('./views/index.vue').default);
 //Vue.component('login', require('./components/Login.vue').default);

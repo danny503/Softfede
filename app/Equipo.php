@@ -8,7 +8,7 @@ class Equipo extends Model
 {
    // protected $table = 'equipos';
    //protected $primaryKey = 'id';
-   protected $fillable = ['idrama','idusuario','nombre','logo'
+   protected $fillable = ['idrama','idcategoria','idusuario','nombre','logo'
    ];
 
    public function rama(){

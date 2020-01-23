@@ -98,7 +98,8 @@ class TorneoController extends Controller
          
         $detalles = DetalleTorneo::join('equipos','detalle_torneos.idequipo','=','equipos.id')
         ->join('ramas','equipos.idrama','=','ramas.id')
-        ->select('detalle_torneos.id','equipos.nombre as equipo','ramas.nombre as rama')
+        ->join('categorias','equipos.idcategoria','=','categorias.id')        
+        ->select('detalle_torneos.id','equipos.nombre as equipo','ramas.nombre as rama','categorias.nombre as nombre_categoria')
         ->where('detalle_torneos.idtorneo','=',$id)
         ->orderBy('detalle_torneos.id', 'desc')->get();         
         return [
@@ -109,9 +110,10 @@ class TorneoController extends Controller
 
     public function pdf(Request $request,$id){
         $torneo = Torneo::join('categorias','torneos.idcategoria','=','categorias.id')
-        //->join('users','ventas.idusuario','=','users.id')
+        ->join('equipos','torneos.id','=','equipos.id')
+        ->join('ramas','equipos.idrama','=','ramas.id')
         ->select('torneos.id','torneos.nombre','torneos.fecha_inicio',
-        'torneos.fecha_fin','torneos.estado','categorias.nombre as nombre_categoria')
+        'torneos.fecha_fin','ramas.nombre as rama','categorias.nombre as nombre_categoria')
         ->where('torneos.id','=',$id)
         ->orderBy('torneos.id','desc')->take(1)->get();
 

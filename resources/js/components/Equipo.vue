@@ -136,6 +136,16 @@
                  </select>
               </div>
             </div>
+                               <div class="form-group row">
+                                    <label class="col-md-3 form-control-label" for="text-input">Rama</label>
+                                    <div class="col-md-9">
+                                        <select class="form-control" v-model="idrama">
+                                            <option value="0" disabled>Seleccione</option>
+                                            <option v-for="rama in arrayRama" :key="rama.id" :value="rama.id" v-text="rama.nombre"></option>
+                                        </select>
+                                        <span class="help-block"></span>
+                                    </div>
+                                </div>            
             <div class="col-md-6">
               <div class="form-group">
                 <label for>Jugador</label>
@@ -149,7 +159,7 @@
               <label for>Número de camisa</label>
               <input type="number" class="form-control" v-model="numero_camisa" />
             </div>
-                  <div class="col-md-6">
+          <div class="col-md-6">
             <div class="form-group row">
               <label  for="text-input">Posición</label>                
                   <select class="form-control" v-model="posicion">
@@ -157,7 +167,7 @@
                       <option value="Escolta">Escolta</option>
                         <option value="Pivote">Pivote</option>
                           <option value="Alero">Alero</option>
-                            <option value="Alero">Base</option>
+                            <option value="Base">Base</option>
                   </select>
                 </div>
             </div>
@@ -189,17 +199,20 @@
                    <template v-if="listado==2">
                     <div class="card-body">
                         <div class="form-group row border">
-                            <div class="col-md-9">
+                            <div class="col-md-4">
+                                <label for="">Equipo</label>
+                                <p v-text="nombre" ></p>
+                            </div>                          
+                            <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="">rama</label>
+                                    <label for="">Rama</label>
                                     <p v-text="nombre_rama"></p>
                                 </div>
                             </div>
-                            <div class="col-md-3">
-                                <label for="">Equipo</label>
-                                <p v-text="nombre" ></p>
-                            </div>
-                            
+                            <div class="col-md-4">
+                                <label for="">Categoria</label>
+                                <p v-text="nombre_categoria"></p>
+                            </div>                            
                         </div>
                         <div class="form-group row border">
                             <div class="table-responsive col-md-12">
@@ -221,8 +234,8 @@
                                             </td>
                                             <td v-text="detalle.posicion">
                                             </td>
-                                            <td><a href="#!" class="btn btn-warning btn-raised btn-xs" @click="abrirModal('equipo','actualizar', detalle)" ><i class="fa fa-pencil"></i></a></td>
-                                            <td><a href="#!" class="btn btn-danger btn-raised btn-xs" @click="eliminarEquipo(detalle)"><i class="fa fa-trash"></i></a></td>
+                                            <td><a href="#" class="btn btn-warning btn-raised btn-xs" @click="abrirModal('equipo','actualizar', detalle)" ><i class="fa fa-pencil"></i></a></td>
+                                            <td><a href="#" class="btn btn-danger btn-raised btn-xs" @click="eliminarEquipo(detalle)"><i class="fa fa-trash"></i></a></td>
                                         </tr>
                                     </tbody>  
                                     <tbody v-else>
@@ -290,15 +303,13 @@
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" @click="cerrarModal()">Cerrar</button>
                             <button type="button" v-if="tipoAccion==1" class="btn btn-primary" @click="registrarCategoria()">Guardar</button>
-                            <button type="button" v-if="tipoAccion==2" class="btn btn-primary" @click="actualizarEquipo()">Actualizar</button>
+                            <button type="button" v-if="tipoAccion==2" class="btn btn-primary" @click="actualizarEquipo(detalle_id)">Actualizar</button>
                         </div>
                     </div>
                     <!-- /.modal-content -->
                 </div>
                 <!-- /.modal-dialog -->
             </div>
-    <!--Fin del modal-->
-
     <!--Fin del modal-->
   </div>
   
@@ -312,6 +323,8 @@ export default {
       id:0,  
       equipo_id: 0,
       idrama: 0,
+      idcategoria:0,
+      nombre_categoria:0,
       idpersona:0,
       detalle_id: 0,
       nombre_rama: 0,
@@ -429,6 +442,7 @@ export default {
           me.listado=1;
           me.listarEquipo(1, '', 'nombre');
           me.idrama=0;
+          me.idcategoria=0;
           me.nombre='';
           me.logo='';
           me.idpersona=0;
@@ -442,16 +456,17 @@ export default {
           console.log(error);
         });
     },
-     actualizarEquipo(){           
+     actualizarEquipo(detalle_id){           
                 let me = this;
-
-                axios.post('/inscripcionej/actualizar',{
+                axios.post('/inscripcionej/actualizar/'+ detalle_id,{
                     'numero_camisa': this.numero_camisa,
                     'posicion' : this.posicion,                    
                     'detalle_id': this.detalle_id
                 }).then(function (response) {
                     me.cerrarModal();
                     me.listarEquipo(1,'','nombre');
+                    me.ncamisa=0;
+                    me.posicion='';                    
                 }).catch(function (error) {
                     console.log(error);
                 }); 
@@ -549,7 +564,7 @@ export default {
     listarPersona(buscar, criterio) {
       let me = this;
       var url = "/jugador/listarJugador?buscar=" + buscar + "&criterio=" + criterio;
-      axios.get(url).then(function(response) {
+      axios.get(url, {params:{idrama:this.idrama}}).then(function(response) {
           var respuesta = response.data;
           me.arrayPersona = respuesta.personas.data;
         })
@@ -604,7 +619,7 @@ export default {
                 confirmButtonText: 'Si, eliminarlo!'
                 }).then((result) => {
                 let me =this;
-                let detalle_id = data.id
+                let detalle_id = data.detalle_id
                 console.log(detalle_id);
                 if (result.value) {                    
                 axios.get('/inscripcionej/destroy/'+detalle_id
@@ -670,6 +685,7 @@ export default {
                     var respuesta= response.data;
                     arrayEquipoT = respuesta.equipo;                    
                     me.nombre_rama = arrayEquipoT[0]['nombre_rama'];
+                    me.nombre_categoria = arrayEquipoT[0]['nombre_categoria'];
                     me.nombre=arrayEquipoT[0]['nombre'];                  
                 })
                 .catch(function (error) {
@@ -728,7 +744,7 @@ export default {
   mounted() {
     this.listarEquipo(1, this.buscar, this.criterio);
     this.selectRama();
-    //this.listarPersona(this.buscar,this.criterio);
+    this.listarPersona(this.buscar,this.criterio);
     
   }
 };

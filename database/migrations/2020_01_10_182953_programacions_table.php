@@ -21,7 +21,9 @@ class ProgramacionsTable extends Migration
             $table->foreign('equipo_a')->references('id')->on('detalle_torneos')->nullable();
             $table->foreign('equipo_b')->references('id')->on('detalle_torneos')->nullable();        
             $table->integer('idtorneo')->unsigned()->nullable();
-            $table->foreign('idtorneo')->references('id')->on('detalle_torneos')->nullable(); 
+            $table->foreign('idtorneo')->references('id')->on('detalle_torneos')->nullable();
+            $table->integer('puntaje_a') ->nullable();
+            $table->integer('puntaje_b') ->nullable();
             $table->timestamps();
             });      
     }

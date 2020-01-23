@@ -112,13 +112,14 @@
         }
     </style>
     <body>
+    @foreach ($protorneo as $t)
         <header>
             <div id="logo">
                 <img src="admin/img/baloncesto.jpg" alt="CompartiendoCodigo" id="imagen">
             </div>
             <div id="datos">
                 <p id="encabezado">
-                    <b>Planilla de jugadores</b><br>Baloncesto<br>Telefono:(+51)999999999<br>Email: compartiendocodigos@gmail.com
+                    <b>Sub federación de baloncesto</b><br>Chalatenango, Chalatenango<br>
                 </p>
             </div>          
         </header>
@@ -128,25 +129,25 @@
                 <table id="facliente">
                     <thead>                        
                         <tr>
-                            <th id="fac">Ganador</th>
+                            <th id="fac">Torneo</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                                                       
+                            <th><p id="cliente">TORNEO: {{$t->torneo}}<br>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </section>
+        @endforeach
         <br>     
         <br>
         <section>
             <div>
                 <table id="facarticulo">
                     <thead>
-                        <tr id="fa">
-                            <th>TORNEO</th>   
+                        <tr id="fa">  
                             <th>JORNADA</th>                       
                             <th>EQUIPO A</th>
                             <th>PUNTAJE A</th>
@@ -157,8 +158,7 @@
                     </thead>
                     <tbody>
                         @foreach ($propartido as $pro)
-                        <tr>
-                            <td>{{$pro->torneo}}</td>   
+                        <tr>  
                             <td>{{$pro->jornada}}</td>
                             <td>{{$pro->equipoA}}</td> 
                             <td>{{$pro->puntaje_a}}</td>

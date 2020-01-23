@@ -84,17 +84,24 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
+                            <form method="post" enctype="multipart/form-data" class="form-horizontal">
                                 <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="text-input">Puntaje Equipo A</label>
+                                    <label class="col-md-3 form-control-label" for="puntaje_a">Puntaje Equipo A</label>
                                     <div class="col-md-9">
-                                        <input type="number" v-model="puntaje_a" class="form-control" placeholder="">                                        
+                                        <input type="number"  min="0" v-model="puntaje_a" class="form-control" placeholder="" onkeypress='return event.charCode >= 48 && event.charCode <= 57'/>                                        
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-md-3 form-control-label" for="text-input">Puntaje Equipo B</label>
                                     <div class="col-md-9">
-                                        <input type="number" v-model="puntaje_b" class="form-control" placeholder="">                                      
+                                        <input type="number" v-model="puntaje_b" min="0" class="form-control" placeholder="" onkeypress='return event.charCode >= 48 && event.charCode <= 57'/>                                       
+                                    </div>
+                                </div>
+                               <div v-show="errorPuntaje" class="form-group row div-error">
+                                    <div class="text-center text-error">
+                                        <div v-for="error in errorMostrarMsjPuntaje" :key="error" v-text="error">
+
+                                        </div>
                                     </div>
                                 </div>
                             </form>
@@ -125,8 +132,8 @@ export default {
             eq2:0,
             numero_camisa:0,
             posicion:0,
-            puntaje_a:0,
-            puntaje_b:0,
+            puntaje_a: null,
+            puntaje_b:null,
             arrayVerp:[],
             ideq2:0,
             equipo_b:0,
@@ -134,6 +141,9 @@ export default {
             torneo:'',
             equipo_id:0,
             idtorneo:0, 
+            errors:[],
+            errorMostrarMsjPuntaje:[],
+            errorPuntaje:0,
             arrayProPartido:[],
             arrayTorneo:[],
             arrayCategoria : [],
@@ -151,12 +161,19 @@ export default {
             axios.get('/propartido/verprogramacion/' + idtorneo).then(function(response) {
                var respuesta= response.data;
                     me.arrayProPartido = respuesta.proo;
-         //console.log(response.data);
+         console.log(me.arrayProPartido);
         })
         .catch(function(error) {
           // handle error
           console.log(error);
         });
+    },
+    checkForm:function(event) {
+      if(this.puntaje_a && this.puntaje_b) return true;
+      this.errors = [];
+      if(!this.puntaje_a) this.errors.push("Age required.");
+      if(!this.puntaje_b) this.errors.push("Name required.");
+      event.preventDefault();
     },
        verProgramacion(idtorneo){
                     let me=this;
@@ -184,6 +201,10 @@ export default {
 
             }, 
      actualizarProgramacion(id){
+              if(this.validarPuntaje()){
+                //preventDefault();
+                    return;
+                }
                 let me = this;
                
                 axios.post('/propartido/actualizar/'+id,{
@@ -193,23 +214,14 @@ export default {
                     'id': this.id
                 }).then(function (response) {
                     me.cerrarModal();
-                    me.listarPartido();
+                    me.listarPartido(1, "", "nombre");
+                    //me.arrayProPartido=[];
+                    //me.idtorneo=0;
+                   // me.torneo=''                    
                 }).catch(function (error) {
                     console.log(error);
                 }); 
             },                               
-    mostrarDetalle(){
-      let me = this;
-      this.listado=0;
-          me.idrama=0;
-          me.nombre='';
-          me.logo='';
-          me.idpersona-0;
-          me.persona='';
-          me.ncamisa=0;
-          me.posicion='';
-          me.arrayDetalle=[];
-    },
     puntaje(){
             let me=this;
                 var url = '/propartido/obtenerpunto';
@@ -223,9 +235,19 @@ export default {
                     console.log(error);
                 });
 
-    },
-    selectTorneo(){
-      let me=this;
+            },
+                validarPuntaje(){
+                this.errorPuntaje=0;
+                this.errorMostrarMsjPuntaje=[];
+
+                if(!this.puntaje_a) this.errorMostrarMsjPuntaje.push("El puntaje A no puede quedar vacío.");
+                if(!this.puntaje_b) this.errorMostrarMsjPuntaje.push("El puntaje B no puede quedar vacío.");
+
+                if(this.errorMostrarMsjPuntaje.length) this.errorPuntaje=1;
+                return this.errorPuntaje;
+            },
+       selectTorneo(){
+        let me=this;
                 var url = '/torneo/selectTorneo';
                 axios.get(url).then(function (response) {
                    // consolo.log(response);
@@ -236,54 +258,6 @@ export default {
                     // handle error
                     console.log(error);
                 });     
-            },
-     ocultarDetalle(){
-      this.listado=1;
-    },
-    agregarDetalle(){
-    let me=this;
-      if(me.idpersona==0 || me.puntaje==0 || me.falta==0 ){        
-      }
-      else{
-        if(me.encuentra(me.idpersona)){
-          swal({
-            type: 'error',
-            title: 'Error',
-            text : 'Este jugador ya esta agregado',
-          })
-        }
-        else{
-          me.arrayDetalle.push({
-          idpersona: me.idpersona,
-          persona: me.persona,
-          puntaje : me.puntaje,
-          falta : me.falta,
-        });      
-        me.idpersona=0;
-        me.persona='';
-        me.puntaje=0;
-        me.falta='';
-        }
-          
-      }
-    
-    },
-        agregarDetalleModal(data =[]){
-                 let me=this;
-                if(me.encuentra(data['id'])){
-                        swal({
-                            type: 'error',
-                            title: 'Error...',
-                            text: 'Este jugador ya se encuentra agregado!',
-                        })
-                    }else{
-                    me.arrayDetalle.push({
-                    idpersona: data['id'],
-                    persona: data['nombre'],
-                    puntaje: 1,
-                    falta: 1
-                    });
-                 }
             }, 
      pdfProPartido(idtorneo){
               //window.open('/puntaje/pdf/'+ id ,'_blank');
@@ -339,6 +313,7 @@ export default {
 
                                 break;
                             }
+                            //console.log();
                         }
                       
 

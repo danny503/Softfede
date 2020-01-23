@@ -269,6 +269,7 @@
                                           <th>Opciones</th>
                                             <th>Equipo</th>
                                             <th>Rama</th>
+                                            <th>Categoria</th>
                                         </tr>
                                     </thead>
                                     <tbody v-if="arrayDetalle.length">
@@ -280,6 +281,7 @@
                                             </td>
                                             <td v-text="detalle.rama">
                                             </td>
+                                            <td v-text="detalle.nombre_categoria"></td>
                                         </tr>
                                     </tbody>  
                                     <tbody v-else>
@@ -327,7 +329,7 @@
                                     <input type="date" class="form-control" v-model="fecha_fin" />
                                 </div>
                             </div>                               
-              <div class="col-md-8">
+                <div class="col-md-8">
                   <div class="form-group">
                       <label for="">Equipos <span style="color:red;" v-show="idequipo==0">(Seleccione)</span></label>
                       <div class="form-inline">
@@ -350,6 +352,7 @@
                                           <th>Opciones</th>
                                             <th>Equipo</th>
                                             <th>Rama</th>
+                                            <th>Categoria</th>
                                         </tr>
                                     </thead>
                                     <tbody v-if="arrayDetalle.length">
@@ -361,6 +364,7 @@
                                             </td>
                                             <td v-text="detalle.nombre_rama">
                                             </td>
+                                            <td v-text="detalle.nombre_categoria"></td>
                                         </tr>
                                     </tbody>  
                                     <tbody v-else>
@@ -416,6 +420,7 @@
                     <th class="text-center">Opciones</th>
                     <th class="text-center">Nombre</th>
                     <th class="text-center">Rama</th>
+                    <th class="text-center">Categoria</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -426,7 +431,8 @@
                       </button>
                       </td>
                     <td v-text="equipo.nombre"></td>
-                    <td v-text="equipo.nombre_rama"></td>                                               
+                    <td v-text="equipo.nombre_rama"></td>
+                    <td v-text="equipo.nombre_categoria"></td>                                               
                   </tr>
                 </tbody>               
               </table>
@@ -721,7 +727,9 @@ export default {
                     idequipo: data['id'],
                     equipo: data['nombre'],
                     idrama: data['idrama'],
-                    rama : data['nombre_rama']
+                    rama : data['nombre_rama'],
+                    idcategoria: data['idcategoria'],
+                    nombre_categoria: data['nombre_categoria']
 
                     });
                  }
@@ -729,15 +737,14 @@ export default {
     listarEquipo(buscar, criterio) {
       let me = this;
       var url = "/equipo/listarEquipo?buscar=" + buscar + "&criterio=" + criterio;
-      axios.get(url).then(function(response) {
+      axios.get(url,{params: {idcategoria:this.idcategoria}}).then(function(response) {
           var respuesta = response.data;
           me.arrayEquipo = respuesta.equipos.data;
         })
         .catch(function(error) {
           console.log(error);
         });
-    },
-   
+    },  
     cerrarModal() {
       this.modal = 0;
       this.tituloModal = "";     

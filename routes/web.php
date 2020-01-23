@@ -42,8 +42,8 @@ Route::group(['middleware' => ['Tecnico']], function () {
     
     Route::post('/inscripcionej/registrar','InscripcionEJController@store');
     Route::delete('/inscripcionej/borrar/{id}','InscripcionEJController@destroy');
-    Route::get('inscripcionej/destroy/{id}', ['as' => 'inscripcionej/destroy', 'uses'=>'InscripcionEJController@destroy']);
-    Route::post('/inscripcionej/actualizar','InscripcionEJController@update');
+    Route::get('inscripcionej/destroy/{detalle_id}', ['as' => 'inscripcionej/destroy', 'uses'=>'InscripcionEJController@destroy']);
+    Route::post('/inscripcionej/actualizar/{detalle_id}','InscripcionEJController@update');
 
     Route::get('/tipo','TipoController@index');
     Route::post('/tipo/registrar','TipoController@store');
@@ -126,7 +126,8 @@ Route::group(['middleware' => ['Administrador']], function () {
     Route::get('/propartido/selectPro','ProPartidoController@selectPro');
     Route::get('/propartido/obtenerpunto','ProPartidoController@obtenerPunto');
 
-    Route::get('/programacion/selecPro','ProgramacionController@selectPro');
+    Route::get('/estadistica','EstadisticaController@index');
+    Route::post('/estadistica/registrar','EstadisticaController@store');
 
     Route::get('/arbitro','ArbitroController@index');
     Route::post('/arbitro/registrar','ArbitroController@store');

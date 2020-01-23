@@ -16,7 +16,7 @@
                                     <div >
                                         <select class=" col-md-3" v-model="criterio">
                                             <option value="nombre">Nombre</option>
-                                            <option value="cargo">Cargo</option>
+                                            <option value="cargo">Categoria</option>
                                         </select>
                                         <input type="text" v-model="buscar" @keyup.enter="listarEquipo(1,buscar,criterio)" placeholder="Buscar">
                                         <button type="submit" @click="listarEquipo(1,buscar,criterio)" class="btn btn-primary"><i class="fa fa-search"></i></button>
@@ -34,6 +34,7 @@
                                             <th class="text-center list-group-item-success">#</th>
                                             <th class="text-center list-group-item-success">Nombre</th>
                                             <th class="text-center list-group-item-success">Rama</th>
+                                            <th class="text-center list-group-item-success">Categoria</th>
                                             <th class="text-center list-group-item-success">Logo</th>
                                             <th class="text-center list-group-item-success">Actualizar</th>
                                             <th class="text-center list-group-item-success">Eliminar</th>
@@ -45,6 +46,7 @@
                                             <td >1</td>
                                             <td v-text="equipo.nombre"></td>
                                             <td v-text="equipo.nombre_rama"></td>
+                                            <td v-text="equipo.nombre_categoria"></td>
                                              <td >                     
                                                  <img :src="'images/' + equipo.logo" alt="Logo del equipo" width="75" height="75">
                                             </td>                                            
@@ -104,6 +106,15 @@
                                         <span class="help-block"></span>
                                     </div>
                                 </div>
+                                <div class="col-md-9">
+                                <div class="form-group">
+                                    <label for>Categoria</label>
+                                    <select class="form-control" v-model="idcategoria">
+                                    <option value="0" disabled>Seleccione una categoria</option>
+                                    <option v-for="categoria in arrayCategoria" :key="categoria.id" :value="categoria.id" v-text="categoria.nombre"></option>
+                                    </select>
+                                </div>
+                                </div>                                
                                 <div class="form-group">
                                 <label >Logo</label>
                                  <div>
@@ -144,6 +155,9 @@
                 equipo_id : 0,
                 idrama : 0,
                 nombre_rama : 0,
+                idcategoria:0,
+                nombre_categoria:0,
+                arrayCategoria: [],
                 nombre : '',
                 logo : '',
                 arrayEquipo : [],
@@ -200,18 +214,6 @@
             }
         },
         methods :{
-           /* formSubmit: function(event) {
-            this.submitted.nombre_rama = this.nombre_rama;
-            this.submitted.idrama = this.idrama;
-            this.submitted.nombre = this.nombre;
-            this.submitted.logo = this.logo;
-            this.logo='';
-            this.idrama = '';
-            this.nombre_rama = '';
-            this.nombre = '';
-            
-            event.target.reset();
-            },*/
             resetForm: function(e) {
             e.preventDefault()
             this.$data.logo = ""
@@ -245,6 +247,21 @@
                     console.log(error);
                 });     
             },
+            selectCategoria() {
+            let me = this;
+            var url = "/categoria/selectCategoria";
+            axios
+                .get(url)
+                .then(function(response) {
+                // console.log(response);
+                var respuesta = response.data;
+                me.arrayCategoria = respuesta.categorias;
+                })
+                .catch(function(error) {
+                // handle error
+                console.log(error);
+                });
+            },            
             cambiarPagina(page,buscar,criterio){
                 let me = this; 
                 //actualiza la pagina actual
@@ -274,6 +291,7 @@
             let formData = new FormData();
             formData.append('nombre',this.nombre);
             formData.append('idrama',this.idrama);
+            formData.append('idcategoria',this.idcategoria);
             formData.append('logo',this.logo);
                 axios.post("/equipo/registrar",formData)
                 .then(response=>{
@@ -299,7 +317,8 @@
             let formData = new FormData();
             formData.append('id',this.equipo_id);
             formData.append('nombre',this.nombre);
-            formData.append('idrama',this.idrama);           
+            formData.append('idrama',this.idrama);  
+            formData.append('idcategoria',this.idcategoria);         
             formData.append('logo',this.logo);
 
                 axios.post("/equipo/actualizar",formData)
@@ -434,6 +453,8 @@
                 this.modal = 0;
                 this.tituloModal='';
                 this.idrama=0,
+                this.idcategoria=0,
+                this.nombre_categoria='',
                 this.nombre_rama='',
                 this.nombre='';
                 this.imagenMiniatura='';
@@ -453,7 +474,9 @@
                         this.modal = 1;
                         this.tituloModal ="Registrar equipo";
                         this.idrama=0,
+                        this.idcategoria=0,                        
                         this.nombre_rama ='',
+                        this.nombre_categoria='',
                         this.nombre ='';
                         this.imagenMiniatura = '';
                         this.mostrarImagen = 0;
@@ -470,6 +493,7 @@
                         this.tipoAccion=2;
                         this.equipo_id=data['id'];
                         this.idrama=data['idrama'];
+                        this.idcategoria=data['idcategoria'];
                         this.nombre = data['nombre'];
                         this.imagenMiniatura = '';
                         this.mostrarImagen = 0;                        
@@ -480,12 +504,14 @@
              }
 
             }
-            this.selectRama()
+            this.selectRama(),
+            this.selectCategoria()
          }
                
     },
         mounted() {
             this.listarEquipo(1,this.buscar,this.criterio);
+            this.selectCategoria();
         }
     }
 </script>

@@ -20,8 +20,10 @@ class EquipoController extends Controller
 
         if($buscar==''){
             $equipos = Equipo::join('ramas','equipos.idrama','=','ramas.id')
+            ->join('categorias','equipos.idcategoria','=','categorias.id')
             ->join('users','equipos.idusuario','=','users.id')
-            ->select('equipos.id','equipos.idrama','equipos.nombre','equipos.idusuario','equipos.logo','ramas.nombre as nombre_rama' ,'users.usuario as nombre_usuario')
+            ->select('equipos.id','equipos.idrama', 'equipos.idcategoria','equipos.nombre','equipos.idusuario','equipos.logo','ramas.nombre as nombre_rama',
+            'categorias.nombre as nombre_categoria','users.usuario as nombre_usuario')
             ->where('users.id','=',Auth::id())
             
         //    SELECT a.*, b.usuario FROM equipos as a inner join users as b on a.idusuario = b.id where a.idusuario = b.usuario
@@ -29,7 +31,8 @@ class EquipoController extends Controller
         }
         else{
             $equipos = Equipo::join('ramas','equipos.idrama','=','ramas.id')
-            ->select('equipos.id','equipos.idrama','equipos.nombre','equipos.logo','ramas.nombre as nombre_rama')
+            ->join('categorias','equipos.idcategoria','=','categorias.id')
+            ->select('equipos.id','equipos.idrama','equipos.idcategoria','equipos.nombre','equipos.logo','ramas.nombre as nombre_rama','categorias.nombre as nombre_categoria')
             ->where('equipos.'.$criterio, 'like', '%'. $buscar . '%')
             ->orderBy('equipos.id', 'desc')->paginate(6);           
         }
@@ -65,6 +68,7 @@ class EquipoController extends Controller
             DB::beginTransaction();       
         $equipo = new Equipo();
         $equipo->idrama = $request->idrama;
+        $equipo->idcategoria = $request->idcategoria;
         $equipo->idusuario = \Auth::user()->id;
         $equipo->nombre = $request->nombre;
         $equipo->logo =  $name;
@@ -79,7 +83,8 @@ class EquipoController extends Controller
        
     public function listarPdf(Request $request,$id){
         $equipo = Equipo::join('ramas','equipos.idrama','=','ramas.id')
-        ->select('equipos.id','equipos.nombre','ramas.nombre as nombre_rama')
+        ->join('categorias', 'equipos.idcategoria','=', 'categorias.id')
+        ->select('equipos.id','equipos.nombre','ramas.nombre as nombre_rama','categorias.nombre as nombre_categoria')
         ->where('equipos.id','=',$id)
         ->orderBy('equipos.id','desc')->take(1)->get();
     
@@ -87,7 +92,7 @@ class EquipoController extends Controller
         ->join('jugadores','inscripcionej.idjugador','=','jugadores.id')
         ->select('inscripcionej.posicion','personas.nombre as persona','jugadores.foto as foto')
         ->where('inscripcionej.idequipo','=',$id)
-        ->orderBy('inscripcionej.id','desc')->get();
+        ->orderBy('inscripcionej.detalle_id','desc')->get();
     
         $pdf = \PDF::loadView('pdf.equipo',['equipo'=>$equipo,'detalles'=>$detalles]);
         return $pdf->stream('equipo.pdf');
@@ -106,6 +111,7 @@ class EquipoController extends Controller
         } 
         $equipo = Equipo::findOrFail($request->id);
         $equipo->idrama = $request->idrama;
+        $equipo->idcategoria = $request->idcategoria;
         $equipo->nombre = $request->nombre;
         $equipo->logo = $name;
         $equipo->save();
@@ -116,10 +122,13 @@ class EquipoController extends Controller
 
         $buscar = $request->buscar;
         $criterio = $request->criterio;
+        $idcategoria = $request->idcategoria;
         
         if ($buscar==''){
             $equipos = Equipo::join('ramas','equipos.idrama','=','ramas.id')
-            ->select('equipos.id','equipos.nombre','ramas.nombre as nombre_rama')
+            ->join('categorias','equipos.idcategoria','=','categorias.id')
+            ->select('equipos.id','equipos.nombre','ramas.nombre as nombre_rama', 'categorias.nombre as nombre_categoria')
+            ->where('equipos.idcategoria', '=', $idcategoria)
             ->orderBy('equipos.id', 'desc')->paginate(6);
         }
         else{
@@ -137,7 +146,8 @@ class EquipoController extends Controller
         $id = $request->id;
 
         $equipos = Equipo::join('ramas','equipos.idrama','=','ramas.id')
-        ->select('equipos.id','equipos.idrama','equipos.nombre','ramas.nombre as nombre_rama')
+        ->join('categorias','equipos.idcategoria','=','categorias.id')
+        ->select('equipos.id','equipos.idrama','equipos.nombre','ramas.nombre as nombre_rama','categorias.nombre as nombre_categoria')
         ->where('equipos.id','=',$id)
         ->orderBy('equipos.id', 'desc')->take(1)->get();
 

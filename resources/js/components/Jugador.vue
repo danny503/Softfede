@@ -82,16 +82,16 @@
                           maxlength="250"></textarea>
                       </div>
                     </div>
-                    <div class="form-group row">
-                        <label class="col-md-3 form-control-label" for="text-input">Genero</label>
-                          <div class="col-md-9">
-                            <select class="form-control" v-model="genero">
-                                  <option value="" disabled>Seleccione su genero</option>
-                                  <option value="Femenino">Femenino</option>
-                                  <option value="Masculino">Maculino</option>
-                           </select>
-                          </div>
-                    </div>
+                      <div class="form-group row">
+                                    <label class="col-md-3 form-control-label" for="text-input">Rama</label>
+                                    <div class="col-md-9">
+                                        <select class="form-control" v-model="idrama">
+                                            <option value="0" disabled>Seleccione</option>
+                                            <option v-for="rama in arrayRama" :key="rama.id" :value="rama.id" v-text="rama.nombre"></option>
+                                        </select>
+                                        <span class="help-block"></span>
+                                    </div>
+                     </div>
                     <div class="form-group">
                       <label>T&eacute;lefono:</label>
                       <div class="input-group">
@@ -161,7 +161,7 @@
                   <tr v-for="persona in arrayPersona" :key="persona.id">
                     <td v-text="persona.nombre"></td>
                     <td v-text="persona.fechanac"></td>
-                    <td v-text="persona.genero"></td>
+                    <td v-text="persona.nombre_rama"></td>
                     <td v-text="persona.direccion"></td>
                     <td v-text="persona.telefono"></td>
                     <td v-text="persona.email"></td>
@@ -233,16 +233,16 @@
                       </div>
                       <!-- /.input group -->
                     </div>
-                    <div class="form-group row">
-                      <label class="col-md-3 form-control-label" for="text-input">Genero</label>
-                      <div class="col-md-9">
-                        <select class="form-control" v-model="genero">
-                          <option value>Seleccione su genero</option>
-                          <option value="Femenino">Femenino</option>
-                          <option value="Masculino">Maculino</option>
-                        </select>
-                      </div>
-                    </div>
+                               <div class="form-group row">
+                                    <label class="col-md-3 form-control-label" for="text-input">Rama</label>
+                                    <div class="col-md-9">
+                                        <select class="form-control" v-model="idrama">
+                                            <option value="0" disabled>Seleccione</option>
+                                            <option v-for="rama in arrayRama" :key="rama.id" :value="rama.id" v-text="rama.nombre"></option>
+                                        </select>
+                                        <span class="help-block"></span>
+                                    </div>
+                                </div>
                     <div class="form-group row">
                       <label for="exampleInputEmail1" class="col-sm-4 col-form-label">Direcci&oacute;n:</label>
                       <div class="col-sm-12">
@@ -323,6 +323,9 @@ export default {
       nombre: "",
       fechanac: "",
       genero: "",
+      idrama:0,
+      nombre_rama:'',
+      arrayRama: [],
       direccion: "",
       telefono: "",
       email: "",
@@ -398,13 +401,28 @@ export default {
       reader.readAsDataURL(file);
 
     },
+    selectRama() {
+      let me = this;
+      var url = "/rama/selectRama";
+      axios.get(url).then(function(response) {
+          // console.log(response);
+          var respuesta = response.data;
+          me.arrayRama = respuesta.ramas;
+        })
+        .catch(function(error) {
+          // handle error
+          console.log(error);
+        });
+    },
+   
     registrarPersona(){
       let me = this;
       this.errors = []
       let formData = new FormData();
       formData.append('nombre',this.nombre);
       formData.append('fechanac',this.fechanac);
-      formData.append('genero',this.genero);
+      //formData.append('genero',this.genero);
+      formData.append('idrama', this.idrama);
       formData.append('direccion',this.direccion);
       formData.append('telefono',this.telefono);
       formData.append('email',this.email);
@@ -450,37 +468,6 @@ export default {
       //Envia la petición para visualizar la data de esa página
       me.listarPersona(page, buscar, criterio);
     },
-    registrarPerson() {
-      if (this.validarPersona()) {
-        return;
-      }
-
-      let me = this;
-
-      axios.post("/jugador/registrar", {
-          nombre: this.nombre,
-          fechanac: this.fechanac,
-          genero: this.genero,
-          direccion: this.direccion,
-          telefono: this.telefono,
-          email: this.email,
-          estatura: this.estatura,
-          foto: this.foto
-        })
-        .then(function(response) {
-          me.cerrarModal();
-          me.listarPersona(1, "", "nombre");
-          swal(
-                "Registrado!",
-                "Se ha registrado con éxito.",
-                "success"
-              );
-        })
-   
-        .catch(function(error) {
-          console.log(error);
-        });
-    },
     everImagen:function(){
         var _this = this;
         _this.file = _this.$$refs.foto.file[0];
@@ -493,7 +480,7 @@ export default {
       formData.append('id',this.persona_id);
       formData.append('nombre',this.nombre);
       formData.append('fechanac',this.fechanac);
-      formData.append('genero',this.genero);
+      formData.append('idrama',this.idrama);
       formData.append('direccion',this.direccion);
       formData.append('telefono',this.telefono);
       formData.append('email',this.email);
@@ -585,7 +572,8 @@ export default {
       this.tituloModal = "";
       this.nombre = "";
       this.fechanac = "";
-      this.genero = "";
+      this.idrama = 0;
+      this.nombre_rama='';
       this.direccion = "";
       this.telefono = "";
       this.email = "";
@@ -621,7 +609,7 @@ export default {
               this.persona_id = data["id"];
               this.nombre = data["nombre"];
               this.fechanac = data["fechanac"];
-              this.genero = data["genero"];
+              this.idrama = data["idrama"];
               this.direccion = data["direccion"];
               this.telefono = data["telefono"];
               this.email = data["email"];
@@ -636,6 +624,7 @@ export default {
   },
   mounted() {
     this.listarPersona(1, this.buscar, this.criterio);
+    this.selectRama();
   }
 };
 </script>

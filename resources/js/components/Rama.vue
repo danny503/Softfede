@@ -50,7 +50,7 @@
             listarRama(){
                 let me=this;
                 axios.get('/rama').then(function (response) {
-                    //console.log(response);
+                    console.log(response);
                     me.arrayRama = response.data;
                 })
                 .catch(function (error) {

@@ -2,10 +2,6 @@
   <div class="content-wrapper">
     <section class="content-header">            
       <div class="card-header"> 
-        <i class="fa fa-align-justify"></i> x
-          <button type="button" @click="abrirModal()" class="btn btn-primary">
-            <i class="icon-plus"></i>&nbsp;Nuevo
-          </button>
       <div class="form-group row">
         <label class="col-md-3 form-control-label" for="text-input">Torneo</label>
           <div class="col-md-9">
@@ -33,8 +29,10 @@
                   <th class="text-center list-group-item-success">Jornadas</th>
                   <th class="text-center list-group-item-success">Equipo A</th>
                   <th class="text-center list-group-item-success">Vs</th>
-                  <th class="text-center list-group-item-success">Equipo B</th>                  
-                  <th class="text-center list-group-item-success">Opciones</th>
+                  <th class="text-center list-group-item-success">Equipo B</th>
+                  <th class="text-center list-group-item-success">Fecha</th>
+                  <th class="text-center list-group-item-success">Hora</th> 
+                  <th class="text-center list-group-item-success">Sede</th>                  
                 </tr>
               </thead>
               <tbody>
@@ -52,10 +50,22 @@
                   <input type="text" v-model="propartido.eq2" class="form-control"  disabled/>
                   </td>
                   <td>
-                 <button type="button" @click="listarPartido()" class="btn btn-info btn-sm">
-                          <i class="fa fa-eye"></i>
-                  </button> 
-                  </td>                                    
+                  <input type="date"  class="form-control" />
+                  </td>
+                  <td>
+                  <input type="time"  class="form-control" />
+                  </td> 
+                  <td>
+                  <div class="col-md-9">
+                    <div class="form-group row">              
+                          <select class="form-control" >
+                            <option value="" disabled>Seleccione la sede</option>
+                              <option value="Escolta">Maraña</option>
+                                <option value="Pivote">Chalate</option>
+                          </select>
+                        </div>
+                    </div>  
+                  </td>                                   
                   <!--<td v-text="propartido.eq2"></td> -->
                 </tr>                   
                 <button type="button" @click="registrarProPartido() " class="btn btn-primary">
@@ -134,7 +144,6 @@ export default {
           'programaciones': this.arrayProPartido                
         })
         .then(function(response) {         
-          //me.listado=1;
           me.listarPartido();
           me.arrayProPartido=[];
           me.idtorneo=0;
