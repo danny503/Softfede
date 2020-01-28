@@ -8,6 +8,7 @@ use App\Equipo;
 use App\Torneo;
 use App\DetalleTorneo;
 use App\Programacion;
+use App\Estadistica;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 
@@ -159,14 +160,14 @@ class ProPartidoController extends Controller
         }
         // return  $eq;         
         //$a[]= array('D','F');
-       return json_encode($a);
+      // return json_encode($a);
        return $a;
        // $eq[] = $array;               
     }
 
     public function store(Request $request)
     {
-        //if (!$request->ajax()) return redirect('/'); 
+        if (!$request->ajax()) return redirect('/'); 
         try{
             DB::beginTransaction();
                             
@@ -181,6 +182,9 @@ class ProPartidoController extends Controller
             $pro['ideq2'];
             else
                 $pro['ideq2']== 0;*/
+            $programacion->fecha = $request->fecha;
+            $programacion->hora = $request->hora;
+            $programacion->idsede = $request->idsede;               
             $programacion->idtorneo = $request->idtorneo;          
             $programacion->save();     
         }
@@ -190,11 +194,13 @@ class ProPartidoController extends Controller
         }               
     }
     public function selectPro(Request $request){
+        if (!$request->ajax()) return redirect('/'); 
         $Progra = DB::table('programacions')->select('id')->get();
         return['programacions' => $Progra];
     }
 
     public function programacionPdf(Request $request, $idtorneo){    
+        //if (!$request->ajax()) return redirect('/'); 
         $protorneo = DB::table('programacions as a')
         ->join('torneos as b','a.idtorneo','=','b.id')
         ->select('b.nombre as torneo')
@@ -205,7 +211,7 @@ class ProPartidoController extends Controller
         ->join('equipos as equipoa','a.equipo_a','=','equipoa.id')
         ->join('equipos as equipob', 'a.equipo_b','=','equipob.id')        
         ->join('torneos as c','a.idtorneo','=','c.id')
-        ->select('a.id','a.jornada','equipoa.nombre as equipoA','equipob.nombre as equipoB','a.puntaje_a','a.puntaje_b')       
+        ->select('a.id','a.jornada','equipoa.nombre as equipoA','equipob.nombre as equipoB','a.puntaje_a','a.puntaje_b','a.fecha','a.hora')       
         ->where('c.id','=',$idtorneo)
         ->orderBy('a.id','asc')
         ->get();
@@ -216,13 +222,55 @@ class ProPartidoController extends Controller
     INNER JOIN equipos  as equipob ON a.equipo_b=equipob.id
     inner JOIN torneos as c on a.idtorneo= c.id*/
     }
+    public function listarproTec(Request $request, $idtorneo){
+        //if (!$request->ajax()) return redirect('/'); 
+        $idtorneo = $request->idtorneo;        
+        $programacion = DB::table('programacions as a')
+        ->join('equipos as equipoa','a.equipo_a','=','equipoa.id')
+        ->join('equipos as equipob', 'a.equipo_b','=','equipob.id')        
+        ->join('torneos as c','a.idtorneo','=','c.id')
+        ->join('sedes as e','a.idsede','=','e.id')
+        ->select('a.id','a.jornada','equipoa.nombre as equipoA','equipob.nombre as equipoB','c.nombre as torneo','a.fecha','a.hora','e.nombre as nombre_sede')       
+        ->where('c.id','=',$idtorneo)
+        ->orderBy('a.id','asc')
+        ->get();
+        return [
+           
+            'prootec' => $programacion
+        ];
+    }
+    public function programacionTecnicoPdf(Request $request, $idtorneo){    
+        //if (!$request->ajax()) return redirect('/'); 
+        $protorneo = DB::table('programacions as a')
+        ->join('torneos as b','a.idtorneo','=','b.id')
+        ->select('b.nombre as torneo')
+        ->where('b.id', '=', $idtorneo)
+        ->orderBy('a.id','asc')->take(1)->get();
+
+        $programacion = DB::table('programacions as a')
+        ->join('equipos as equipoa','a.equipo_a','=','equipoa.id')
+        ->join('equipos as equipob', 'a.equipo_b','=','equipob.id')        
+        ->join('torneos as c','a.idtorneo','=','c.id')
+        ->join('sedes as e','a.idsede','=', 'e.id')
+        ->select('a.id','a.jornada','equipoa.nombre as equipoA','equipob.nombre as equipoB','a.fecha','a.hora','e.nombre as nombre_sede')       
+        ->where('c.id','=',$idtorneo)
+        ->orderBy('a.id','asc')
+        ->get();
+        $pdf = \PDF::loadView('pdf.programacionTecnico',['protorneo'=>$protorneo, 'propartido'=>$programacion]);
+        return $pdf->stream('programacionTecnico.pdf');
+    /*SELECT a.id, a.jornada, equipoa.nombre, equipob.nombre,c.nombre from programacions as a 
+    INNER JOIN equipos as equipoa on a.equipo_a =equipoa.id 
+    INNER JOIN equipos  as equipob ON a.equipo_b=equipob.id
+    inner JOIN torneos as c on a.idtorneo= c.id*/
+    }
     public function verProgramacion(Request $request){
+        if (!$request->ajax()) return redirect('/'); 
         $idtorneo = $request->idtorneo;
         $programacion = DB::table('programacions as a')
         ->join('equipos as equipoa','a.equipo_a','=','equipoa.id')
         ->join('equipos as equipob', 'a.equipo_b','=','equipob.id')        
         ->join('torneos as c','a.idtorneo','=','c.id')
-        ->select('a.id','a.jornada','equipoa.nombre as equipoA','equipob.nombre as equipoB','a.puntaje_a','a.puntaje_b', 'c.nombre as torneo')       
+        ->select('a.id','a.jornada','equipoa.id as idequipo_a','equipoa.nombre as equipoA','equipob.id as idequipo_b','equipob.nombre as equipoB','a.puntaje_a','a.puntaje_b', 'c.nombre as torneo')       
         ->where('c.id','=',$idtorneo)
         ->orderBy('a.id','asc')
         ->get();
@@ -231,14 +279,185 @@ class ProPartidoController extends Controller
             'proo' => $programacion
         ];
     }
+    public function buscarEstadistica(Request $request, $id){
+        $buscar = DB::table('estadisticas')
+        ->select('pj','pg','pp','pts')
+        ->where('equipo_id', '=', 5)->get();
+        return ['buscar' => $buscar];       
+    }
+    public function BuscarIdA(Request $request, $ida, $idb, $pa, $pb){
+       // $pa = 45;
+        //$pb = 12;
+        if ($pa > $pb){
+            $rpga = 1;
+            $rpgb = 0;
+            $rppa = 0;
+            $rppb = 1;
+        }
+        //buscarEstadistica($id);            
+        $est_equipoa = DB::table('estadisticas')
+        ->select('pj','pg','pp','pts')
+        ->where('equipo_id', '=', $ida)->get();
+
+        foreach($est_equipoa as $t){
+                $pj = $t->pj;
+                $pg = $t->pg;
+                $pp = $t->pp;
+                $pts = $t->pts;
+        }
+        $spj = $pj + 1;
+        $spg = $pg + $rpga;
+        $spp = $pp + $rppa;
+        $spts = ($spg * 2) + $spp;
+            
+        //$equipo_id = $request->equipo_id;
+        $estadistica_a = DB::table('estadisticas')->where('equipo_id','=', $ida)
+        ->update(['pj'=> $spj,'pg' => $spg, 'pp'=> $spp,'pts' =>$spts]);
+
+        //ESTADISTICA EQUIPO B
+        if ($pb<$pa){
+            $rpga = 0;
+            $rpgb = 1;
+            $rppa = 1;
+            $rppb = 0;
+        }
+
+        $est_equipo_b = DB::table('estadisticas')
+        ->select('pj','pg','pp','pts')
+        ->where('equipo_id', '=', $idb)->get();
+
+        foreach($est_equipo_b as $t){
+                $pj = $t->pj;
+                $pg = $t->pg;
+                $pp = $t->pp;
+                $pts = $t->pts;
+        }
+        $spj = $pj + 1;
+        $spg = $pg + $rpga;
+        $spp = $pp + $rppa;
+        $spts = ($spg * 2) + $spp;
+            
+        //$equipo_id = $request->equipo_id;
+        $estadistica_b = DB::table('estadisticas')->where('equipo_id','=', $idb)
+        ->update(['pj'=> $spj,'pg' => $spg, 'pp'=> $spp,'pts' =>$spts]);
+
+        return ['pj' => $spp];
+    }
+    public function actualizarEstadistica(Request $request)   {
+        $equipo_id = $request->equipo_id;
+        $programacion = DB::table('estadisticas')->where('equipo_id','=', $equipo_id )
+        ->update(['pj'=> $request->spj,'pg' =>$request->spg, 'pp'=> $request->spp,'pts' =>$request->pts]);
+        /*UPDATE `estadisticas` SET `pj` = '12', `pg` = '12', 
+        `pp` = '02', `pts` = '20' WHERE `estadisticas`.`id` = 1;*/
+    }
+    public function BuscarIdB(Request $request){
+        $idtorneo = $request->idtorneo;
+        $idprob = DB::table('programacions as a')
+        ->join('equipos as equipoa','a.equipo_a','=','equipoa.id')
+        ->join('equipos as equipob', 'a.equipo_b','=','equipob.id')
+        ->join('torneos as c','a.idtorneo','=','c.id')
+        ->select('equipoa.id as idA','equipob.id as idB','a.puntaje_a','a.puntaje_b')
+        ->where([['c.id','=',$idtorneo],['a.id','=',21]])
+        //->orWhere('a.id','=', 21)
+        ->get();
+        return [
+           
+            'idprob' => $idprob
+        ];
+    }
+    
     public function update(Request $request)   {
+        if (!$request->ajax()) return redirect('/'); 
         $id = $request->id;
-        $programacion = DB::table('programacions')->where('id','=', $id )
+        $ida = $request->idequipo_a;
+        $idb = $request->idequipo_b;
+    //    $ida = 3;
+      //  $idb = 4;
+        $pa = $request->puntaje_a;
+        $pb = $request->puntaje_b;
+        
+        $programacion = DB::table('programacions')->where('id','=', $id)
         ->update(['puntaje_a'=> $request->puntaje_a,'puntaje_b' =>$request->puntaje_b]);
+
+           $rpga = 0;
+            $rpgb = 0;
+            $rppa = 0;
+            $rppb = 0;
+            $pj = 0;
+            $pg = 0;
+            $pp = 0;
+            $pts = 0;
+        if ($pa > $pb){
+            $rpga = 1;
+            $rpgb = 0;
+            $rppa = 0;
+            $rppb = 1;
+        }
+        if ($pa<$pb){
+            $rpga = 0;
+            $rpgb = 1;
+            $rppa = 1;
+            $rppb = 0;
+        }
+        $est_equipoa = DB::table('estadisticas')
+        ->select('pj','pg','pp','pts')
+        ->where('equipo_id', '=', $ida)->get();
+
+        
+
+        foreach($est_equipoa as $t){
+                $pj = $t->pj;
+                $pg = $t->pg;
+                $pp = $t->pp;
+                $pts = $t->pts;
+        }
+        $spj = $pj + 1;
+        $spg = $pg + $rpga;
+        $spp = $pp + $rppa;
+        $spts = ($spg * 2) + $spp;
+            
+        
+        $estadistica_a = DB::table('estadisticas')->where('equipo_id','=', $ida)
+        ->update(['pj'=> $spj,'pg' => $spg, 'pp'=> $spp,'pts' =>$spts]);
+
+        //ESTADISTICA EQUIPO B
+        if ($pa > $pb){
+            $rpga = 1;
+            $rpgb = 0;
+            $rppa = 0;
+            $rppb = 1;
+        }
+        if ($pb<$pa){
+            $rpga = 0;
+            $rpgb = 1;
+            $rppa = 1;
+            $rppb = 0;
+        }
+
+        $est_equipo_b = DB::table('estadisticas')
+        ->select('pj','pg','pp','pts')
+        ->where('equipo_id', '=', $idb)->get();
+
+        foreach($est_equipo_b as $t){
+                $pj = $t->pj;
+                $pg = $t->pg;
+                $pp = $t->pp;
+                $pts = $t->pts;
+        }
+        $spj = $pj + 1;
+        $spg = $pg + $rpga;
+        $spp = $pp + $rppa;
+        $spts = ($spg * 2) + $spp;
+            
+        //$equipo_id = $request->equipo_id;
+        $estadistica_b = DB::table('estadisticas')->where('equipo_id','=', $idb)
+        ->update(['pj'=> $spj,'pg' => $spg, 'pp'=> $spp,'pts' =>$spts]);
         /* UPDATE `programacions` SET `puntaje_a` = '15', 
         `puntaje_b` = '20' WHERE `programacions`.`id` = 4;*/
+
     }
     public function obtenerPunto(Request $request){
+       // if (!$request->ajax()) return redirect('/'); 
         $puntaje = DB::table('programacions')->count();
         return ['puntaje' => $puntaje];
     }

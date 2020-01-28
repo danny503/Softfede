@@ -50,18 +50,17 @@
                   <input type="text" v-model="propartido.eq2" class="form-control"  disabled/>
                   </td>
                   <td>
-                  <input type="date"  class="form-control" />
+                  <input type="date" v-model="fecha"  class="form-control" />
                   </td>
                   <td>
-                  <input type="time"  class="form-control" />
+                  <input type="time" v-model="hora" class="form-control" />
                   </td> 
                   <td>
                   <div class="col-md-9">
                     <div class="form-group row">              
-                          <select class="form-control" >
-                            <option value="" disabled>Seleccione la sede</option>
-                              <option value="Escolta">Maraña</option>
-                                <option value="Pivote">Chalate</option>
+                          <select class="form-control" v-model="idsede">
+                            <option value="0" disabled>Seleccione la sede</option>
+                           <option v-for="sede in arraySede" :key="sede.id" :value="sede.id" v-text="sede.nombre"></option>
                           </select>
                         </div>
                     </div>  
@@ -98,7 +97,12 @@ export default {
             torneo:''           ,
             equipo_id:0,
             idtorneo:0, 
+            idsede:0,
+            fecha:'',
+            hora:'',
             arrayProPartido:[],
+            arraySede:[],
+            arrayEstadistica:[],
             arrayTorneo:[]
         }
     },              
@@ -114,9 +118,24 @@ export default {
               for(var index=0; index < l; index++){
               // x[index][0] ,'vs', x[index][1];
               me.arrayProPartido.push({'eq1': x[index][0].nombre,'eq2': x[index][1].nombre,'jornada': x[index][2],'ideq1': x[index][0].id,'ideq2': x[index][1].id});
-              //console.log('eq1');
+             //console.log('eq1');
               }
-         //console.log(response.data);
+         console.log(response.data);
+        })
+        .catch(function(error) {
+          // handle error
+          console.log(error);
+        });
+    },
+     buscarEstadistica() {
+          //console.log(this.idtorneo);
+         // this.arrayProPartido = [];
+          let me = this;
+            axios.get('/propartido/buscarestadistica').then(function(response) {
+       // me.arrayEstadistica = response.data;
+          var respuesta = response.data;
+          me.arrayEstadistica = respuesta.pj.data;
+         console.log(response.data);
         })
         .catch(function(error) {
           // handle error
@@ -136,11 +155,27 @@ export default {
                     console.log(error);
                 });     
             },
+    selectSede(){
+      let me=this;
+                var url = '/sede/selectSede';
+                axios.get(url).then(function (response) {
+                   // consolo.log(response);
+                    var respuesta= response.data;
+                    me.arraySede = respuesta.sedes;                    
+                })
+                .catch(function (error) {
+                    // handle error
+                    console.log(error);
+                });     
+            },            
      registrarProPartido() {       
       let me = this;        
       //console.log(this.arrayProPartido[0].ideq1);
       axios.post('/propartido/registrar', {
-          'idtorneo':this.idtorneo,              
+          'idtorneo':this.idtorneo,
+          'fecha': this.fecha,
+          'hora': this.hora,
+          'idsede': this.idsede,              
           'programaciones': this.arrayProPartido                
         })
         .then(function(response) {         
@@ -161,6 +196,8 @@ export default {
      mounted() {
         //this.listarPartido();
         this.selectTorneo();
+        this.selectSede();
+       // this.buscarEstadistica();
   }
 }
 </script>

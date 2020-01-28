@@ -230,10 +230,15 @@
                                     <p v-text="nombre"></p>
                                 </div>
                             </div>
-                            <div class="col-md-3">
-                                <label for="">Categoria</label>
-                                <p v-text="categoria"></p>
-                            </div>
+                                <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for>Categoria</label>
+                                    <select class="form-control" v-model="idcategoria">
+                                    <option value="0" disabled>Seleccione una categoria</option>
+                                    <option v-for="categoria in arrayCategoria" :key="categoria.id" :value="categoria.id" v-text="categoria.nombre"></option>
+                                    </select>
+                                </div>
+                                </div>                             
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label>Fecha inicio</label>
@@ -267,6 +272,7 @@
                                     <thead>
                                         <tr>
                                           <th>Opciones</th>
+                                          <th>Id</th>
                                             <th>Equipo</th>
                                             <th>Rama</th>
                                             <th>Categoria</th>
@@ -277,6 +283,7 @@
                                            <button type="button" @click="eliminarDetalle(index)" class="btn btn-danger btn-sm">
                                               <i class="fa fa-close"></i>
                                            </button>
+                                           <td v-text="detalle.id"></td>
                                             <td v-text="detalle.equipo">
                                             </td>
                                             <td v-text="detalle.rama">
@@ -350,6 +357,7 @@
                                     <thead>
                                         <tr>
                                           <th>Opciones</th>
+                                          <th>Id</th>
                                             <th>Equipo</th>
                                             <th>Rama</th>
                                             <th>Categoria</th>
@@ -360,6 +368,7 @@
                                            <button type="button" @click="eliminarDetalle(index)" class="btn btn-danger btn-sm">
                                               <i class="fa fa-close"></i>
                                            </button>
+                                           <td v-text="detalle.id"></td>
                                             <td v-text="detalle.equipo">
                                             </td>
                                             <td v-text="detalle.nombre_rama">
@@ -614,7 +623,6 @@ export default {
           me.listarTorneo(1, '', 'nombre');
         })
         .catch(function(error){
-
         });              
     },    
     actualizarTorneo() {     
@@ -660,6 +668,8 @@ export default {
      
       let me = this;
       this.listado=0;
+          me.id=0;
+          me.idtorneo=0;
           me.idcategoria=0;
           me.nombre='';
           me.fecha_inicio='';

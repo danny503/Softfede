@@ -24,8 +24,7 @@ class EquipoController extends Controller
             ->join('users','equipos.idusuario','=','users.id')
             ->select('equipos.id','equipos.idrama', 'equipos.idcategoria','equipos.nombre','equipos.idusuario','equipos.logo','ramas.nombre as nombre_rama',
             'categorias.nombre as nombre_categoria','users.usuario as nombre_usuario')
-            ->where('users.id','=',Auth::id())
-            
+            ->where('users.id','=',Auth::id())                        
         //    SELECT a.*, b.usuario FROM equipos as a inner join users as b on a.idusuario = b.id where a.idusuario = b.usuario
             ->orderBy('equipos.id', 'desc')->paginate(6);
         }
@@ -163,7 +162,7 @@ class EquipoController extends Controller
         $id = $request->id;
          
         $detalles = InscripcionJE::join('personas','inscripcionej.idjugador','=','personas.id')
-        ->select('inscripcionej.numero_camisa','inscripcionej.posicion','personas.nombre as persona')
+        ->select('inscripcionej.detalle_id','inscripcionej.numero_camisa','inscripcionej.posicion','personas.nombre as persona')
         ->where('inscripcionej.idequipo','=',$id)
         ->orderBy('inscripcionej.detalle_id', 'desc')->get();                    
          

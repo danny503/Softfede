@@ -16,10 +16,10 @@
             <div class="table-responsive">
                <form action="propartido" method="post" enctype="multipart/form-data">
                <h1>Ver Partidos Generados</h1>
-               <button type="button" @click="listarPartido(idtorneo)" class="btn btn-info btn-sm">
+               <button type="button" @click="listarProTec(idtorneo)" class="btn btn-info btn-sm">
                         <i class="fa fa-life-ring"></i>
                 </button> &nbsp; 
-                   <button type="button" @click="buscarEstadistica()" class="btn btn-info btn-sm">
+                   <button type="button" @click="pdfProPartido(idtorneo)" class="btn btn-info btn-sm">
                         <i class="fa fa-file"></i>
                     </button>                                    
                     <div class="table-responsive">
@@ -30,9 +30,9 @@
                   <th class="text-center list-group-item-success">Equipo A</th>
                   <th class="text-center list-group-item-success">Vs</th>
                   <th class="text-center list-group-item-success">Equipo B</th>      
-                  <th class="text-center list-group-item-success">Puntaje A</th>      
-                  <th class="text-center list-group-item-success">Puntaje B</th>      
-                  <th class="text-center list-group-item-success">Opciones</th>
+                  <th class="text-center list-group-item-success">Sede</th>      
+                  <th class="text-center list-group-item-success">Fecha</th>      
+                  <th class="text-center list-group-item-success">Hora</th>      
                 </tr>
               </thead>
             <tbody>
@@ -47,26 +47,9 @@
                   <input type="text" v-model="propartido.equipoB" class="form-control"  disabled/>
                   </td>-->
                   <td v-text="propartido.equipoB"></td>
-                  <td v-text="propartido.puntaje_a"></td>
-                  <td v-text="propartido.puntaje_b"></td>
-
-                  <td v-if="!propartido.puntaje_a && propartido.puntaje_b == null ">
-                 <button type="button" @click="abrirModal('categoria','actualizar', propartido)" class="btn btn-info btn-sm">
-                     <i class="fa fa-plus"></i>
-                  </button>
-                 <button type="button" @click="puntaje()" disabled class="btn btn-info btn-sm">
-                      <i class="fa fa-eye"></i>
-                  </button> 
-                  </td>  
-                  <td v-else="">
-
-                 <button type="button" disabled @click="abrirModal('categoria','actualizar', propartido)" class="btn btn-info btn-sm">
-                     <i class="fa fa-plus"></i>
-                  </button>
-                 <button type="button" @click="mostrarDetalle()" disabled class="btn btn-info btn-sm">
-                      <i class="fa fa-eye"></i>
-                  </button>                   
-                  </td> 
+                  <td v-text="propartido.nombre_sede"></td>
+                  <td v-text="propartido.fecha"></td>
+                  <td v-text="propartido.hora"></td>
                 </tr> 
               </tbody>               
             </table>
@@ -86,8 +69,6 @@
                         <div class="modal-body">
                             <form method="post" enctype="multipart/form-data" class="form-horizontal">
                                 <div class="form-group row">
-                                  <input type="text" v-model="idequipo_a">
-                                  <input type="text" v-model="idequipo_b">
                                     <label class="col-md-3 form-control-label" for="puntaje_a">Puntaje Equipo A</label>
                                     <div class="col-md-9">
                                         <input type="number"  min="0" v-model="puntaje_a" class="form-control" placeholder="" onkeypress='return event.charCode >= 48 && event.charCode <= 57'/>                                        
@@ -144,8 +125,6 @@ export default {
             equipo_id:0,
             idtorneo:0, 
             errors:[],
-            idequipo_a:null,
-            idequipo_b:null,
             errorMostrarMsjPuntaje:[],
             errorPuntaje:0,
             arrayProPartido:[],
@@ -158,29 +137,14 @@ export default {
         }
     },  
     methods:{
-        listarPartido(idtorneo) {
+        listarProTec(idtorneo) {
           //console.log(this.idtorneo);
           this.arrayProPartido = [];
           let me = this;
-            axios.get('/propartido/verprogramacion/' + idtorneo).then(function(response) {
+            axios.get('/propartido/listarprotec/' + idtorneo).then(function(response) {
                var respuesta= response.data;
-                    me.arrayProPartido = respuesta.proo;
-         console.log(me.arrayProPartido);
-        })
-        .catch(function(error) {
-          // handle error
-          console.log(error);
-        });
-    },
-     buscarEstadistica(ida,idb,pa,pb) {
-          //console.log(this.idtorneo);
-         // this.arrayProPartido = [];
-          let me = this;
-            axios.get('/propartido/buscarida/'+ ida + idb + pa + pb).then(function(response) {
-          //me.arrayEstadistica = response.data;
-          var respuesta = response.data;
-          me.arrayEstadistica = respuesta.pj;
-         console.log(me.arrayEstadistica);
+                    me.arrayProPartido = respuesta.prootec;
+         //console.log(me.arrayProPartido);
         })
         .catch(function(error) {
           // handle error
@@ -229,13 +193,11 @@ export default {
                 axios.post('/propartido/actualizar/'+id,{
                     'puntaje_a': this.puntaje_a,
                     'puntaje_b': this.puntaje_b,
-                    'idequipo_a' : this.idequipo_a,
-                    'idequipo_b' : this.idequipo_b,                    
+                    
                     'id': this.id
                 }).then(function (response) {
                     me.cerrarModal();
-                    me.listarPartido();
-                    //me.arrayProPartido = [];
+                    me.listarPartido(1, "", "nombre");
                     //me.arrayProPartido=[];
                     //me.idtorneo=0;
                    // me.torneo=''                    
@@ -282,7 +244,7 @@ export default {
             }, 
      pdfProPartido(idtorneo){
               //window.open('/puntaje/pdf/'+ id ,'_blank');
-              window.open('/propartido/programacionPdf/' + idtorneo,'_blank');
+              window.open('/propartido/programaciontecnicoPdf/' + idtorneo,'_blank');
             },
                   listarPersona(buscar, criterio) {
       let me = this;
@@ -329,8 +291,6 @@ export default {
                                 this.tituloModal = 'Ingrasar puntajes';
                                 this.tipoAccion = 2;
                                 this.id = data['id'];
-                                this.idequipo_a = data['idequipo_a']
-                                this.idequipo_b = data['idequipo_b']
                                 this.puntaje_a= data['puntaje_a'];
                                 this.puntaje_b = data['puntaje_b'];
 
@@ -349,7 +309,6 @@ export default {
     }
   },
      mounted() {
-
         //this.listarPartido();
         this.selectTorneo();
   }

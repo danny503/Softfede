@@ -48,8 +48,8 @@ class InscripcionEJController extends Controller
     public function update(Request $request)
     {
         //if(!$request->ajax()) return redirect('/');
-        $detalle_id = $request->detalle_id;
-        $inscripcion = DB::table('inscripcionej')->where('detalle_id','=', 6 )
+        
+         DB::table('inscripcionej')->where('detalle_id','=', $request->detalle_id)
         ->update(['numero_camisa'=> $request->numero_camisa,'posicion' =>$request->posicion]);
         /*UPDATE `inscripcionej` SET `numero_camisa` = '5', `posicion` = 'Basa'
          WHERE `inscripcionej`.`id` = 1;*/

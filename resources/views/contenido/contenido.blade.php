@@ -93,6 +93,12 @@
             <template v-if="menu==11">
             <tipo></tipo>
             </template>
+            <template v-if="menu==15">
+            <puntajepartido></puntajepartido>
+            </template>
+            <template v-if="menu==17">
+            <programacionTecnico></programacionTecnico>
+            </template>
            
              @elseif (Auth::user()->idrol == 4)
              <template v-if="menu==0">

@@ -150,10 +150,9 @@
                         <tr id="fa">  
                             <th>JORNADA</th>                       
                             <th>EQUIPO A</th>
-                            <th>PUNTAJE A</th>
                             <th>Vs</th>  
                             <th>EQUIPO B</th> 
-                            <th>PUNTAJE B</th>
+                            <th>SEDE</th>
                             <th>FECHA</th>                       
                             <TH>HORA</TH>
                         </tr>
@@ -163,10 +162,9 @@
                         <tr>  
                             <td>{{$pro->jornada}}</td>
                             <td>{{$pro->equipoA}}</td> 
-                            <td>{{$pro->puntaje_a}}</td>
                             <td>Vs</td>  
-                            <td>{{$pro->equipoB}}</td>  
-                            <td>{{$pro->puntaje_b}}</td> 
+                            <td>{{$pro->equipoB}}</td>
+                            <td>{{$pro->nombre_sede}}</td>   
                             <td>{{$pro->fecha}}</td>                    
                             <td>{{$pro->hora}}</td>
                         </tr>

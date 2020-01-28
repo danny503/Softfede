@@ -47,6 +47,13 @@ class SedeController extends Controller
         $sede->direccion = $request->direccion;
         $sede->condicion = '1';
         $sede->save();
+    } 
+     public function selectSede(Request $request){
+        //if (!$request->ajax()) return redirect('/');
+        $sede = Sede:://where('condicion','=','1')
+        select('id','nombre')->get();
+        return ['sedes' => $sede];
+
     }
     public function desactivar(Request $request)
     {

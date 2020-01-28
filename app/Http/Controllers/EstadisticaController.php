@@ -20,7 +20,7 @@ class EstadisticaController extends Controller
         DB::raw('SUM(a.pts) as pts'))
         //->where('a.equipo_id','=','b.id')
         ->groupBy('a.equipo_id')
-        ->orderBy('Pts', 'desc')->get();
+        ->orderByRaw('Pts and Pg DESC')->get();
         return ['estadistica' => $estadisticas];
         /*select e.nombre, SUM( p.pj ) PJ, SUM( p.pg ) PG, SUM( p.pp ) PP, SUM( pts )PTS from
          estadisticas as p 
@@ -29,6 +29,16 @@ class EstadisticaController extends Controller
         ORDER BY Pts DESC;*/
         /*$estadistica = Estadistica::all();
         return $estadistica;*/
+    }
+    public function Buscar(Request $request, $id, $pa, $pb){
+        if ($pa > $pb) {
+            $rpga = 1;
+            $rpgb = 0;
+        }else{
+            $rpga = 0;
+            $rpgb = 1;
+        }                   
+                                
     }
 
     public function create()

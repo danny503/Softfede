@@ -135,17 +135,7 @@
                 <option v-for="equipo in arrayEquipo" :key="equipo.id" :value="equipo.id" v-text="equipo.nombre"></option>
                  </select>
               </div>
-            </div>
-                               <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="text-input">Rama</label>
-                                    <div class="col-md-9">
-                                        <select class="form-control" v-model="idrama">
-                                            <option value="0" disabled>Seleccione</option>
-                                            <option v-for="rama in arrayRama" :key="rama.id" :value="rama.id" v-text="rama.nombre"></option>
-                                        </select>
-                                        <span class="help-block"></span>
-                                    </div>
-                                </div>            
+            </div>          
             <div class="col-md-6">
               <div class="form-group">
                 <label for>Jugador</label>
@@ -219,6 +209,7 @@
                                 <table class="table table-bordered table-striped table-sm">
                                     <thead>
                                         <tr>
+                                            <th>id</th>
                                             <th>Jugador</th>
                                             <th>Número de camisa</th>
                                             <th>Posición</th>
@@ -228,6 +219,7 @@
                                     </thead>
                                     <tbody v-if="arrayDetalle.length">
                                         <tr v-for="detalle in arrayDetalle" :key="detalle.detalle_id">
+                                            <td v-text="detalle.detalle_id">
                                             <td v-text="detalle.persona">
                                             </td>
                                             <td v-text="detalle.numero_camisa">
@@ -392,14 +384,11 @@ export default {
   methods: {
     listarEquipo(page, buscar, criterio) {
       let me = this;
-      var url =
-        "/equipo?page=" + page + "&buscar=" + buscar + "&criterio=" + criterio;
-      axios
-        .get(url)
-        .then(function(response) {
+      var url = "/equipo?page=" + page + "&buscar=" + buscar + "&criterio=" + criterio;
+      axios.get(url,{params: {idrama:this.idrama}}).then(function(response) {
           var respuesta = response.data;
           me.arrayEquipo = respuesta.equipos.data;
-          me.pagination = respuesta.pagination;
+         // me.pagination = respuesta.pagination;
         })
         .catch(function(error) {
           // handle error
@@ -441,13 +430,11 @@ export default {
         .then(function(response) {
           me.listado=1;
           me.listarEquipo(1, '', 'nombre');
-          me.idrama=0;
-          me.idcategoria=0;
-          me.nombre='';
-          me.logo='';
+          me.idequipo =0;
+          me.nombre = "";
           me.idpersona=0;
-          me.persona='';
-          me.ncamisa=0;
+          me.persona="";
+          me.numero_camisa=0;
           me.posicion='';
           me.arrayDetalle=[];
           window.open('/equipo/pdf/'+ id ,'_blank');
@@ -464,9 +451,10 @@ export default {
                     'detalle_id': this.detalle_id
                 }).then(function (response) {
                     me.cerrarModal();
-                    me.listarEquipo(1,'','nombre');
-                    me.ncamisa=0;
-                    me.posicion='';                    
+                    me.listado=1;
+                    me.posicion='';
+                    me.numero_camisa=0;
+                    me.listarPersona(1,'','nombre');
                 }).catch(function (error) {
                     console.log(error);
                 }); 
@@ -520,6 +508,7 @@ export default {
       this.listado=0;
           me.idrama=0;
           me.nombre='';
+          me.detalle_id=0;
           me.logo='';
           me.idpersona-0;
           me.persona='';
@@ -564,7 +553,7 @@ export default {
     listarPersona(buscar, criterio) {
       let me = this;
       var url = "/jugador/listarJugador?buscar=" + buscar + "&criterio=" + criterio;
-      axios.get(url, {params:{idrama:this.idrama}}).then(function(response) {
+      axios.get(url, {params:{idequipo:this.idequipo}&&{idrama:this.idrama}}).then(function(response) {
           var respuesta = response.data;
           me.arrayPersona = respuesta.personas.data;
         })
@@ -574,6 +563,8 @@ export default {
     },   
     cerrarModal() {
       this.modal = 0;
+      this.numero_camisa = "";
+      this.posicion = 0;
       this.tituloModal = "";     
     },      
    abrirModal(modelo, accion, data = []){
@@ -624,7 +615,7 @@ export default {
                 if (result.value) {                    
                 axios.get('/inscripcionej/destroy/'+detalle_id
                     ).then(function (response) {
-                        me.listarEquipo(1,'','nombre');
+                        me.listado=1;
                          swal(
                         'Eliminado!',
                         'Tu jugador ha sido eliminado.',
