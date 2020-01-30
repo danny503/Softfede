@@ -2,19 +2,22 @@
      <div class="content-wrapper">
         <!-- Content Header (Page header) -->
         <section class="content-header">
-
-                <div class="form- col-md-3">
-                  <div class="form-group">
-                    <label>Nombre del torneo</label>
-                    <select class="form-control select2" style="width: 100%;">
-                      <option selected="selected">Amistoso</option>
-                      <option>Torneo local</option>
-                      <option>Navide&ntilde;o</option>
-                    </select>
-                  </div>                
-                </div>
+          <div class="card-header"> 
+          <div class="form-group row">
+            <label class="col-md-4 form-control-label" for="text-input">Torneo</label>           
+              <div class="col-md-8">
+                <select class="form-control" v-model="idtorneo">
+                  <option value="0" disabled>Seleccione</option>
+                    <option v-for="torneo in arrayTorneo" :key="torneo.id" :value="torneo.id" v-text="torneo.nombre" v-on:change="listarEstadistica()" ></option>
+                </select>                
+              </div>              
+          </div>
+        </div>  
+  
+                            <button type="button" @click="listarEstadistica()" class="btn btn-primary btn-sm">
+                        <i class="fa fa-eye"></i>
+                    </button>          
         </section>
-
         <!-- Main content -->
         <section class="content">
             <div class="col-xs-12">
@@ -57,17 +60,21 @@
         data(){
             return{
                 nombre_equipo: '',
+                idtorneo:0,
+                nombre_torneo:'',
                 pj:0,
                 pg:0,
                 pp:0,
                 pts:0,
+                arrayTorneo:[],
                 arrayEstadistica:[]
             }
         },
         methods :{
-            lsitarEstadistica(){
+            listarEstadistica(){
                 let me=this;
-                axios.get('/estadistica').then(function (response) {
+                this.arrayEstadistica = [];
+                axios.get('/estadistica', {params: {idtorneo:this.idtorneo}}).then(function (response) {
                     var respuesta = response.data;
                     me.arrayEstadistica = respuesta.estadistica;
                     console.log(respuesta);
@@ -76,10 +83,24 @@
                     // handle error
                     console.log(error);
                 });
-            }
+            },
+          selectTorneo(){
+            let me=this;
+                var url = '/torneo/selectTorneo';
+                axios.get(url).then(function (response) {
+                   // consolo.log(response);
+                    var respuesta= response.data;
+                    me.arrayTorneo = respuesta.torneos;                    
+                })
+                .catch(function (error) {
+                    // handle error
+                    console.log(error);
+                });     
+            },
     },
     mounted() {
-        this.lsitarEstadistica();
+        //this.listarEstadistica();
+        this.selectTorneo();
     }
 }
 

@@ -26,6 +26,7 @@
             <table class="table table-hover text-center">
               <thead>
                 <tr>
+                  <th class="text-center list-group-item-primary">IdPro</th>
                   <th class="text-center list-group-item-success">Jornadas</th>
                   <th class="text-center list-group-item-success">Equipo A</th>
                   <th class="text-center list-group-item-success">Vs</th>
@@ -37,10 +38,12 @@
               </thead>
               <tbody>
                 <tr v-for="propartido in arrayProPartido" :key="propartido.id">                  
+                  <td v-text="propartido.idpro">
+                  </td>                           
                   <td v-text="propartido.jornada"></td> 
                  <!-- <td>
                   <input type="text" v-model="jornada" class="form-control"/>
-                  </td>-->                            
+                  </td>--> 
                   <td>
                   <input type="text" v-model="propartido.eq1" class="form-control"  disabled/>
                   </td>                  
@@ -90,6 +93,7 @@ export default {
             equipo_a:0,
             eq1:0,
             eq2:0,
+            idpro:null,
            // ideq1:0,
             ideq2:0,
             equipo_b:0,
@@ -103,6 +107,7 @@ export default {
             arrayProPartido:[],
             arraySede:[],
             arrayEstadistica:[],
+            arrayPro:[],
             arrayTorneo:[]
         }
     },              
@@ -113,11 +118,13 @@ export default {
           let me = this;
             axios.get('/propartido',{params: {idtorneo:this.idtorneo}}).then(function(response) {
               //me.arrayProPartido = response.data;
+              var respuesta= response.data;
+
               var x = response.data;
               var l = x.length;
               for(var index=0; index < l; index++){
               // x[index][0] ,'vs', x[index][1];
-              me.arrayProPartido.push({'eq1': x[index][0].nombre,'eq2': x[index][1].nombre,'jornada': x[index][2],'ideq1': x[index][0].id,'ideq2': x[index][1].id});
+              me.arrayProPartido.push({'eq1': x[index][0].nombre,'eq2': x[index][1].nombre,'jornada': x[index][2], 'ideq1': x[index][0].id,'ideq2': x[index][1].id});
              //console.log('eq1');
               }
          console.log(response.data);
@@ -126,6 +133,15 @@ export default {
           // handle error
           console.log(error);
         });
+        this.arrayPro = [];
+            var url= '/propartido/index1';
+            axios.get(url,{params: {idtorneo:this.idtorneo}}).then(function (response) {
+               console.log(response);
+               var respuesta= response.data;
+               me.arrayPro = respuesta.index;
+              }).catch(function (error) {
+                  console.log(error);
+          });
     },
      buscarEstadistica() {
           //console.log(this.idtorneo);

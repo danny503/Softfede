@@ -120,25 +120,7 @@
                                     </a>
                                 </li>
                             </ul>
-                        </li>
-
-                        <li class="nav-item has-treeview">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fa fa-edit"></i>
-                                <p>
-                                    Inscribirse
-                                    <i class="fa fa-angle-left right"></i>
-                                </p>
-                            </a>
-                             <ul class="nav nav-treeview">
-                                <li @click="menu=12" class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="fa fa-circle-o nav-icon"></i>
-                                        <p>Inscribirse</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
+                        </li>                         
                         <li class="nav-item has-treeview">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fa fa-table"></i>
@@ -153,29 +135,17 @@
                                         <p>Tabla posiciones</p>
                                     </a>
                                 </li>
-                                <li @click="menu=14" class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="fa fa-circle-o nav-icon"></i>
-                                        <p>Jugador destacado</p>
-                                    </a>
-                                </li>
                             </ul>
                         </li>
                         <li class="nav-item has-treeview">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fa fa-edit"></i>
                                 <p>
-                                    Planilla de juego
+                                    Puntaje
                                     <i class="fa fa-angle-left right"></i>
                                 </p>
                             </a>
                             <ul class="nav nav-treeview">
-                                <li @click="menu=15" class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="fa fa-circle-o nav-icon"></i>
-                                        <p>Puntaje</p>
-                                    </a>
-                                </li>
                                 <li @click="menu=17" class="nav-item">
                                     <a href="#" class="nav-link">
                                         <i class="fa fa-circle-o nav-icon"></i>

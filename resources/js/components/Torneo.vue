@@ -169,9 +169,9 @@
               <div class="col-md-8">
                   <div class="form-group">
                       <label for="">Equipos <span style="color:red;" v-show="idequipo==0">(Seleccione)</span></label>
+                          <button @click="abrirModal()" class="btn btn-primary">...</button>                      
                       <div class="form-inline">
-                          <input type="text" class="form-control" v-model="idequipo" placeholder="Ingrese equipos">
-                          <button @click="abrirModal()" class="btn btn-primary">...</button>
+
                       </div>
                   </div>
               </div>
@@ -229,6 +229,7 @@
                                     <label for="">Nombre del torneo</label>
                                     <p v-text="nombre"></p>
                                 </div>
+                                  <input type="text" hidden v-model="idtorneo">                                
                             </div>
                                 <div class="col-md-3">
                                 <div class="form-group">
@@ -238,7 +239,7 @@
                                     <option v-for="categoria in arrayCategoria" :key="categoria.id" :value="categoria.id" v-text="categoria.nombre"></option>
                                     </select>
                                 </div>
-                                </div>                             
+                                </div>                                                             
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label>Fecha inicio</label>
@@ -254,9 +255,9 @@
                         <div class="col-md-8">
                           <div class="form-group">
                             <label for="">Equipos <span style="color:red;" v-show="idequipo==0">(Seleccione)</span></label>
+                                  <button @click="abrirModal()" class="btn btn-primary">...</button>                            
                               <div class="form-inline">
-                                <input type="text" class="form-control" v-model="idequipo" placeholder="Ingrese equipos">
-                                  <button @click="abrirModal()" class="btn btn-primary">...</button>
+                                
                               </div>
                           </div>
                         </div>
@@ -272,7 +273,6 @@
                                     <thead>
                                         <tr>
                                           <th>Opciones</th>
-                                          <th>Id</th>
                                             <th>Equipo</th>
                                             <th>Rama</th>
                                             <th>Categoria</th>
@@ -283,7 +283,7 @@
                                            <button type="button" @click="eliminarDetalle(index)" class="btn btn-danger btn-sm">
                                               <i class="fa fa-close"></i>
                                            </button>
-                                           <td v-text="detalle.id"></td>
+                                         <input type="text" hidden v-model="detalle.idequipo">
                                             <td v-text="detalle.equipo">
                                             </td>
                                             <td v-text="detalle.rama">
@@ -304,96 +304,12 @@
                         <div class="form-group row">
                             <div class="col-md-12">
                                 <button type="button" @click="ocultarDetalle()" class="btn btn-secondary">Cerrar</button>                                
-                                <button type="button" @click="insertEquipo()" class="btn btn-warning">Editar</button>
+                                <button type="button" @click="insertEquipo()" class="btn btn-warning">Guardar Cambios</button>
                             </div>
                         </div>
                     </div>
                     </template>
                     <!--Fin ver torneo-->
-                    <!--Ver detalle actuazalizar-->
-                     <template v-else-if="listado==3">
-                    <div class="card-body">
-                        <div class="form-group row border">
-                            <div class="col-md-9">
-                                <div class="form-group">
-                                    <label for="">Nombre del torneo</label>
-                                    <p v-text="nombre"></p>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <label for="">Categoria</label>
-                                <p v-text="categoria"></p>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label>Fecha inicio</label>
-                                    <input type="date" class="form-control" v-model="fecha_inicio" />
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label>Fecha fin</label>
-                                    <input type="date" class="form-control" v-model="fecha_fin" />
-                                </div>
-                            </div>                               
-                <div class="col-md-8">
-                  <div class="form-group">
-                      <label for="">Equipos <span style="color:red;" v-show="idequipo==0">(Seleccione)</span></label>
-                      <div class="form-inline">
-                          <input type="text" class="form-control" v-model="idequipo" placeholder="Ingrese equipos">
-                          <button @click="abrirModal()" class="btn btn-primary">...</button>
-                      </div>
-                  </div>
-              </div>
-              <div class="col-md-2">
-                  <div class="form-group">
-                      <button @click="agregarDetalle()" class="btn btn-success form-control btnagregar"><i class="fa fa-plus"></i></button>
-                  </div>
-              </div>                     
-                    </div>
-                        <div class="form-group row border">
-                            <div class="table-responsive col-md-12">
-                                <table class="table table-bordered table-striped table-sm">
-                                    <thead>
-                                        <tr>
-                                          <th>Opciones</th>
-                                          <th>Id</th>
-                                            <th>Equipo</th>
-                                            <th>Rama</th>
-                                            <th>Categoria</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody v-if="arrayDetalle.length">
-                                        <tr v-for="(detalle, index) in arrayDetalle" :key="detalle.id">
-                                           <button type="button" @click="eliminarDetalle(index)" class="btn btn-danger btn-sm">
-                                              <i class="fa fa-close"></i>
-                                           </button>
-                                           <td v-text="detalle.id"></td>
-                                            <td v-text="detalle.equipo">
-                                            </td>
-                                            <td v-text="detalle.nombre_rama">
-                                            </td>
-                                            <td v-text="detalle.nombre_categoria"></td>
-                                        </tr>
-                                    </tbody>  
-                                    <tbody v-else>
-                                        <tr>
-                                            <td colspan="4">
-                                                No hay equipos agregados
-                                            </td>
-                                        </tr>
-                                    </tbody>                                  
-                                </table>
-                            </div>
-                        </div>
-                         <div class="form-group row">
-                            <div class="col-md-12">
-                                <button type="button" @click="ocultarDetalle2()" class="btn btn-secondary">Cerrar</button>
-                                <button type="button" @click="actualizarTorneo1()" class="btn btn-primary">Guardar cambios</button>                                
-                            </div>
-                        </div>
-                    </div>
-               </template>                                        
       </div>
       <!-- Fin ejemplo de tabla Listado -->
     </div>
@@ -615,12 +531,18 @@ export default {
     insertEquipo(){
       let me = this;
       console.log(this.idequipo, this.idtorneo)
-      axios.post('/torneo/insertarEquipo',{
-        'idequipo': this.idequipo,
-        'idtorneo': this.idtorneo
+      axios.post('/detalletorneo/registrar',{
+        //'idequipo': this.idequipo,
+        'data' : this.arrayDetalle,
+        'idtorneo' : this.idtorneo
       })
         .then(function(response){
+          me.listado=1;
           me.listarTorneo(1, '', 'nombre');
+          me.idcategoria=0;
+          me.idequipo=0;
+          me.equipo='';
+          me.arrayDetalle=[];
         })
         .catch(function(error){
         });              
@@ -843,6 +765,7 @@ export default {
                     var respuesta= response.data;
                     arrayTorneoT = respuesta.torneo;
                     
+                    me.idtorneo = arrayTorneoT[0]['idtorneo'];
                     me.nombre = arrayTorneoT[0]['nombre'];
                     me.categoria = arrayTorneoT[0]['categoria'];
                     me.fecha_inicio=arrayTorneoT[0]['fecha_inicio'];

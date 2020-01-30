@@ -120,6 +120,7 @@ Route::group(['middleware' => ['Administrador']], function () {
     Route::post('/detalletorneo/registrar','TorneoDetalleController@store');
 
     Route::get('/propartido','ProPartidoController@index');
+    Route::get('/propartido/index1','ProPartidoController@index1');
     Route::get('/propartido/listarprotec/{idtorneo}', 'ProPartidoController@listarproTec');
     Route::post('/propartido/registrar','ProPartidoController@store');
     Route::post('/propartido/actualizar/{id}','ProPartidoController@update');

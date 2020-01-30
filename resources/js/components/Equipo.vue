@@ -125,8 +125,7 @@
            <!-- <div class="col-md-6">
               <label for>Nombre</label>
               <input type="text" class="form-control" v-model="nombre" />
-            </div>-->
-
+            </div>-->             
           <div class="col-md-6">
               <div class="form-group">
                 <label for>Equipo</label>
@@ -385,7 +384,7 @@ export default {
     listarEquipo(page, buscar, criterio) {
       let me = this;
       var url = "/equipo?page=" + page + "&buscar=" + buscar + "&criterio=" + criterio;
-      axios.get(url,{params: {idrama:this.idrama}}).then(function(response) {
+      axios.get(url).then(function(response) {
           var respuesta = response.data;
           me.arrayEquipo = respuesta.equipos.data;
          // me.pagination = respuesta.pagination;
@@ -420,24 +419,46 @@ export default {
         return;
       }
       let me = this;
+       
       axios.post('/inscripcionej/registrar', {
           'idequipo': this.idequipo,
           'idjugador': this.idjugador,
           'numero_camisa':this.numero_camisa,
           'posicion':this.posicion
          
-        })
-        .then(function(response) {
-          me.listado=1;
-          me.listarEquipo(1, '', 'nombre');
-          me.idequipo =0;
-          me.nombre = "";
-          me.idpersona=0;
-          me.persona="";
-          me.numero_camisa=0;
-          me.posicion='';
-          me.arrayDetalle=[];
-          window.open('/equipo/pdf/'+ id ,'_blank');
+        }).then(function(response) {
+              var respuesta= response.data;
+              //me.arrayDetalle = respuesta.existe;
+
+                if(respuesta == 0){
+                swal(
+                "Registrado!",
+                "Ya se ha registrado.",
+                "success"
+              );
+               me.listado=1;
+              me.listarEquipo(1, '', 'nombre');
+
+              me.idequipo =0;
+              me.nombre = "";
+              me.idjugador=0;
+              me.persona="";
+              me.numero_camisa=0;
+              me.posicion='';
+              me.arrayDetalle=[];            
+              }
+              else{
+                swal(
+                "Error!",
+                "Ya se ha registrado este número de camisa.",
+                "error"
+              ); 
+              }
+             // var respuesta= response.data;
+              //me.arrayDetalle = respuesta.existe;                  
+         
+          
+          //window.open('/equipo/pdf/'+ id ,'_blank');
         })
         .catch(function(error) {
           console.log(error);
@@ -550,14 +571,17 @@ export default {
                     });
                  }
             }, 
-    listarPersona(buscar, criterio) {
+    listarPersona() {
       let me = this;
-      var url = "/jugador/listarJugador?buscar=" + buscar + "&criterio=" + criterio;
-      axios.get(url, {params:{idequipo:this.idequipo}&&{idrama:this.idrama}}).then(function(response) {
+      var url = '/jugador/listarJugador';
+      axios.get(url,{params: {idrama:this.idrama}})
+        .then(function(response) {
+           console.log(response);
           var respuesta = response.data;
-          me.arrayPersona = respuesta.personas.data;
+          me.arrayPersona = respuesta.personas;
         })
         .catch(function(error) {
+          // handle error
           console.log(error);
         });
     },   
@@ -735,7 +759,7 @@ export default {
   mounted() {
     this.listarEquipo(1, this.buscar, this.criterio);
     this.selectRama();
-    this.listarPersona(this.buscar,this.criterio);
+    this.listarPersona();
     
   }
 };

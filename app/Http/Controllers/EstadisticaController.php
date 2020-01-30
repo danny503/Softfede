@@ -14,13 +14,11 @@ class EstadisticaController extends Controller
     {
         $estadisticas = DB::table('estadisticas as a')
         ->join('equipos as b','a.equipo_id','=','b.id')
-        ->select('b.nombre', DB::raw('SUM(a.pj) as pj'),
-        DB::raw('SUM(a.pg) as pg'),
-        DB::raw('SUM(a.pp) as pp'),
-        DB::raw('SUM(a.pts) as pts'))
-        //->where('a.equipo_id','=','b.id')
+        ->join('torneos as c','a.idtorneo','=','c.id')
+        ->select('b.nombre', 'c.nombre as torneo', 'a.pj as pj','a.pg as pg','a.pp as pp','pts as pts')
+        ->where('a.idtorneo','=', $request->idtorneo)
         ->groupBy('a.equipo_id')
-        ->orderByRaw('Pts and Pg DESC')->get();
+        ->orderByRaw('Pts DESC')->get();
         return ['estadistica' => $estadisticas];
         /*select e.nombre, SUM( p.pj ) PJ, SUM( p.pg ) PG, SUM( p.pp ) PP, SUM( pts )PTS from
          estadisticas as p 
@@ -30,17 +28,6 @@ class EstadisticaController extends Controller
         /*$estadistica = Estadistica::all();
         return $estadistica;*/
     }
-    public function Buscar(Request $request, $id, $pa, $pb){
-        if ($pa > $pb) {
-            $rpga = 1;
-            $rpgb = 0;
-        }else{
-            $rpga = 0;
-            $rpgb = 1;
-        }                   
-                                
-    }
-
     public function create()
     {
         //

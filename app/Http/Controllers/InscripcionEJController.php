@@ -25,13 +25,23 @@ class InscripcionEJController extends Controller
     public function store(Request $request)
     {
         if (!$request->ajax()) return redirect('/');
-        $inscripcion = new InscripcionJE();
-        $inscripcion->idequipo =  $request->idequipo;
-        $inscripcion->idjugador = $request->idjugador;
-       //$inscripcion->fecha_ingreso = $det['fecha_ingreso'];
-        $inscripcion->numero_camisa = $request->numero_camisa;  
-        $inscripcion->posicion = $request->posicion;          
-        $inscripcion->save();             
+        $existe= DB::table('inscripcionej')
+        ->select('*')
+        ->where([['idequipo','=', $request->idequipo],['numero_camisa','=', $request->numero_camisa]])->count();
+        
+        if($existe == 0 ){
+            $inscripcion = new InscripcionJE();
+            $inscripcion->idequipo =  $request->idequipo;
+            $inscripcion->idjugador = $request->idjugador;
+           //$inscripcion->fecha_ingreso = $det['fecha_ingreso'];
+            $inscripcion->numero_camisa = $request->numero_camisa;  
+            $inscripcion->posicion = $request->posicion;          
+            $inscripcion->save();
+        }else{
+            
+           $existe = 1;
+        }
+        return $existe;            
     }
     
     public function show($id)

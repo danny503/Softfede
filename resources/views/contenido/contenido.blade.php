@@ -87,6 +87,9 @@
             <template v-if="menu==3">
             <jugador></jugador>
             </template>
+            <template v-if="menu==13">
+            <tablaposicion></tablaposicion>
+            </template>
             <template v-if="menu==22">
             <equipos></equipos>
             </template>

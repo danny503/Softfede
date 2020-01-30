@@ -52,27 +52,33 @@ class JugadorController extends Controller
 
     public function listarJugador(Request $request)
     {
-        if (!$request->ajax()) return redirect('/');
+        //if (!$request->ajax()) return redirect('/');
 
         $buscar = $request->buscar;
         $criterio = $request->criterio;
-        $idrama = $request->idrama;
-        
-        if ($buscar==''){
-            $personas = Jugador::join('personas','jugadores.id','=','personas.id')
+       $idrama = $request->idrama;
+        $idequipo = 0;
+           /* $personas = Jugador::join('personas','jugadores.id','=','personas.id')
             ->join('users','jugadores.idusuario','=','users.id')
             ->join('ramas','personas.idrama','=','ramas.id')
             ->select('personas.id','personas.nombre', 'ramas.nombre as nombre_rama')
             ->where('personas.idrama','=', $idrama)
             ->orWhere('users.id','=',Auth::id())
-            ->orderBy('personas.id', 'desc')->paginate(6);
-        }
-        else{
-            $personas = Jugador::join('personas','jugadores.id','=','personas.id')
-            ->select('personas.id','personas.nombre')            
-            ->where('personas.'.$criterio, 'like', '%'. $buscar . '%')
-            ->orderBy('personas.id', 'desc')->paginate(6);
-        }
+            ->orderBy('personas.id', 'desc')->paginate(6);*/
+            $teams = DB::table('teams')
+            ->select(DB::raw('select a.id, a.nombre from personas as a inner JOIN jugadores as b on a.id=b.id INNER JOIN 
+            equipos as c on c.idrama=a.idrama where a.idrama= (select idrama from equipos where id=2) group by a.id ORDER BY a.id desc'))
+            ->get();
+
+            $personas = DB::table('jugadores as a')
+            ->join('personas as b','a.id','=','b.id')
+            ->join('equipos as c','c.idrama','=','b.idrama')
+            ->select('b.id','b.nombre')
+            //->where('c.idrama','=','(select idrama from equipos where id','=', $idequipo))
+            ->groupBy('b.id')
+            ->orderBy('b.id','desc')->get();
+            /*select a.id, a.nombre from personas as a inner JOIN jugadores as b on a.id=b.id INNER JOIN 
+            equipos as c on c.idrama=a.idrama where a.idrama=1 ORDER BY a.id DESC*/
         
         return [ 'personas' => $personas ];
     }

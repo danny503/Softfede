@@ -77,15 +77,13 @@ class TorneoController extends Controller
     public function obtenerCabecera(Request $request){
         if (!$request->ajax()) return redirect('/');
  
-        $id = $request->id;
-         
-        $torneo = Torneo::join('categorias','torneos.idcategoria','=','categorias.id')
-        ->select('torneos.id','torneos.nombre','torneos.fecha_inicio',
-        'torneos.fecha_fin','torneos.estado','categorias.nombre as categoria')
-        ->where('torneos.id','=',$id)
-        ->orderBy('torneos.id', 'desc')->take(1)->get();
-
-         
+        $idtorneo = $request->id;
+        $torneo = DB::table('torneos as a')
+        ->join('categorias as b','a.idcategoria','=','b.id')
+        ->select('a.id as idtorneo','a.nombre','a.fecha_inicio','a.fecha_fin','a.estado','b.nombre as categoria')
+        ->where('a.id','=',$idtorneo)
+        ->orderBy('a.id','desc')->take(1)->get();
+                 
         return [
            
             'torneo' => $torneo
@@ -95,13 +93,26 @@ class TorneoController extends Controller
         if (!$request->ajax()) return redirect('/');
  
         $id = $request->id;
+            $detalles = DB::table('detalle_torneos as a')
+            ->join('equipos as b','a.idequipo','=','b.id')
+            ->join('ramas as c','b.idrama','=','c.id')
+            ->join('categorias as e','b.idcategoria','=','e.id')
+            ->select('a.id','b.id as idequipo','b.nombre as equipo','c.nombre as rama','e.nombre as nombre_categoria')
+            ->where('a.idtorneo','=', $id)
+            ->groupBy('a.idequipo')
+            ->orderBy('a.id','desc')->get();
+      /*SELECT a.id,a.idequipo,b.nombre as equipo, c.nombre as rama, e.nombre as categoria FROM detalle_torneos as a INNER join 
+      equipos as b on a.idequipo =b.id  INNER JOIN ramas as c on b.idrama = c.id INNER JOIN categorias as e on b.idcategoria = e.id
+        where a.idtorneo = 1
+        GROUP BY a.idequipo
+        ORDER BY a.id desc*/
          
-        $detalles = DetalleTorneo::join('equipos','detalle_torneos.idequipo','=','equipos.id')
+       /* $detalles = DetalleTorneo::join('equipos','detalle_torneos.idequipo','=','equipos.id')
         ->join('ramas','equipos.idrama','=','ramas.id')
         ->join('categorias','equipos.idcategoria','=','categorias.id')        
-        ->select('detalle_torneos.id','equipos.nombre as equipo','ramas.nombre as rama','categorias.nombre as nombre_categoria')
+        ->select('detalle_torneos.id','equipos.id as idequipo','equipos.nombre as equipo','ramas.nombre as rama','categorias.nombre as nombre_categoria')
         ->where('detalle_torneos.idtorneo','=',$id)
-        ->orderBy('detalle_torneos.id', 'desc')->get();         
+        ->orderBy('detalle_torneos.id', 'desc')->get();    */     
         return [
            
             'detalles' => $detalles
@@ -185,18 +196,21 @@ class TorneoController extends Controller
 
     }   
     public function insertarEquipo(Request $request){
-        //$idequipo = $request->idequipo;
-        //$idtorneo = $request->idtorneo;
-        /*DB::table('detalle_torneos')
-       ->insert([
-       'id' => $request->id,
-       'idequipo' => $request->idequipo,
-       'idtorneo' => $request->idequipo]
-        );*/
-        $inscripcion = new DetalleTorneo();
+        //$torneo = new Torneo();
+        $inscripciones = $request->data;//Array de detalles
+        //Recorro todos los elementos
+        foreach($inscripciones as $ep=>$det)
+        {
+            $inscripcion = new DetalleTorneo();
+            $inscripcion->idequipo = $det['idequipo'];
+            $inscripcion->idtorneo = $request->idtorneo;
+            $inscripcion->save();
+        }
+
+       /* $inscripcion = new DetalleTorneo();
         $inscripcion->idtorneo =   $request->idtorneo;
         $inscripcion->idequipo = $request->idequipo;       
-        $inscripcion->save();
+        $inscripcion->save();*/
        // INSERT INTO `detalle_torneos` (`id`, `idequipo`, `idtorneo`) VALUES ('25', '3', '3');
 
        }

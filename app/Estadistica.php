@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Estadistica extends Model
 {
-    protected $fillable = [ 'equipo_id', 'pj','pg','pp','pts'
+    protected $fillable = [ 'idtorneo','equipo_id', 'pj','pg','pp','pts'
 
     ];
     public function Programacion(){

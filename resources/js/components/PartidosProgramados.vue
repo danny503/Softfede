@@ -7,7 +7,7 @@
           <div class="col-md-9">
             <select class="form-control" v-model="idtorneo">
               <option value="0" disabled>Seleccione</option>
-                <option v-for="torneo in arrayTorneo" :key="torneo.id" :value="torneo.id" v-text="torneo.nombre"></option>
+                <option v-for="torneo in arrayTorneo" :key="torneo.id" :value="torneo.id" v-text="torneo.nombre" @click="listarPartido(idtorneo)"></option>
             </select>
           </div>
       </div>
@@ -19,7 +19,7 @@
                <button type="button" @click="listarPartido(idtorneo)" class="btn btn-info btn-sm">
                         <i class="fa fa-life-ring"></i>
                 </button> &nbsp; 
-                   <button type="button" @click="buscarEstadistica()" class="btn btn-info btn-sm">
+                   <button type="button" @click="pdfProPartido(idtorneo)" class="btn btn-info btn-sm">
                         <i class="fa fa-file"></i>
                     </button>                                    
                     <div class="table-responsive">
@@ -54,24 +54,18 @@
                  <button type="button" @click="abrirModal('categoria','actualizar', propartido)" class="btn btn-info btn-sm">
                      <i class="fa fa-plus"></i>
                   </button>
-                 <button type="button" @click="puntaje()" disabled class="btn btn-info btn-sm">
-                      <i class="fa fa-eye"></i>
-                  </button> 
                   </td>  
                   <td v-else="">
 
                  <button type="button" disabled @click="abrirModal('categoria','actualizar', propartido)" class="btn btn-info btn-sm">
                      <i class="fa fa-plus"></i>
-                  </button>
-                 <button type="button" @click="mostrarDetalle()" disabled class="btn btn-info btn-sm">
-                      <i class="fa fa-eye"></i>
                   </button>                   
                   </td> 
                 </tr> 
               </tbody>               
             </table>
           </div>          
-               </form> 
+          </form> 
             </div>      
         </div>
               <div class="modal fade" tabindex="-1" :class="{'mostrar':modal}" role="dialog" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
@@ -86,8 +80,8 @@
                         <div class="modal-body">
                             <form method="post" enctype="multipart/form-data" class="form-horizontal">
                                 <div class="form-group row">
-                                  <input type="text" v-model="idequipo_a">
-                                  <input type="text" v-model="idequipo_b">
+                                  <input type="text" hidden v-model="idequipo_a">
+                                  <input type="text" hidden v-model="idequipo_b">
                                     <label class="col-md-3 form-control-label" for="puntaje_a">Puntaje Equipo A</label>
                                     <div class="col-md-9">
                                         <input type="number"  min="0" v-model="puntaje_a" class="form-control" placeholder="" onkeypress='return event.charCode >= 48 && event.charCode <= 57'/>                                        
@@ -160,11 +154,11 @@ export default {
     methods:{
         listarPartido(idtorneo) {
           //console.log(this.idtorneo);
-          this.arrayProPartido = [];
+          //this.arrayProPartido = [];
           let me = this;
             axios.get('/propartido/verprogramacion/' + idtorneo).then(function(response) {
                var respuesta= response.data;
-                    me.arrayProPartido = respuesta.proo;
+               me.arrayProPartido = respuesta.proo;
          console.log(me.arrayProPartido);
         })
         .catch(function(error) {
@@ -224,19 +218,18 @@ export default {
                 //preventDefault();
                     return;
                 }
-                let me = this;
-               
+                let me = this;               
                 axios.post('/propartido/actualizar/'+id,{
                     'puntaje_a': this.puntaje_a,
                     'puntaje_b': this.puntaje_b,
                     'idequipo_a' : this.idequipo_a,
-                    'idequipo_b' : this.idequipo_b,                    
+                    'idequipo_b' : this.idequipo_b,
+                    'idtorneo' : this.idtorneo,                    
                     'id': this.id
                 }).then(function (response) {
                     me.cerrarModal();
-                    me.listarPartido();
-                    //me.arrayProPartido = [];
-                    //me.arrayProPartido=[];
+                    me.listarPartido(this.idtorneo);
+                    me.arrayProPartido = [];
                     //me.idtorneo=0;
                    // me.torneo=''                    
                 }).catch(function (error) {

@@ -23,8 +23,10 @@ class ProPartidoController extends Controller
        $equipo = DB::table('equipos as a')
        ->join('detalle_torneos as b','a.id','=','b.idequipo')
        ->join('torneos as c','b.idtorneo','=','c.id')
+       //->join('programacions as e','b.id','=','e.id')
        ->select('a.id','c.nombre as torneo','a.nombre as nombre')
        ->where('c.id','=',$request->idtorneo)       
+       ->groupBy('b.idequipo')
        ->get();
        //$id = id; 
        //select a.id, c.nombre, a.nombre as equipo from equipos as a inner join detalle_torneos as b on a.id = b.idequipo 
@@ -222,6 +224,15 @@ class ProPartidoController extends Controller
     INNER JOIN equipos  as equipob ON a.equipo_b=equipob.id
     inner JOIN torneos as c on a.idtorneo= c.id*/
     }
+    public function index1(Request $request){
+        $idtorneo = $request->idtorneo;   
+        $index1 = DB::table('programacions as a')
+        ->join('sedes as b','a.idsede','=','b.id')
+        ->join('torneos as c','a.idtorneo','=','c.id')
+        ->select('a.id as idpro','a.fecha','a.hora','b.nombre as nombre_sede','c.nombre as torneo')
+        ->where('c.id','=',$idtorneo)->get();        
+        return['index1'=>$index1];
+    }
     public function listarproTec(Request $request, $idtorneo){
         //if (!$request->ajax()) return redirect('/'); 
         $idtorneo = $request->idtorneo;        
@@ -270,7 +281,7 @@ class ProPartidoController extends Controller
         ->join('equipos as equipoa','a.equipo_a','=','equipoa.id')
         ->join('equipos as equipob', 'a.equipo_b','=','equipob.id')        
         ->join('torneos as c','a.idtorneo','=','c.id')
-        ->select('a.id','a.jornada','equipoa.id as idequipo_a','equipoa.nombre as equipoA','equipob.id as idequipo_b','equipob.nombre as equipoB','a.puntaje_a','a.puntaje_b', 'c.nombre as torneo')       
+        ->select('a.id','a.jornada','equipoa.id as idequipo_a','equipoa.nombre as equipoA','equipob.id as idequipo_b','equipob.nombre as equipoB','a.puntaje_a','a.puntaje_b', 'c.nombre as torneo','a.fecha','a.hora')       
         ->where('c.id','=',$idtorneo)
         ->orderBy('a.id','asc')
         ->get();
@@ -371,6 +382,7 @@ class ProPartidoController extends Controller
         $id = $request->id;
         $ida = $request->idequipo_a;
         $idb = $request->idequipo_b;
+        $idtorneo = $request->idtorneo;
     //    $ida = 3;
       //  $idb = 4;
         $pa = $request->puntaje_a;
@@ -387,13 +399,14 @@ class ProPartidoController extends Controller
             $pg = 0;
             $pp = 0;
             $pts = 0;
+
         if ($pa > $pb){
             $rpga = 1;
             $rpgb = 0;
             $rppa = 0;
             $rppb = 1;
         }
-        if ($pa<$pb){
+        if ($pa < $pb){
             $rpga = 0;
             $rpgb = 1;
             $rppa = 1;
@@ -401,8 +414,7 @@ class ProPartidoController extends Controller
         }
         $est_equipoa = DB::table('estadisticas')
         ->select('pj','pg','pp','pts')
-        ->where('equipo_id', '=', $ida)->get();
-
+        ->where([['equipo_id', '=', $ida],['idtorneo', '=',$idtorneo]])->get();
         
 
         foreach($est_equipoa as $t){
@@ -416,18 +428,20 @@ class ProPartidoController extends Controller
         $spp = $pp + $rppa;
         $spts = ($spg * 2) + $spp;
             
-        
-        $estadistica_a = DB::table('estadisticas')->where('equipo_id','=', $ida)
+        $insert_estadistica = DB::table('estadisticas')->insert([
+        'idtorneo' => $idtorneo, 'equipo_id'=> $ida,'pj'=>$pj,'pg'=>$pg,'pp'=>$pp,'pts'=>$pts]);
+
+        $estadistica_a = DB::table('estadisticas')->where([['equipo_id','=', $ida],['idtorneo','=',$idtorneo]])
         ->update(['pj'=> $spj,'pg' => $spg, 'pp'=> $spp,'pts' =>$spts]);
 
         //ESTADISTICA EQUIPO B
-        if ($pa > $pb){
+        if ($pb > $pa){
             $rpga = 1;
             $rpgb = 0;
             $rppa = 0;
             $rppb = 1;
         }
-        if ($pb<$pa){
+        if ($pb < $pa){
             $rpga = 0;
             $rpgb = 1;
             $rppa = 1;
@@ -436,7 +450,7 @@ class ProPartidoController extends Controller
 
         $est_equipo_b = DB::table('estadisticas')
         ->select('pj','pg','pp','pts')
-        ->where('equipo_id', '=', $idb)->get();
+        ->where([['equipo_id', '=', $idb],['idtorneo', '=',$idtorneo]])->get();
 
         foreach($est_equipo_b as $t){
                 $pj = $t->pj;
@@ -450,7 +464,10 @@ class ProPartidoController extends Controller
         $spts = ($spg * 2) + $spp;
             
         //$equipo_id = $request->equipo_id;
-        $estadistica_b = DB::table('estadisticas')->where('equipo_id','=', $idb)
+        $insert_estadisticab = DB::table('estadisticas')->insert([
+            'idtorneo' => $idtorneo, 'equipo_id'=> $idb,'pj'=>$pj,'pg'=>$pg,'pp'=>$pp,'pts'=>$pts]);
+            
+        $estadistica_b = DB::table('estadisticas')->where([['equipo_id','=', $idb],['idtorneo','=',$idtorneo]])
         ->update(['pj'=> $spj,'pg' => $spg, 'pp'=> $spp,'pts' =>$spts]);
         /* UPDATE `programacions` SET `puntaje_a` = '15', 
         `puntaje_b` = '20' WHERE `programacions`.`id` = 4;*/

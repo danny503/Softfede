@@ -23,23 +23,7 @@
                                 </p>
                             </a>
                         </li>
-                         <li class="nav-item has-treeview">
-                            <a href="#" class="nav-link">
-                                <i class="fa fa-fw fa-users"></i>
-                                <p>Usuarios
-                                    <i class="fa fa-angle-left right"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                              
-                                <li @click="menu=2" class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="fa fa-circle-o nav-icon"></i>
-                                        <p>Inicio de sesi&oacute;n</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
+   
                          <li class="nav-item has-treeview">
                             <a href="#" class="nav-link">
                                 <i class="fa fa-fw fa-check-square-o"></i>
@@ -113,12 +97,6 @@
                                         <p>Tabla posiciones</p>
                                     </a>
                                 </li>
-                                <li @click="menu=14" class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="fa fa-circle-o nav-icon"></i>
-                                        <p>Jugador destacado</p>
-                                    </a>
-                                </li>
                             </ul>
                         </li>
                        
@@ -131,12 +109,6 @@
                                 </p>
                             </a>
                             <ul class="nav nav-treeview">
-                                <li @click="menu=16" class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="fa fa-circle-o nav-icon"></i>
-                                        <p>Programaci&oacute;n de partidos</p>
-                                    </a>
-                                </li>
                                 <li @click="menu=17" class="nav-item">
                                     <a href="#" class="nav-link">
                                         <i class="fa fa-circle-o nav-icon"></i>
