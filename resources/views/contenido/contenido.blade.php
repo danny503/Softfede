@@ -40,7 +40,7 @@
             <tipo></tipo>
             </template>
             <template v-if="menu==12">
-            <update></update>
+            <programacionfecha></programacionfecha>
             </template>
             <template v-if="menu==13">
             <tablaposicion></tablaposicion>
