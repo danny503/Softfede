@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Jugador;
 use App\Persona;
+use App\Equipo;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -53,11 +54,37 @@ class JugadorController extends Controller
     public function listarJugador(Request $request)
     {
         //if (!$request->ajax()) return redirect('/');
-
         $buscar = $request->buscar;
         $criterio = $request->criterio;
-       $idrama = $request->idrama;
-        $idequipo = 0;
+        //$idrama = $request->idrama;
+        
+        if ($buscar==''){
+            $personas = Jugador::join('personas','jugadores.id','=','personas.id')
+            ->join('users','jugadores.idusuario','=','users.id')
+            ->join('equipos','equipos.idrama','=','personas.idrama')
+            ->select('personas.id','personas.nombre')
+            ->whereIn('personas.idrama', Equipo::select('idrama')->where('id','=', $request->idequipo)->get()->toArray())
+            //->whereIn([['users.id','=',Auth::id()],['personas.idrama', Equipo::select('idrama')->where('id','=', $request->idequipo)->get()->toArray()]])
+            ->groupBy('personas.id')
+            ->orderBy('personas.id', 'desc')->paginate(6);      
+        }
+        else{
+            $personas = Jugador::join('personas','jugadores.id','=','personas.id')
+            ->select('personas.id','personas.nombre')            
+            ->where('personas.'.$criterio, 'like', '%'. $buscar . '%')
+            ->orderBy('personas.id', 'desc')->paginate(6);
+        }
+
+       /* $personas = DB::table('personas as a')
+        ->join('jugadores as b','a.id','=','b.id')
+        ->join('equipo as c','c.idrama','=','a.idrama')
+        ->select('a.id','a.nombre')
+        ->where('a.idrama','=' ,(DB::raw("select idrama from equipos where id=2")))
+        ->groupBy('a.id')
+        ->orderBy('a.id', 'desc')->get();
+
+      // $idrama = $request->idrama;
+//        $idequipo = $request->idequipo;
            /* $personas = Jugador::join('personas','jugadores.id','=','personas.id')
             ->join('users','jugadores.idusuario','=','users.id')
             ->join('ramas','personas.idrama','=','ramas.id')
@@ -65,21 +92,39 @@ class JugadorController extends Controller
             ->where('personas.idrama','=', $idrama)
             ->orWhere('users.id','=',Auth::id())
             ->orderBy('personas.id', 'desc')->paginate(6);*/
-            $teams = DB::table('teams')
+            /*$teams = DB::table('teams')
             ->select(DB::raw('select a.id, a.nombre from personas as a inner JOIN jugadores as b on a.id=b.id INNER JOIN 
             equipos as c on c.idrama=a.idrama where a.idrama= (select idrama from equipos where id=2) group by a.id ORDER BY a.id desc'))
-            ->get();
-
-            $personas = DB::table('jugadores as a')
-            ->join('personas as b','a.id','=','b.id')
-            ->join('equipos as c','c.idrama','=','b.idrama')
-            ->select('b.id','b.nombre')
-            //->where('c.idrama','=','(select idrama from equipos where id','=', $idequipo))
-            ->groupBy('b.id')
-            ->orderBy('b.id','desc')->get();
+            ->get();*/
+            /*$personas = DB::table('personas as a')
+            ->join('jugadores as b','a.id','=','b.id')
+            ->join('users as e','b.idusuario','e.id')
+            ->join('equipos as c','a.idrama','=','c.idrama')
+            ->select('a.id','a.nombre')
+            ->where('e.id','=',Auth::id())
+            ->groupBy('a.id')
+            ->orderBy('a.id','desc')->get();
+            $buscar = $request->buscar;
+            $criterio = $request->criterio;
+            //$idrama = $request->idrama;
+            
+            if ($buscar==''){
+                $personas = Jugador::join('personas','jugadores.id','=','personas.id')
+                ->join('users','jugadores.idusuario','=','users.id')
+                ->join('equipos','personas.idrama','=','equipos.idrama')
+                ->select('personas.id','personas.nombre','equipos.idrama')
+                ->where([['users.id','=',Auth::id()],['personas.idrama','=', $request->idrama]])
+                ->groupBy('personas.id')
+                ->orderBy('personas.id', 'desc')->paginate(6);
+            }
+            else{
+                $personas = Jugador::join('personas','jugadores.id','=','personas.id')
+                ->select('personas.id','personas.nombre')            
+                ->where('personas.'.$criterio, 'like', '%'. $buscar . '%')
+                ->orderBy('personas.id', 'desc')->paginate(6);
+            }
             /*select a.id, a.nombre from personas as a inner JOIN jugadores as b on a.id=b.id INNER JOIN 
             equipos as c on c.idrama=a.idrama where a.idrama=1 ORDER BY a.id DESC*/
-        
         return [ 'personas' => $personas ];
     }
 

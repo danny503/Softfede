@@ -2818,6 +2818,10 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+var _methods;
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 //
 //
 //
@@ -3149,6 +3153,7 @@ __webpack_require__.r(__webpack_exports__);
       numero_camisa: "",
       arrayPersona: [],
       arrayDetalle: [],
+      arrayEquipoT: [],
       listado: 1,
       modal: 0,
       tituloModal: "",
@@ -3203,14 +3208,46 @@ __webpack_require__.r(__webpack_exports__);
       return pagesArray;
     }
   },
-  methods: {
+  methods: (_methods = {
     listarEquipo: function listarEquipo(page, buscar, criterio) {
       var me = this;
       var url = "/equipo?page=" + page + "&buscar=" + buscar + "&criterio=" + criterio;
       axios.get(url).then(function (response) {
         var respuesta = response.data;
-        me.arrayEquipo = respuesta.equipos.data; // me.pagination = respuesta.pagination;
+        me.arrayEquipo = respuesta.equipos.data; //me.arrayEquipo = response.data
+        // me.pagination = respuesta.pagination;
       })["catch"](function (error) {
+        // handle error
+        console.log(error);
+      });
+    },
+    listarEquipo2: function listarEquipo2(buscar, criterio) {
+      var me = this;
+      var url = "/equipo/listarEquipo?buscar=" + buscar + "&criterio=" + criterio;
+      axios.get(url).then(function (response) {
+        console.log(me.arrayEquipoT);
+        var respuesta = response.data;
+        me.arrayEquipoT = respuesta.equipos.data;
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    cerrarModal: function cerrarModal() {
+      this.modal = 0;
+      this.tituloModal = "";
+    },
+    listarPersona: function listarPersona() {
+      var me = this;
+      var url = '/jugador/listarJugador';
+      axios.get(url, {
+        params: {
+          idequipo: this.idequipo
+        }
+      }).then(function (response) {
+        console.log(response.data);
+        var respuesta = response.data;
+        me.arrayPersona = respuesta.personas.data;
+      }.bind(this))["catch"](function (error) {
         // handle error
         console.log(error);
       });
@@ -3222,7 +3259,7 @@ __webpack_require__.r(__webpack_exports__);
         // console.log(response);
         var respuesta = response.data;
         me.arrayRama = respuesta.ramas;
-      })["catch"](function (error) {
+      }.bind(this))["catch"](function (error) {
         // handle error
         console.log(error);
       });
@@ -3339,17 +3376,6 @@ __webpack_require__.r(__webpack_exports__);
     ocultarDetalle: function ocultarDetalle() {
       this.listado = 1;
     },
-    encuentra: function encuentra(id) {
-      var sw = 0;
-
-      for (var i = 0; i < this.arrayDetalle.length; i++) {
-        if (this.arrayDetalle[i].idpersona == id) {
-          sw = true;
-        }
-      }
-
-      return sw;
-    },
     eliminarDetalle: function eliminarDetalle(index) {
       var me = this;
       me.arrayDetalle.splice(index, 1);
@@ -3372,171 +3398,123 @@ __webpack_require__.r(__webpack_exports__);
           posicion: 1
         });
       }
-    },
-    listarPersona: function listarPersona() {
-      var me = this;
-      var url = '/jugador/listarJugador';
-      axios.get(url, {
-        params: {
-          idrama: this.idrama
-        }
-      }).then(function (response) {
-        console.log(response);
-        var respuesta = response.data;
-        me.arrayPersona = respuesta.personas;
-      })["catch"](function (error) {
-        // handle error
-        console.log(error);
-      });
-    },
-    cerrarModal: function cerrarModal() {
-      this.modal = 0;
-      this.numero_camisa = "";
-      this.posicion = 0;
-      this.tituloModal = "";
-    },
-    abrirModal: function abrirModal(modelo, accion) {
-      var data = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
-
-      switch (modelo) {
-        case "equipo":
-          {
-            switch (accion) {
-              case "registrar":
-                {
-                  this.modal = 1;
-                  this.tituloModal = 'Resgistrar';
-                  this.tipoAccion = 1;
-                  break;
-                }
-
-              case "actualizar":
-                {
-                  this.modal = 1;
-                  this.tituloModal = 'Actualizar';
-                  this.tipoAccion = 2;
-                  this.detalle_id = data['detalle_id'];
-                  this.numero_camisa = data['numero_camisa'];
-                  this.posicion = data['posicion'];
-                  this.persona = data['persona'];
-                  break;
-                }
-            }
-          }
-      }
-    },
-    eliminarEquipo: function eliminarEquipo(data) {
-      var _this2 = this;
-
-      //Esta nos abrirá un alert de javascript y si aceptamos borrará la tarea que hemos elegido
-      swal({
-        title: '¿Estás seguro?',
-        text: "¡No podrás revertir esto!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Si, eliminarlo!'
-      }).then(function (result) {
-        var me = _this2;
-        var detalle_id = data.detalle_id;
-        console.log(detalle_id);
-
-        if (result.value) {
-          axios.get('/inscripcionej/destroy/' + detalle_id).then(function (response) {
-            me.listado = 1;
-            swal('Eliminado!', 'Tu jugador ha sido eliminado.', 'success');
-          })["catch"](function (error) {
-            console.log(error);
-          });
-        }
-      });
-    },
-    desactivarUsuario: function desactivarUsuario(id) {
-      var _this3 = this;
-
-      swal({
-        title: "Esta seguro de desactivar este usuario?",
-        type: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Aceptar!",
-        cancelButtonText: "Cancelar",
-        confirmButtonClass: "btn btn-success",
-        cancelButtonClass: "btn btn-danger",
-        buttonsStyling: false,
-        reverseButtons: true
-      }).then(function (result) {
-        if (result.value) {
-          var me = _this3;
-          axios.put("/user/desactivar", {
-            id: id
-          }).then(function (response) {
-            me.listarPersona(1, "", "nombre");
-            swal("Desactivado!", "El registro ha sido desactivado con éxito.", "success");
-          })["catch"](function (error) {
-            console.log(error);
-          });
-        } else if ( // Read more about handling dismissals
-        result.dismiss === swal.DismissReason.cancel) {}
-      });
-    },
-    verEquipo: function verEquipo(id) {
-      var me = this;
-      me.listado = 2; //Obtener datos del ingreso
-
-      var arrayEquipoT = [];
-      var url = '/equipo/obtenerCabecera?id=' + id;
-      axios.get(url).then(function (response) {
-        var respuesta = response.data;
-        arrayEquipoT = respuesta.equipo;
-        me.nombre_rama = arrayEquipoT[0]['nombre_rama'];
-        me.nombre_categoria = arrayEquipoT[0]['nombre_categoria'];
-        me.nombre = arrayEquipoT[0]['nombre'];
-      })["catch"](function (error) {
-        console.log(error);
-      }); //obtener datos de los detalles
-
-      var url = '/equipo/obtenerDetalles?id=' + id;
-      axios.get(url).then(function (response) {
-        //console.log(response);
-        var respuesta = response.data;
-        me.arrayDetalle = respuesta.detalles;
-      })["catch"](function (error) {
-        console.log(error);
-      });
-    },
-    activarUsuario: function activarUsuario(id) {
-      var _this4 = this;
-
-      swal({
-        title: "Esta seguro de activar este usuario?",
-        type: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Aceptar!",
-        cancelButtonText: "Cancelar",
-        confirmButtonClass: "btn btn-success",
-        cancelButtonClass: "btn btn-danger",
-        buttonsStyling: false,
-        reverseButtons: true
-      }).then(function (result) {
-        if (result.value) {
-          var me = _this4;
-          axios.put("/user/activar", {
-            id: id
-          }).then(function (response) {
-            me.listarPersona(1, "", "nombre");
-            swal("Activado!", "El registro ha sido activado con éxito.", "success");
-          })["catch"](function (error) {
-            console.log(error);
-          });
-        } else if ( // Read more about handling dismissals
-        result.dismiss === swal.DismissReason.cancel) {}
-      });
     }
+  }, _defineProperty(_methods, "cerrarModal", function cerrarModal() {
+    this.modal = 0;
+    this.numero_camisa = "";
+    this.posicion = 0;
+    this.tituloModal = "";
+  }), _defineProperty(_methods, "abrirModal", function abrirModal(modelo, accion) {
+    var data = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
+
+    switch (modelo) {
+      case "equipo":
+        {
+          switch (accion) {
+            case "registrar":
+              {
+                this.modal = 1;
+                this.tituloModal = 'Resgistrar';
+                this.tipoAccion = 1;
+                break;
+              }
+
+            case "actualizar":
+              {
+                this.modal = 1;
+                this.tituloModal = 'Actualizar';
+                this.tipoAccion = 2;
+                this.detalle_id = data['detalle_id'];
+                this.numero_camisa = data['numero_camisa'];
+                this.posicion = data['posicion'];
+                this.persona = data['persona'];
+                break;
+              }
+          }
+        }
+    }
+  }), _defineProperty(_methods, "eliminarEquipo", function eliminarEquipo(data) {
+    var _this2 = this;
+
+    //Esta nos abrirá un alert de javascript y si aceptamos borrará la tarea que hemos elegido
+    swal({
+      title: '¿Estás seguro?',
+      text: "¡No podrás revertir esto!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si, eliminarlo!'
+    }).then(function (result) {
+      var me = _this2;
+      var detalle_id = data.detalle_id;
+      console.log(detalle_id);
+
+      if (result.value) {
+        axios.get('/inscripcionej/destroy/' + detalle_id).then(function (response) {
+          me.listado = 1;
+          swal('Eliminado!', 'Tu jugador ha sido eliminado.', 'success');
+        })["catch"](function (error) {
+          console.log(error);
+        });
+      }
+    });
+  }), _defineProperty(_methods, "desactivarUsuario", function desactivarUsuario(id) {
+    var _this3 = this;
+
+    swal({
+      title: "Esta seguro de desactivar este usuario?",
+      type: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Aceptar!",
+      cancelButtonText: "Cancelar",
+      confirmButtonClass: "btn btn-success",
+      cancelButtonClass: "btn btn-danger",
+      buttonsStyling: false,
+      reverseButtons: true
+    }).then(function (result) {
+      if (result.value) {
+        var me = _this3;
+        axios.put("/user/desactivar", {
+          id: id
+        }).then(function (response) {
+          me.listarPersona(1, "", "nombre");
+          swal("Desactivado!", "El registro ha sido desactivado con éxito.", "success");
+        })["catch"](function (error) {
+          console.log(error);
+        });
+      } else if ( // Read more about handling dismissals
+      result.dismiss === swal.DismissReason.cancel) {}
+    });
+  }), _defineProperty(_methods, "verEquipo", function verEquipo(id) {
+    var me = this;
+    me.listado = 2; //Obtener datos del ingreso
+
+    var arrayEquipoT = [];
+    var url = '/equipo/obtenerCabecera?id=' + id;
+    axios.get(url).then(function (response) {
+      var respuesta = response.data;
+      arrayEquipoT = respuesta.equipo;
+      me.nombre_rama = arrayEquipoT[0]['nombre_rama'];
+      me.nombre_categoria = arrayEquipoT[0]['nombre_categoria'];
+      me.nombre = arrayEquipoT[0]['nombre'];
+    })["catch"](function (error) {
+      console.log(error);
+    }); //obtener datos de los detalles
+
+    var url = '/equipo/obtenerDetalles?id=' + id;
+    axios.get(url).then(function (response) {
+      //console.log(response);
+      var respuesta = response.data;
+      me.arrayDetalle = respuesta.detalles;
+    })["catch"](function (error) {
+      console.log(error);
+    });
+  }), _methods),
+  created: function created() {
+    this.selectRama();
   },
   mounted: function mounted() {
     this.listarEquipo(1, this.buscar, this.criterio);
@@ -4792,7 +4770,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -5242,6 +5219,360 @@ __webpack_require__.r(__webpack_exports__);
     //this.listarPartido();
     this.selectTorneo();
     this.selectSede(); // this.buscarEstadistica();
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ProgramacionFecha.vue?vue&type=script&lang=js&":
+/*!****************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ProgramacionFecha.vue?vue&type=script&lang=js& ***!
+  \****************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      propartido: '',
+      id: 0,
+      nombre: '',
+      jornada: 0,
+      equipo_a: 0,
+      eq1: 0,
+      eq2: 0,
+      numero_camisa: 0,
+      posicion: 0,
+      puntaje_a: null,
+      puntaje_b: null,
+      arrayVerp: [],
+      idsede: 0,
+      fecha: '',
+      hora: '',
+      arraySede: [],
+      ideq2: 0,
+      equipo_b: 0,
+      equipo: '',
+      torneo: '',
+      equipo_id: 0,
+      idtorneo: 0,
+      errors: [],
+      idequipo_a: null,
+      idequipo_b: null,
+      errorMostrarMsjPuntaje: [],
+      errorPuntaje: 0,
+      arrayProPartido: [],
+      arrayTorneo: [],
+      arrayCategoria: [],
+      modal: 0,
+      tituloModal: '',
+      tipoAccion: 0,
+      listado: 1
+    };
+  },
+  methods: {
+    listarPartido: function listarPartido(idtorneo) {
+      //console.log(this.idtorneo);
+      //this.arrayProPartido = [];
+      var me = this;
+      axios.get('/propartido/verprogramacion/' + idtorneo).then(function (response) {
+        var respuesta = response.data;
+        me.arrayProPartido = respuesta.proo;
+        console.log(me.arrayProPartido);
+      })["catch"](function (error) {
+        // handle error
+        console.log(error);
+      });
+    },
+    selectSede: function selectSede() {
+      var me = this;
+      var url = '/sede/selectSede';
+      axios.get(url).then(function (response) {
+        // consolo.log(response);
+        var respuesta = response.data;
+        me.arraySede = respuesta.sedes;
+      })["catch"](function (error) {
+        // handle error
+        console.log(error);
+      });
+    },
+    buscarEstadistica: function buscarEstadistica(ida, idb, pa, pb) {
+      //console.log(this.idtorneo);
+      // this.arrayProPartido = [];
+      var me = this;
+      axios.get('/propartido/buscarida/' + ida + idb + pa + pb).then(function (response) {
+        //me.arrayEstadistica = response.data;
+        var respuesta = response.data;
+        me.arrayEstadistica = respuesta.pj;
+        console.log(me.arrayEstadistica);
+      })["catch"](function (error) {
+        // handle error
+        console.log(error);
+      });
+    },
+    checkForm: function checkForm(event) {
+      if (this.puntaje_a && this.puntaje_b) return true;
+      this.errors = [];
+      if (!this.puntaje_a) this.errors.push("Age required.");
+      if (!this.puntaje_b) this.errors.push("Name required.");
+      event.preventDefault();
+    },
+    verProgramacion: function verProgramacion(idtorneo) {
+      var me = this;
+      console.log(me.arrayVerp); // axios.get('/propartido/verprogramacion/' + idtorneo).then(function (response) {
+      //me.arrayVerp = response.data;
+
+      var arrayTorneoT = [];
+      var url = '/propartido/verprogramacion/' + idtorneo;
+      axios.get(url).then(function (response) {
+        var respuesta = response.data;
+        arrayTorneoT = respuesta.programacion;
+        me.jornada = arrayTorneoT[0]['jornada'];
+        me.equipo_a = arrayTorneoT[0]['equipoA'];
+        me.equipo_b = arrayTorneoT[0]['equipoB'];
+      })["catch"](function (error) {
+        console.log(error);
+      })["finally"](function () {// always executed
+      });
+    },
+    actualizarProgramacion: function actualizarProgramacion(id) {
+      if (this.validarPuntaje()) {
+        //preventDefault();
+        return;
+      }
+
+      var me = this;
+      axios.post('/propartido/actualizar/' + id, {
+        'idtorneo': this.idtorneo,
+        'fecha': this.fecha,
+        'hora': this.hora,
+        'idsede': this.idsede,
+        'id': this.id
+      }).then(function (response) {
+        me.cerrarModal();
+        me.listarPartido(this.idtorneo);
+        me.arrayProPartido = []; //me.idtorneo=0;
+        // me.torneo=''                    
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    puntaje: function puntaje() {
+      var me = this;
+      var url = '/propartido/obtenerpunto';
+      axios.get(url).then(function (response) {
+        console.log(response.data);
+        var respuesta = response.data; //me.arrayTorneo = respuesta.torneos;                    
+      })["catch"](function (error) {
+        // handle error
+        console.log(error);
+      });
+    },
+    validarPuntaje: function validarPuntaje() {
+      this.errorPuntaje = 0;
+      this.errorMostrarMsjPuntaje = [];
+      if (!this.puntaje_a) this.errorMostrarMsjPuntaje.push("El puntaje A no puede quedar vacío.");
+      if (!this.puntaje_b) this.errorMostrarMsjPuntaje.push("El puntaje B no puede quedar vacío.");
+      if (this.errorMostrarMsjPuntaje.length) this.errorPuntaje = 1;
+      return this.errorPuntaje;
+    },
+    selectTorneo: function selectTorneo() {
+      var me = this;
+      var url = '/torneo/selectTorneo';
+      axios.get(url).then(function (response) {
+        // consolo.log(response);
+        var respuesta = response.data;
+        me.arrayTorneo = respuesta.torneos;
+      })["catch"](function (error) {
+        // handle error
+        console.log(error);
+      });
+    },
+    pdfProPartido: function pdfProPartido(idtorneo) {
+      //window.open('/puntaje/pdf/'+ id ,'_blank');
+      window.open('/propartido/programacionPdf/' + idtorneo, '_blank');
+    },
+    listarPersona: function listarPersona(buscar, criterio) {
+      var me = this;
+      var url = "/jugador/listarJugador?buscar=" + buscar + "&criterio=" + criterio;
+      axios.get(url).then(function (response) {
+        var respuesta = response.data;
+        me.arrayPersona = respuesta.personas.data;
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    encuentra: function encuentra(id) {
+      var sw = 0;
+
+      for (var i = 0; i < this.arrayDetalle.length; i++) {
+        if (this.arrayDetalle[i].idequipo == id) {
+          sw = true;
+        }
+      }
+
+      return sw;
+    },
+    eliminarDetalle: function eliminarDetalle(index) {
+      var me = this;
+      me.arrayDetalle.splice(index, 1);
+    },
+    abrirModal: function abrirModal(modelo, accion) {
+      var data = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
+
+      switch (modelo) {
+        case "categoria":
+          {
+            switch (accion) {
+              case "registrar":
+                {
+                  this.modal = 1;
+                  this.tituloModal = 'Resgistrar Categoria';
+                  this.puntaje_a = 0;
+                  this.puntaje_b = 0;
+                  this.tipoAccion = 1;
+                  break;
+                }
+
+              case "actualizar":
+                {
+                  this.modal = 1;
+                  this.tituloModal = 'Ingrasar';
+                  this.tipoAccion = 2;
+                  this.id = data['id'];
+                  this.fecha = data['fecha'];
+                  this.hora = data['hora'];
+                  this.idsede = data['idsede'];
+                  this.puntaje_b = data['puntaje_b'];
+                  break;
+                }
+              //console.log();
+            }
+          }
+      }
+    },
+    cerrarModal: function cerrarModal() {
+      this.modal = 0;
+      this.tituloModal = "";
+    }
+  },
+  mounted: function mounted() {
+    this.selectSede();
+    this.selectTorneo();
   }
 });
 
@@ -7425,6 +7756,8 @@ __webpack_require__.r(__webpack_exports__);
     cerrarModal: function cerrarModal() {
       this.modal = 0;
       this.tituloModal = "";
+      this.idequipo = 0;
+      this.arrayEquipo = [];
     },
     abrirModal: function abrirModal(modelo, accion) {
       var data = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
@@ -12957,6 +13290,25 @@ exports.push([module.i, "\n.modal-content {\r\n  width: 100% !important;\r\n  po
 /*!*************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/css-loader??ref--5-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--5-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/PartidosProgramados.vue?vue&type=style&index=0&lang=css& ***!
   \*************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.modal-content {\r\n  width: 100% !important;\r\n  position: absolute !important;\n}\n.mostrar {\r\n  display: list-item !important;\r\n  opacity: 1 !important;\r\n  position: absolute !important;\r\n  background-color: #3c29297a !important;\n}\n.div-error {\r\n  display: flex;\r\n  justify-content: center;\n}\n.text-error {\r\n  color: red !important;\r\n  font-weight: bold;\n}\n@media (min-width: 600px) {\n.btnagregar {\r\n    margin-top: 2rem;\n}\n}\r\n", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ProgramacionFecha.vue?vue&type=style&index=0&lang=css&":
+/*!***********************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--5-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--5-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ProgramacionFecha.vue?vue&type=style&index=0&lang=css& ***!
+  \***********************************************************************************************************************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -44142,6 +44494,36 @@ if(false) {}
 
 /***/ }),
 
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ProgramacionFecha.vue?vue&type=style&index=0&lang=css&":
+/*!***************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--5-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--5-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ProgramacionFecha.vue?vue&type=style&index=0&lang=css& ***!
+  \***************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../../node_modules/css-loader??ref--5-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--5-2!../../../node_modules/vue-loader/lib??vue-loader-options!./ProgramacionFecha.vue?vue&type=style&index=0&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ProgramacionFecha.vue?vue&type=style&index=0&lang=css&");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
 /***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/PuntajePartido.vue?vue&type=style&index=0&lang=css&":
 /*!************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/style-loader!./node_modules/css-loader??ref--5-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--5-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/PuntajePartido.vue?vue&type=style&index=0&lang=css& ***!
@@ -47323,20 +47705,25 @@ var render = function() {
                               ],
                               staticClass: "form-control",
                               on: {
-                                change: function($event) {
-                                  var $$selectedVal = Array.prototype.filter
-                                    .call($event.target.options, function(o) {
-                                      return o.selected
-                                    })
-                                    .map(function(o) {
-                                      var val =
-                                        "_value" in o ? o._value : o.value
-                                      return val
-                                    })
-                                  _vm.idequipo = $event.target.multiple
-                                    ? $$selectedVal
-                                    : $$selectedVal[0]
-                                }
+                                change: [
+                                  function($event) {
+                                    var $$selectedVal = Array.prototype.filter
+                                      .call($event.target.options, function(o) {
+                                        return o.selected
+                                      })
+                                      .map(function(o) {
+                                        var val =
+                                          "_value" in o ? o._value : o.value
+                                        return val
+                                      })
+                                    _vm.idequipo = $event.target.multiple
+                                      ? $$selectedVal
+                                      : $$selectedVal[0]
+                                  },
+                                  function($event) {
+                                    return _vm.listarPersona()
+                                  }
+                                ]
                               }
                             },
                             [
@@ -47346,14 +47733,15 @@ var render = function() {
                                 [_vm._v("Seleccione un Equipo")]
                               ),
                               _vm._v(" "),
-                              _vm._l(_vm.arrayEquipo, function(equipo) {
-                                return _c("option", {
-                                  key: equipo.id,
-                                  domProps: {
-                                    value: equipo.id,
-                                    textContent: _vm._s(equipo.nombre)
-                                  }
-                                })
+                              _vm._l(_vm.arrayEquipo, function(equipo1) {
+                                return _c(
+                                  "option",
+                                  {
+                                    key: equipo1.id,
+                                    domProps: { value: equipo1.id }
+                                  },
+                                  [_vm._v(_vm._s(equipo1.nombre))]
+                                )
                               })
                             ],
                             2
@@ -51679,6 +52067,499 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", { staticClass: "text-center list-group-item-success" }, [
           _vm._v("Sede")
+        ])
+      ])
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ProgramacionFecha.vue?vue&type=template&id=ad7e20c0&":
+/*!********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ProgramacionFecha.vue?vue&type=template&id=ad7e20c0& ***!
+  \********************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "content-wrapper" }, [
+    _c("section", { staticClass: "content-header" }, [
+      _c("div", { staticClass: "card-header" }, [
+        _c("div", { staticClass: "form-group row" }, [
+          _c(
+            "label",
+            {
+              staticClass: "col-md-3 form-control-label",
+              attrs: { for: "text-input" }
+            },
+            [_vm._v("Torneo")]
+          ),
+          _vm._v(" "),
+          _c("div", { staticClass: "col-md-9" }, [
+            _c(
+              "select",
+              {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.idtorneo,
+                    expression: "idtorneo"
+                  }
+                ],
+                staticClass: "form-control",
+                on: {
+                  change: function($event) {
+                    var $$selectedVal = Array.prototype.filter
+                      .call($event.target.options, function(o) {
+                        return o.selected
+                      })
+                      .map(function(o) {
+                        var val = "_value" in o ? o._value : o.value
+                        return val
+                      })
+                    _vm.idtorneo = $event.target.multiple
+                      ? $$selectedVal
+                      : $$selectedVal[0]
+                  }
+                }
+              },
+              [
+                _c("option", { attrs: { value: "0", disabled: "" } }, [
+                  _vm._v("Seleccione")
+                ]),
+                _vm._v(" "),
+                _vm._l(_vm.arrayTorneo, function(torneo) {
+                  return _c("option", {
+                    key: torneo.id,
+                    domProps: {
+                      value: torneo.id,
+                      textContent: _vm._s(torneo.nombre)
+                    },
+                    on: {
+                      click: function($event) {
+                        return _vm.listarPartido(_vm.idtorneo)
+                      }
+                    }
+                  })
+                })
+              ],
+              2
+            )
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "card-header" }, [
+        _c("div", { staticClass: "table-responsive" }, [
+          _c(
+            "form",
+            {
+              attrs: {
+                action: "propartido",
+                method: "post",
+                enctype: "multipart/form-data"
+              }
+            },
+            [
+              _c("h1", [_vm._v("Ver Partidos Generados")]),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-info btn-sm",
+                  attrs: { type: "button" },
+                  on: {
+                    click: function($event) {
+                      return _vm.listarPartido(_vm.idtorneo)
+                    }
+                  }
+                },
+                [_c("i", { staticClass: "fa fa-life-ring" })]
+              ),
+              _vm._v("   \n                   "),
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-info btn-sm",
+                  attrs: { type: "button" },
+                  on: {
+                    click: function($event) {
+                      return _vm.pdfProPartido(_vm.idtorneo)
+                    }
+                  }
+                },
+                [_c("i", { staticClass: "fa fa-file" })]
+              ),
+              _vm._v(" "),
+              _c("div", { staticClass: "table-responsive" }, [
+                _c("table", { staticClass: "table table-hover text-center" }, [
+                  _vm._m(0),
+                  _vm._v(" "),
+                  _c(
+                    "tbody",
+                    _vm._l(_vm.arrayProPartido, function(propartido) {
+                      return _c("tr", { key: propartido.id }, [
+                        _c("td", {
+                          domProps: { textContent: _vm._s(propartido.jornada) }
+                        }),
+                        _vm._v(" "),
+                        _c("td", {
+                          domProps: { textContent: _vm._s(propartido.equipoA) }
+                        }),
+                        _vm._v(" "),
+                        _c("td", [_vm._v("Vs")]),
+                        _vm._v(" "),
+                        _c("td", {
+                          domProps: { textContent: _vm._s(propartido.equipoB) }
+                        }),
+                        _vm._v(" "),
+                        _c("td", {
+                          domProps: { textContent: _vm._s(propartido.fecha) }
+                        }),
+                        _vm._v(" "),
+                        _c("td", {
+                          domProps: { textContent: _vm._s(propartido.hora) }
+                        }),
+                        _vm._v(" "),
+                        _c("td", {
+                          domProps: {
+                            textContent: _vm._s(propartido.nombre_sede)
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("td", [
+                          _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-info btn-sm",
+                              attrs: { type: "button" },
+                              on: {
+                                click: function($event) {
+                                  return _vm.abrirModal(
+                                    "categoria",
+                                    "actualizar",
+                                    propartido
+                                  )
+                                }
+                              }
+                            },
+                            [_c("i", { staticClass: "fa fa-plus" })]
+                          )
+                        ])
+                      ])
+                    }),
+                    0
+                  )
+                ])
+              ])
+            ]
+          )
+        ])
+      ]),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          staticClass: "modal fade",
+          class: { mostrar: _vm.modal },
+          staticStyle: { display: "none" },
+          attrs: {
+            tabindex: "-1",
+            role: "dialog",
+            "aria-labelledby": "myModalLabel",
+            "aria-hidden": "true"
+          }
+        },
+        [
+          _c(
+            "div",
+            {
+              staticClass: "modal-dialog modal-primary modal-lg",
+              attrs: { role: "document" }
+            },
+            [
+              _c("div", { staticClass: "modal-content " }, [
+                _c("div", { staticClass: "modal-header" }, [
+                  _c("h4", {
+                    staticClass: "modal-title",
+                    domProps: { textContent: _vm._s(_vm.tituloModal) }
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass: "close",
+                      attrs: { type: "button", "aria-label": "Close" },
+                      on: {
+                        click: function($event) {
+                          return _vm.cerrarModal()
+                        }
+                      }
+                    },
+                    [
+                      _c("span", { attrs: { "aria-hidden": "true" } }, [
+                        _vm._v("×")
+                      ])
+                    ]
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "modal-body" }, [
+                  _c(
+                    "form",
+                    {
+                      staticClass: "form-horizontal",
+                      attrs: { method: "post", enctype: "multipart/form-data" }
+                    },
+                    [
+                      _c("div", { staticClass: "form-group row" }, [
+                        _c(
+                          "label",
+                          { staticClass: "col-md-3 form-control-label" },
+                          [_vm._v("Fecha")]
+                        ),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "col-md-9" }, [
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.fecha,
+                                expression: "fecha"
+                              }
+                            ],
+                            staticClass: "form-control",
+                            attrs: {
+                              type: "date",
+                              min: "0",
+                              placeholder: "",
+                              onkeypress:
+                                "return event.charCode >= 48 && event.charCode <= 57"
+                            },
+                            domProps: { value: _vm.fecha },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.fecha = $event.target.value
+                              }
+                            }
+                          })
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "form-group row" }, [
+                        _c(
+                          "label",
+                          {
+                            staticClass: "col-md-3 form-control-label",
+                            attrs: { for: "text-input" }
+                          },
+                          [_vm._v("Hora")]
+                        ),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "col-md-9" }, [
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.hora,
+                                expression: "hora"
+                              }
+                            ],
+                            staticClass: "form-control",
+                            attrs: {
+                              type: "time",
+                              min: "0",
+                              placeholder: "",
+                              onkeypress:
+                                "return event.charCode >= 48 && event.charCode <= 57"
+                            },
+                            domProps: { value: _vm.hora },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.hora = $event.target.value
+                              }
+                            }
+                          })
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-md-9" }, [
+                        _c(
+                          "label",
+                          {
+                            staticClass: "col-md-3 form-control-label",
+                            attrs: { for: "text-input" }
+                          },
+                          [_vm._v("Sede")]
+                        ),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "form-group row" }, [
+                          _c(
+                            "select",
+                            {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.idsede,
+                                  expression: "idsede"
+                                }
+                              ],
+                              staticClass: "form-control",
+                              on: {
+                                change: function($event) {
+                                  var $$selectedVal = Array.prototype.filter
+                                    .call($event.target.options, function(o) {
+                                      return o.selected
+                                    })
+                                    .map(function(o) {
+                                      var val =
+                                        "_value" in o ? o._value : o.value
+                                      return val
+                                    })
+                                  _vm.idsede = $event.target.multiple
+                                    ? $$selectedVal
+                                    : $$selectedVal[0]
+                                }
+                              }
+                            },
+                            [
+                              _c(
+                                "option",
+                                { attrs: { value: "0", disabled: "" } },
+                                [_vm._v("Seleccione la sede")]
+                              ),
+                              _vm._v(" "),
+                              _vm._l(_vm.arraySede, function(sede) {
+                                return _c("option", {
+                                  key: sede.id,
+                                  domProps: {
+                                    value: sede.id,
+                                    textContent: _vm._s(sede.nombre)
+                                  }
+                                })
+                              })
+                            ],
+                            2
+                          )
+                        ])
+                      ])
+                    ]
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "modal-footer" }, [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-secondary",
+                      attrs: { type: "button" },
+                      on: {
+                        click: function($event) {
+                          return _vm.cerrarModal()
+                        }
+                      }
+                    },
+                    [_vm._v("Cerrar")]
+                  ),
+                  _vm._v(" "),
+                  _vm.tipoAccion == 1
+                    ? _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-primary",
+                          attrs: { type: "button" },
+                          on: {
+                            click: function($event) {
+                              return _vm.registrarCategoria()
+                            }
+                          }
+                        },
+                        [_vm._v("Guardar")]
+                      )
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.tipoAccion == 2
+                    ? _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-primary",
+                          attrs: { type: "button" },
+                          on: {
+                            click: function($event) {
+                              return _vm.actualizarProgramacion(_vm.id)
+                            }
+                          }
+                        },
+                        [_vm._v("Actualizar")]
+                      )
+                    : _vm._e()
+                ])
+              ])
+            ]
+          )
+        ]
+      )
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", { staticClass: "text-center list-group-item-success" }, [
+          _vm._v("Jornadas")
+        ]),
+        _vm._v(" "),
+        _c("th", { staticClass: "text-center list-group-item-success" }, [
+          _vm._v("Equipo A")
+        ]),
+        _vm._v(" "),
+        _c("th", { staticClass: "text-center list-group-item-success" }, [
+          _vm._v("Vs")
+        ]),
+        _vm._v(" "),
+        _c("th", { staticClass: "text-center list-group-item-success" }, [
+          _vm._v("Equipo B")
+        ]),
+        _vm._v(" "),
+        _c("th", { staticClass: "text-center list-group-item-success" }, [
+          _vm._v("Fecha")
+        ]),
+        _vm._v(" "),
+        _c("th", { staticClass: "text-center list-group-item-success" }, [
+          _vm._v("Hora")
+        ]),
+        _vm._v(" "),
+        _c("th", { staticClass: "text-center list-group-item-success" }, [
+          _vm._v("Sede")
+        ]),
+        _vm._v(" "),
+        _c("th", { staticClass: "text-center list-group-item-success" }, [
+          _vm._v("Opciones")
         ])
       ])
     ])
@@ -68961,7 +69842,8 @@ Vue.component('propartido', __webpack_require__(/*! ./components/ProPartido.vue 
 Vue.component('puntajepartido', __webpack_require__(/*! ./components/PuntajePartido.vue */ "./resources/js/components/PuntajePartido.vue")["default"]);
 Vue.component('partidosprogramados', __webpack_require__(/*! ./components/PartidosProgramados.vue */ "./resources/js/components/PartidosProgramados.vue")["default"]);
 Vue.component('programaciontecnico', __webpack_require__(/*! ./components/programacionTecnico.vue */ "./resources/js/components/programacionTecnico.vue")["default"]);
-Vue.component('tablaposicion', __webpack_require__(/*! ./components/TablaPosicion.vue */ "./resources/js/components/TablaPosicion.vue")["default"]); //Vue.component('index', require('./views/index.vue').default);
+Vue.component('tablaposicion', __webpack_require__(/*! ./components/TablaPosicion.vue */ "./resources/js/components/TablaPosicion.vue")["default"]);
+Vue.component('programacionfecha', __webpack_require__(/*! ./components/ProgramacionFecha.vue */ "./resources/js/components/ProgramacionFecha.vue")["default"]); //Vue.component('index', require('./views/index.vue').default);
 //Vue.component('login', require('./components/Login.vue').default);
 
 /**
@@ -69815,6 +70697,93 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ProPartido_vue_vue_type_template_id_7c2e151f___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ProPartido_vue_vue_type_template_id_7c2e151f___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/ProgramacionFecha.vue":
+/*!*******************************************************!*\
+  !*** ./resources/js/components/ProgramacionFecha.vue ***!
+  \*******************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _ProgramacionFecha_vue_vue_type_template_id_ad7e20c0___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ProgramacionFecha.vue?vue&type=template&id=ad7e20c0& */ "./resources/js/components/ProgramacionFecha.vue?vue&type=template&id=ad7e20c0&");
+/* harmony import */ var _ProgramacionFecha_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ProgramacionFecha.vue?vue&type=script&lang=js& */ "./resources/js/components/ProgramacionFecha.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _ProgramacionFecha_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ProgramacionFecha.vue?vue&type=style&index=0&lang=css& */ "./resources/js/components/ProgramacionFecha.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
+  _ProgramacionFecha_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _ProgramacionFecha_vue_vue_type_template_id_ad7e20c0___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _ProgramacionFecha_vue_vue_type_template_id_ad7e20c0___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/ProgramacionFecha.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/ProgramacionFecha.vue?vue&type=script&lang=js&":
+/*!********************************************************************************!*\
+  !*** ./resources/js/components/ProgramacionFecha.vue?vue&type=script&lang=js& ***!
+  \********************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ProgramacionFecha_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./ProgramacionFecha.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ProgramacionFecha.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ProgramacionFecha_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/ProgramacionFecha.vue?vue&type=style&index=0&lang=css&":
+/*!****************************************************************************************!*\
+  !*** ./resources/js/components/ProgramacionFecha.vue?vue&type=style&index=0&lang=css& ***!
+  \****************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ProgramacionFecha_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader!../../../node_modules/css-loader??ref--5-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--5-2!../../../node_modules/vue-loader/lib??vue-loader-options!./ProgramacionFecha.vue?vue&type=style&index=0&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ProgramacionFecha.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ProgramacionFecha_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ProgramacionFecha_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ProgramacionFecha_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ProgramacionFecha_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ProgramacionFecha_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
+
+/***/ }),
+
+/***/ "./resources/js/components/ProgramacionFecha.vue?vue&type=template&id=ad7e20c0&":
+/*!**************************************************************************************!*\
+  !*** ./resources/js/components/ProgramacionFecha.vue?vue&type=template&id=ad7e20c0& ***!
+  \**************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ProgramacionFecha_vue_vue_type_template_id_ad7e20c0___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./ProgramacionFecha.vue?vue&type=template&id=ad7e20c0& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ProgramacionFecha.vue?vue&type=template&id=ad7e20c0&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ProgramacionFecha_vue_vue_type_template_id_ad7e20c0___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ProgramacionFecha_vue_vue_type_template_id_ad7e20c0___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

@@ -21,6 +21,7 @@ Vue.component('puntajepartido', require('./components/PuntajePartido.vue').defau
 Vue.component('partidosprogramados', require('./components/PartidosProgramados.vue').default);
 Vue.component('programaciontecnico', require('./components/programacionTecnico.vue').default);
 Vue.component('tablaposicion', require('./components/TablaPosicion.vue').default);
+Vue.component('programacionfecha', require('./components/ProgramacionFecha.vue').default);
 
 //Vue.component('index', require('./views/index.vue').default);
 //Vue.component('login', require('./components/Login.vue').default);

@@ -125,13 +125,13 @@
            <!-- <div class="col-md-6">
               <label for>Nombre</label>
               <input type="text" class="form-control" v-model="nombre" />
-            </div>-->             
+            </div>-->                         
           <div class="col-md-6">
               <div class="form-group">
                 <label for>Equipo</label>
-                 <select class="form-control" v-model="idequipo">
+                 <select class="form-control" v-model="idequipo" @change="listarPersona()">
                 <option value="0" disabled>Seleccione un Equipo</option>
-                <option v-for="equipo in arrayEquipo" :key="equipo.id" :value="equipo.id" v-text="equipo.nombre"></option>
+                <option v-for="equipo1 in arrayEquipo " :key="equipo1.id" :value="equipo1.id" >{{ equipo1.nombre }}</option>
                  </select>
               </div>
             </div>          
@@ -330,6 +330,7 @@ export default {
       numero_camisa:"",
       arrayPersona: [],
       arrayDetalle: [],
+      arrayEquipoT:[],
       listado:1,
       modal: 0,
       tituloModal: "",
@@ -387,6 +388,7 @@ export default {
       axios.get(url).then(function(response) {
           var respuesta = response.data;
           me.arrayEquipo = respuesta.equipos.data;
+           //me.arrayEquipo = response.data
          // me.pagination = respuesta.pagination;
         })
         .catch(function(error) {
@@ -394,6 +396,36 @@ export default {
           console.log(error);
         });
     },
+    listarEquipo2(buscar, criterio) {
+      let me = this;
+      var url = "/equipo/listarEquipo?buscar=" + buscar + "&criterio=" + criterio;
+      axios.get(url).then(function(response) {
+        console.log(me.arrayEquipoT)
+          var respuesta = response.data;
+          me.arrayEquipoT = respuesta.equipos.data;
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },  
+    cerrarModal() {
+      this.modal = 0;
+      this.tituloModal = "";     
+    },    
+    listarPersona() {
+      let me = this;
+      var url = '/jugador/listarJugador';
+      axios.get(url,{params: {idequipo:this.idequipo}})
+        .then(function(response) {
+           console.log(response.data);
+          var respuesta = response.data;
+          me.arrayPersona = respuesta.personas.data;
+        }.bind(this))
+        .catch(function(error) {
+          // handle error
+          console.log(error);
+        });
+    },    
     selectRama() {
       let me = this;
       var url = "/rama/selectRama";
@@ -401,7 +433,7 @@ export default {
           // console.log(response);
           var respuesta = response.data;
           me.arrayRama = respuesta.ramas;
-        })
+        }.bind(this))
         .catch(function(error) {
           // handle error
           console.log(error);
@@ -540,16 +572,6 @@ export default {
     ocultarDetalle(){
       this.listado=1;
     },
-    encuentra(id){
-      var sw=0;
-      for(var i=0;i<this.arrayDetalle.length;i++){
-        if(this.arrayDetalle[i].idpersona==id){
-          sw = true;
-        }
-      }
-      return sw;
-    },
-
     eliminarDetalle(index){
       let me =this;
       me.arrayDetalle.splice(index,1 );
@@ -571,20 +593,7 @@ export default {
                     });
                  }
             }, 
-    listarPersona() {
-      let me = this;
-      var url = '/jugador/listarJugador';
-      axios.get(url,{params: {idrama:this.idrama}})
-        .then(function(response) {
-           console.log(response);
-          var respuesta = response.data;
-          me.arrayPersona = respuesta.personas;
-        })
-        .catch(function(error) {
-          // handle error
-          console.log(error);
-        });
-    },   
+   
     cerrarModal() {
       this.modal = 0;
       this.numero_camisa = "";
@@ -717,45 +726,10 @@ export default {
                     console.log(error);
                 });
             },  
-    activarUsuario(id) {
-      swal({
-        title: "Esta seguro de activar este usuario?",
-        type: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Aceptar!",
-        cancelButtonText: "Cancelar",
-        confirmButtonClass: "btn btn-success",
-        cancelButtonClass: "btn btn-danger",
-        buttonsStyling: false,
-        reverseButtons: true
-      }).then(result => {
-        if (result.value) {
-          let me = this;
-
-          axios.put("/user/activar", {
-              id: id
-            })
-            .then(function(response) {
-              me.listarPersona(1, "", "nombre");
-              swal(
-                "Activado!",
-                "El registro ha sido activado con éxito.",
-                "success"
-              );
-            })
-            .catch(function(error) {
-              console.log(error);
-            });
-        } else if (
-          // Read more about handling dismissals
-          result.dismiss === swal.DismissReason.cancel
-        ) {
-        }
-      });
-    }
   },
+          created: function(){
+            this.selectRama()
+        },
   mounted() {
     this.listarEquipo(1, this.buscar, this.criterio);
     this.selectRama();

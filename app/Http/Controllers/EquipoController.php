@@ -25,7 +25,7 @@ class EquipoController extends Controller
             ->select('equipos.id','equipos.idrama', 'equipos.idcategoria','equipos.nombre','equipos.idusuario','equipos.logo','ramas.nombre as nombre_rama',
             'categorias.nombre as nombre_categoria','users.usuario as nombre_usuario')
             ->where('users.id','=',Auth::id())                        
-            //SELECT a.*, b.usuario FROM equipos as a inner join users as b on a.idusuario = b.id where a.idusuario = b.usuario
+        //    SELECT a.*, b.usuario FROM equipos as a inner join users as b on a.idusuario = b.id where a.idusuario = b.usuario
             ->orderBy('equipos.id', 'desc')->paginate(6);
         }
         else{
@@ -122,14 +122,12 @@ class EquipoController extends Controller
         $buscar = $request->buscar;
         $criterio = $request->criterio;
         $idcategoria = $request->idcategoria;
-        $idrama = $request->idrama;
         
         if ($buscar==''){
             $equipos = Equipo::join('ramas','equipos.idrama','=','ramas.id')
             ->join('categorias','equipos.idcategoria','=','categorias.id')
-            ->select('equipos.id','equipos.nombre','equipos.idrama','ramas.nombre as nombre_rama', 'categorias.nombre as nombre_categoria')
+            ->select('equipos.id','equipos.nombre','ramas.nombre as nombre_rama', 'categorias.nombre as nombre_categoria')
             ->where('equipos.idcategoria', '=', $idcategoria)
-            //->orWhere('equipos.idrama','=', $idrama)
             ->orderBy('equipos.id', 'desc')->paginate(6);
         }
         else{

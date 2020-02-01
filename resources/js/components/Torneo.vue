@@ -679,7 +679,9 @@ export default {
     },  
     cerrarModal() {
       this.modal = 0;
-      this.tituloModal = "";     
+      this.tituloModal = "";  
+      this.idequipo=0;
+      this.arrayEquipo=[];
     },
     abrirModal(modelo, accion, data = []) {     
           this.modal = 1;
