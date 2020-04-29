@@ -35,15 +35,16 @@
         </li>
       </ul>
 
+    <form @submit.prevent="registrarPersona" enctype="multipart/form-data">
       <div class="card">
         <div id="myTabContent" class="tab-content">
           <div class="tab-pane active in" id="new">
             <div class="container-fluid">
-              <div class="row">
-                <div class="col-xs-9 col-md-10">
-                  <form @submit.prevent="registrarPersona" enctype="multipart/form-data">
-                    <div class="form-group label-floating">
-                      <label for="exampleInputEmail1">Nombre</label>
+              <div class="card-body">
+               <div class="row">
+                <div class="col-md-6">                  
+                    <div class="form-group">
+                      <label>Nombre</label>
                       <input
                         type="text"
                         class="form-control"
@@ -52,6 +53,8 @@
                         placeholder="Ingrese nombre su nombre" />
                         <span v-if="errors.nombre" class="badge badge-danger">{{errors.nombre[0]}}</span>
                     </div>
+                </div>    
+                  <div class="col-md-6">                
                     <div class="form-group">
                       <label>Fecha Nacimiento:</label>
                       <div class="input-group">
@@ -68,51 +71,66 @@
                       </div>
                       <!-- /.input group -->
                     </div>
-                    <div class="form-group row">
-                      <label
-                        for="exampleInputEmail1"
-                        class="col-sm-4 col-form-label"
-                      >Direcci&oacute;n:</label>
-                      <div class="col-sm-12">
+                  </div>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label>Direcci&oacute;n:</label>
                         <textarea
                           id="direccion"
                           name="direccion"
                           class="form-control"
                           v-model="direccion"
                           maxlength="250"></textarea>
-                      </div>
                     </div>
-                      <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="text-input">Rama</label>
-                                    <div class="col-md-9">
-                                        <select class="form-control" v-model="idrama">
-                                            <option value="0" disabled>Seleccione</option>
-                                            <option v-for="rama in arrayRama" :key="rama.id" :value="rama.id" v-text="rama.nombre"></option>
-                                        </select>
-                                        <span class="help-block"></span>
-                                    </div>
+                   </div>
+                   <div class="col-md-6">
+                      <div class="form-group">
+                        <label class="col-md-3 form-control-label" for="text-input">Genero</label>
+                            <select class="form-control" v-model="idrama">
+                                <option value="0" disabled>Seleccione</option>
+                                <option v-for="rama in arrayRama" :key="rama.id" :value="rama.id" v-text="rama.nombre"></option>
+                            </select>
+                           <span class="help-block"></span>
                      </div>
-                    <div class="form-group">
-                      <label>T&eacute;lefono:</label>
-                      <div class="input-group">
-                        <div class="input-group-addon">
-                          <i class="fa fa-phone"></i>
+                  </div>
+                    </div> 
+                  </div>
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label>T&eacute;lefono:</label>
+                          <div class="input-group">
+                            <div class="input-group-addon">
+                              <i class="fa fa-phone"></i>
+                            </div>
+                            <input type="text" class="form-control" v-model="telefono"  placeholder="Ingrese su telefono"/>
+                            <span v-if="errors.telefono" class="badge badge-danger">{{errors.telefono[0]}}</span>
+                          </div>
+                          <!-- /.input group -->
                         </div>
-                        <input type="text" class="form-control" v-model="telefono"  placeholder="Ingrese su telefono"/>
-                        <span v-if="errors.telefono" class="badge badge-danger">{{errors.telefono[0]}}</span>
                       </div>
-                      <!-- /.input group -->
+                      <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="exampleInputEmail1">Correo</label>
+                        <input
+                          type="email"
+                          class="form-control"
+                          id="exampleInputNombre"
+                          v-model="email"
+                          placeholder="nombre@dominio.com" />
+                          <span v-if="errors.email" class="badge badge-danger">{{errors.email[0]}}</span>
+                      </div>
                     </div>
-                    <div class="form-group">
-                      <label for="exampleInputEmail1">Correo</label>
-                      <input
-                        type="email"
-                        class="form-control"
-                        id="exampleInputNombre"
-                        v-model="email"
-                        placeholder="nombre@dominio.com" />
-                        <span v-if="errors.email" class="badge badge-danger">{{errors.email[0]}}</span>
                     </div>
+                  </div>
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-md-3">
                     <div class="form-group">
                       <label for="exampleInputEmail1">Estatura</label>
                       <input
@@ -123,23 +141,36 @@
                         placeholder="Estatura en metros 1.75 mt"
                       />
                     </div>
+                  </div>
+                  <div class="col-md-6">
                     <div class="form-group">
                       <label for="exampleInputFile">Foto</label>
                       <input type="file" @change="obtenerImagen" id="exampleInputFile" />
                       <span v-if="errors.foto" class="badge badge-danger">{{errors.foto[0]}}</span>
                     </div>
-                    <figure>
-                        <img :src="imagen" alt="Foto de jugador" width="304" height="300">
-                    </figure>
-                    <p class="text-center">
-                      <button type="button" class="btn btn-primary" @click="registrarPersona()">Guardar</button>
-                    </p>
-                  </form>
+                    </div>
+                    <div class="form-group">
+                      <div class="col-md-3">
+                        <figure>
+                          <img :src="imagen" alt="Foto de jugador" width="150" height="150">
+                        </figure>
+                      </div>
+                    </div>
+                    </div>
+                  </div>
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                  <p class="text-center">
+                        <button type="button" class="btn btn-outline-primary btn-lg btn-block" @click="registrarPersona()">Guardar</button>
+                  </p>
+                  </div>
+                  </div>
                 </div>
-              </div>
-            </div>
+                </div>
           </div>
-
+                
+                <!-- list -->
           <div class="tab-pane fade" id="list">
             <div class="table-responsive">
               <table class="table table-hover text-center">
@@ -200,15 +231,16 @@
               </table>
             </div>
           </div>
-          
+
+        <!-- Modal-->
           <div class="modal fade" tabindex="-1" :class="{'mostrar' : modal}" role="dialog" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
             <div class="modal-dialog modal-primary modal-lg" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                            <h4 class="modal-title" v-text="tituloModal"></h4>
-                            <button type="button" class="close" @click="cerrarModal()" aria-label="Close">
-                              <span aria-hidden="true">×</span>
-                            </button>
+                  <h4 class="modal-title" v-text="tituloModal"></h4>
+                  <button type="button" class="close" @click="cerrarModal()" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                  </button>
                   </div>
                 <div class="modal-body">
                   <form action method="post" enctype="multipart/form-data" class="form-horizontal">
@@ -233,16 +265,16 @@
                       </div>
                       <!-- /.input group -->
                     </div>
-                               <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="text-input">Rama</label>
-                                    <div class="col-md-9">
-                                        <select class="form-control" v-model="idrama">
-                                            <option value="0" disabled>Seleccione</option>
-                                            <option v-for="rama in arrayRama" :key="rama.id" :value="rama.id" v-text="rama.nombre"></option>
-                                        </select>
-                                        <span class="help-block"></span>
-                                    </div>
-                                </div>
+                      <div class="form-group row">
+                          <label class="col-md-3 form-control-label" for="text-input">Genero</label>
+                          <div class="col-md-9">
+                              <select class="form-control" v-model="idrama">
+                                  <option value="0" disabled>Seleccione</option>
+                                  <option v-for="rama in arrayRama" :key="rama.id" :value="rama.id" v-text="rama.nombre"></option>
+                              </select>
+                              <span class="help-block"></span>
+                          </div>
+                      </div>
                     <div class="form-group row">
                       <label for="exampleInputEmail1" class="col-sm-4 col-form-label">Direcci&oacute;n:</label>
                       <div class="col-sm-12">
@@ -294,7 +326,7 @@
                       <span v-if="errors.foto" class="badge badge-danger">{{errors.foto[0]}}</span>
                     </div>
                     <figure>
-                        <img :src="imagen" alt="Foto de jugador" width="304" height="300">
+                        <img :src="imagen" alt="Foto de jugador" width="150" height="150">
                     </figure>
                   </form>
                 </div>
@@ -307,9 +339,11 @@
               <!-- /.modal-content -->
             </div>
             <!-- /.modal-dialog -->
+          </div>          
           </div>
         </div>
-      </div>
+        
+      </form>
     </section>
     <!-- /.content -->
   </div>

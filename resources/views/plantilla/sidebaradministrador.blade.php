@@ -168,13 +168,7 @@
                                         <i class="fa fa-circle-o nav-icon"></i>
                                         <p>Programaci&oacute;n de partidos</p>
                                     </a>
-                                </li>
-                                <li @click="menu=12" class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="fa fa-circle-o nav-icon"></i>
-                                        <p>Programaci&oacute;n Fechas</p>
-                                    </a>
-                                </li>                                
+                                </li>                               
                                 <li @click="menu=17" class="nav-item">
                                     <a href="#" class="nav-link">
                                         <i class="fa fa-circle-o nav-icon"></i>

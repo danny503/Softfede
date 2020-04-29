@@ -106,15 +106,16 @@
                                         <span class="help-block"></span>
                                     </div>
                                 </div>
-                                <div class="col-md-9">
-                                <div class="form-group">
-                                    <label for>Categoria</label>
-                                    <select class="form-control" v-model="idcategoria">
-                                    <option value="0" disabled>Seleccione una categoria</option>
-                                    <option v-for="categoria in arrayCategoria" :key="categoria.id" :value="categoria.id" v-text="categoria.nombre"></option>
-                                    </select>
-                                </div>
-                                </div>                                
+                                <div class="form-group row">
+                                    <label class="col-md-3 form-control-label" for="text-input">Categoria</label>
+                                    <div class="col-md-9">
+                                        <select class="form-control" v-model="idcategoria">
+                                            <option value="0" disabled>Seleccione</option>
+                                            <option v-for="categoria in arrayCategoria" :key="categoria.id" :value="categoria.id" v-text="categoria.nombre"></option>
+                                        </select>
+                                        <span class="help-block"></span>
+                                    </div>
+                                </div>                               
                                 <div class="form-group">
                                 <label >Logo</label>
                                  <div>

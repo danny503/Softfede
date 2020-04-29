@@ -2,6 +2,10 @@
   <div class="content-wrapper">
     <section class="content-header">            
       <div class="card-header"> 
+        <i class="fa fa-align-justify"></i> x
+          <button type="button" @click="abrirModal()" class="btn btn-primary">
+            <i class="icon-plus"></i>&nbsp;Nuevo
+          </button>
       <div class="form-group row">
         <label class="col-md-3 form-control-label" for="text-input">Torneo</label>
           <div class="col-md-9">
@@ -26,24 +30,19 @@
             <table class="table table-hover text-center">
               <thead>
                 <tr>
-                  <th class="text-center list-group-item-primary">IdPro</th>
                   <th class="text-center list-group-item-success">Jornadas</th>
                   <th class="text-center list-group-item-success">Equipo A</th>
                   <th class="text-center list-group-item-success">Vs</th>
-                  <th class="text-center list-group-item-success">Equipo B</th>
-                  <th class="text-center list-group-item-success">Fecha</th>
-                  <th class="text-center list-group-item-success">Hora</th> 
-                  <th class="text-center list-group-item-success">Sede</th>                  
+                  <th class="text-center list-group-item-success">Equipo B</th>                  
+                  <th class="text-center list-group-item-success">Opciones</th>
                 </tr>
               </thead>
               <tbody>
                 <tr v-for="propartido in arrayProPartido" :key="propartido.id">                  
-                  <td v-text="propartido.idpro">
-                  </td>                           
                   <td v-text="propartido.jornada"></td> 
                  <!-- <td>
                   <input type="text" v-model="jornada" class="form-control"/>
-                  </td>--> 
+                  </td>-->                            
                   <td>
                   <input type="text" v-model="propartido.eq1" class="form-control"  disabled/>
                   </td>                  
@@ -53,21 +52,10 @@
                   <input type="text" v-model="propartido.eq2" class="form-control"  disabled/>
                   </td>
                   <td>
-                  <input type="date" v-model="fecha"  class="form-control" />
-                  </td>
-                  <td>
-                  <input type="time" v-model="hora" class="form-control" />
-                  </td> 
-                  <td>
-                  <div class="col-md-9">
-                    <div class="form-group row">              
-                          <select class="form-control" v-model="idsede">
-                            <option value="0" disabled>Seleccione la sede</option>
-                           <option v-for="sede in arraySede" :key="sede.id" :value="sede.id" v-text="sede.nombre"></option>
-                          </select>
-                        </div>
-                    </div>  
-                  </td>                                   
+                 <button type="button" @click="listarPartido()" class="btn btn-info btn-sm">
+                          <i class="fa fa-eye"></i>
+                  </button> 
+                  </td>                                    
                   <!--<td v-text="propartido.eq2"></td> -->
                 </tr>                   
                 <button type="button" @click="registrarProPartido() " class="btn btn-primary">
@@ -93,7 +81,6 @@ export default {
             equipo_a:0,
             eq1:0,
             eq2:0,
-            idpro:null,
            // ideq1:0,
             ideq2:0,
             equipo_b:0,
@@ -101,13 +88,7 @@ export default {
             torneo:''           ,
             equipo_id:0,
             idtorneo:0, 
-            idsede:0,
-            fecha:'',
-            hora:'',
             arrayProPartido:[],
-            arraySede:[],
-            arrayEstadistica:[],
-            arrayPro:[],
             arrayTorneo:[]
         }
     },              
@@ -118,40 +99,14 @@ export default {
           let me = this;
             axios.get('/propartido',{params: {idtorneo:this.idtorneo}}).then(function(response) {
               //me.arrayProPartido = response.data;
-              var respuesta= response.data;
-
               var x = response.data;
               var l = x.length;
               for(var index=0; index < l; index++){
               // x[index][0] ,'vs', x[index][1];
-              me.arrayProPartido.push({'eq1': x[index][0].nombre,'eq2': x[index][1].nombre,'jornada': x[index][2], 'ideq1': x[index][0].id,'ideq2': x[index][1].id});
-             //console.log('eq1');
+              me.arrayProPartido.push({'eq1': x[index][0].nombre,'eq2': x[index][1].nombre,'jornada': x[index][2],'ideq1': x[index][0].id,'ideq2': x[index][1].id});
+              //console.log('eq1');
               }
-         console.log(response.data);
-        })
-        .catch(function(error) {
-          // handle error
-          console.log(error);
-        });
-        this.arrayPro = [];
-            var url= '/propartido/index1';
-            axios.get(url,{params: {idtorneo:this.idtorneo}}).then(function (response) {
-               console.log(response);
-               var respuesta= response.data;
-               me.arrayPro = respuesta.index;
-              }).catch(function (error) {
-                  console.log(error);
-          });
-    },
-     buscarEstadistica() {
-          //console.log(this.idtorneo);
-         // this.arrayProPartido = [];
-          let me = this;
-            axios.get('/propartido/buscarestadistica').then(function(response) {
-       // me.arrayEstadistica = response.data;
-          var respuesta = response.data;
-          me.arrayEstadistica = respuesta.pj.data;
-         console.log(response.data);
+         //console.log(response.data);
         })
         .catch(function(error) {
           // handle error
@@ -171,30 +126,15 @@ export default {
                     console.log(error);
                 });     
             },
-    selectSede(){
-      let me=this;
-                var url = '/sede/selectSede';
-                axios.get(url).then(function (response) {
-                   // consolo.log(response);
-                    var respuesta= response.data;
-                    me.arraySede = respuesta.sedes;                    
-                })
-                .catch(function (error) {
-                    // handle error
-                    console.log(error);
-                });     
-            },            
      registrarProPartido() {       
       let me = this;        
       //console.log(this.arrayProPartido[0].ideq1);
       axios.post('/propartido/registrar', {
-          'idtorneo':this.idtorneo,
-          'fecha': this.fecha,
-          'hora': this.hora,
-          'idsede': this.idsede,              
+          'idtorneo':this.idtorneo,              
           'programaciones': this.arrayProPartido                
         })
         .then(function(response) {         
+          //me.listado=1;
           me.listarPartido();
           me.arrayProPartido=[];
           me.idtorneo=0;
@@ -212,8 +152,6 @@ export default {
      mounted() {
         //this.listarPartido();
         this.selectTorneo();
-        this.selectSede();
-       // this.buscarEstadistica();
   }
 }
 </script>

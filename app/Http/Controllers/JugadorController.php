@@ -9,6 +9,7 @@ use App\Equipo;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 class JugadorController extends Controller
 {
     public function index(Request $request)
@@ -64,7 +65,7 @@ class JugadorController extends Controller
             ->join('equipos','equipos.idrama','=','personas.idrama')
             ->select('personas.id','personas.nombre')
             ->whereIn('personas.idrama', Equipo::select('idrama')->where('id','=', $request->idequipo)->get()->toArray())
-            //->whereIn([['users.id','=',Auth::id()],['personas.idrama', Equipo::select('idrama')->where('id','=', $request->idequipo)->get()->toArray()]])
+            ->where('users.id','=',Auth::id())
             ->groupBy('personas.id')
             ->orderBy('personas.id', 'desc')->paginate(6);      
         }
@@ -82,16 +83,6 @@ class JugadorController extends Controller
         ->where('a.idrama','=' ,(DB::raw("select idrama from equipos where id=2")))
         ->groupBy('a.id')
         ->orderBy('a.id', 'desc')->get();
-
-      // $idrama = $request->idrama;
-//        $idequipo = $request->idequipo;
-           /* $personas = Jugador::join('personas','jugadores.id','=','personas.id')
-            ->join('users','jugadores.idusuario','=','users.id')
-            ->join('ramas','personas.idrama','=','ramas.id')
-            ->select('personas.id','personas.nombre', 'ramas.nombre as nombre_rama')
-            ->where('personas.idrama','=', $idrama)
-            ->orWhere('users.id','=',Auth::id())
-            ->orderBy('personas.id', 'desc')->paginate(6);*/
             /*$teams = DB::table('teams')
             ->select(DB::raw('select a.id, a.nombre from personas as a inner JOIN jugadores as b on a.id=b.id INNER JOIN 
             equipos as c on c.idrama=a.idrama where a.idrama= (select idrama from equipos where id=2) group by a.id ORDER BY a.id desc'))
@@ -106,23 +97,7 @@ class JugadorController extends Controller
             ->orderBy('a.id','desc')->get();
             $buscar = $request->buscar;
             $criterio = $request->criterio;
-            //$idrama = $request->idrama;
-            
-            if ($buscar==''){
-                $personas = Jugador::join('personas','jugadores.id','=','personas.id')
-                ->join('users','jugadores.idusuario','=','users.id')
-                ->join('equipos','personas.idrama','=','equipos.idrama')
-                ->select('personas.id','personas.nombre','equipos.idrama')
-                ->where([['users.id','=',Auth::id()],['personas.idrama','=', $request->idrama]])
-                ->groupBy('personas.id')
-                ->orderBy('personas.id', 'desc')->paginate(6);
-            }
-            else{
-                $personas = Jugador::join('personas','jugadores.id','=','personas.id')
-                ->select('personas.id','personas.nombre')            
-                ->where('personas.'.$criterio, 'like', '%'. $buscar . '%')
-                ->orderBy('personas.id', 'desc')->paginate(6);
-            }
+            //$idrama = $request->idrama;                        
             /*select a.id, a.nombre from personas as a inner JOIN jugadores as b on a.id=b.id INNER JOIN 
             equipos as c on c.idrama=a.idrama where a.idrama=1 ORDER BY a.id DESC*/
         return [ 'personas' => $personas ];
@@ -131,22 +106,17 @@ class JugadorController extends Controller
     public function store(Request $request)
     {
         if (!$request->ajax()) return redirect('/');
-        $this->validate($request,[
-            'nombre' => 'max:250|required|unique:personas',
+        $request->validate([
+            'nombre' => 'max:150|required|unique:personas',
             'email' => 'required|email|unique:personas',
-            //'telefono' =>  'required|min:15|numeric',
             'telefono'=> 'regex:([0-9])',
-            'foto' => 'dimensions:min_width=100,min_height=150,mimes:jpg,jpeg,png|max:1500',
-        
-        ]);
+            'foto' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+        ]);      
         if($request->hasFile('foto')){
             $file = $request->file('foto');
             $name = time().$file->getClientOriginalName();
             $file->move(public_path().'/fotos/',$name);
-        }        
-        
-        try{
-            DB::beginTransaction();
+        }               
             $persona = new Persona();
             $persona->nombre = $request->nombre;
             $persona->fechanac = $request->fechanac;
@@ -163,12 +133,6 @@ class JugadorController extends Controller
             $jugador->id = $persona->id;
             $jugador->idusuario = \Auth::user()->id;
             $jugador->save();
-
-            DB::commit();
-
-        } catch (Exception $e){
-            DB::rollBack();
-        }
         //return $request;
 
     }   
@@ -176,16 +140,12 @@ class JugadorController extends Controller
     public function update(Request $request)
     {
         if (!$request->ajax()) return redirect('/');
-       /* $this->validate($request,[
-            'nombre' => 'max:250|required|unique:personas',
-            'email' => 'required|email',
-            //'telefono' =>  'required|min:15|numeric',
+        $request->validate([
+            'nombre' => 'max:150|required|unique:personas'.$id,
+            'email' => 'required|email|unique:personas' .$id,
             'telefono'=> 'regex:([0-9])',
-            //'foto' => 'mimes:jpg,jpeg,png',
-        
-        ]);*/
-
-        $name = "";
+            'foto' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+        ]);
 
         if($request->hasFile('foto')){
             $file = $request->file('foto');
