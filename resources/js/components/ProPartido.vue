@@ -39,18 +39,10 @@
               </thead>
               <tbody>
                 <tr v-for="propartido in arrayProPartido" :key="propartido.id">                  
-                  <td v-text="propartido.jornada"></td> 
-                 <!-- <td>
-                  <input type="text" v-model="jornada" class="form-control"/>
-                  </td>-->                            
-                  <td>
-                  <input type="text" v-model="propartido.eq1" class="form-control"  disabled/>
-                  </td>                  
-                  <!--<td v-text="propartido.eq1"></td>-->
+                  <td v-text="propartido.jornada"></td>                                             
+                  <td v-text="propartido.eq1"></td>                  
                   <td>Vs</td>
-                  <td>
-                  <input type="text" v-model="propartido.eq2" class="form-control"  disabled/>
-                  </td>
+                  <td v-text="propartido.eq2"></td>
                   <td>
                  <button type="button" @click="listarPartido()" class="btn btn-info btn-sm">
                           <i class="fa fa-eye"></i>
