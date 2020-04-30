@@ -15,7 +15,7 @@ class EstadisticaController extends Controller
         $estadisticas = DB::table('estadisticas as a')
         ->join('equipos as b','a.equipo_id','=','b.id')
         ->join('torneos as c','a.idtorneo','=','c.id')
-        ->select('b.nombre', 'c.nombre as torneo', 'a.pj as pj','a.pg as pg','a.pp as pp','pts as pts')
+        ->select('b.nombre','b.logo', 'c.nombre as torneo', 'a.pj as pj','a.pg as pg','a.pp as pp','pts as pts')
         ->where('a.idtorneo','=', $request->idtorneo)
         ->groupBy('a.equipo_id')
         ->orderByRaw('Pts DESC')->get();
@@ -28,74 +28,5 @@ class EstadisticaController extends Controller
         /*$estadistica = Estadistica::all();
         return $estadistica;*/
     }
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {                            
-        $programaciones = $request->programaciones;
-
-        foreach($programaciones as $item=>$pro){
-            $programacion = new Programacion();
-            $programacion->equipo_a = $pro['ideq1'];
-            $programacion->equipo_b = $pro['ideq2'];
-            $programacion->save();     
-            $detalle_id = $request->detalle_id;         
-            DB::estadistica("INSERT INTO estadisticas( equipo_id )
-            SELECT equipo_a FROM programacions WHERE id = 2");
-        }
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
+    
 }

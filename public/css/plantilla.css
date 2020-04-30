@@ -13051,6 +13051,117 @@ a.text-muted:hover {
 .elevation-5 {
   box-shadow: 0 19px 38px rgba(0, 0, 0, 0.3), 0 15px 12px rgba(0, 0, 0, 0.22);
 }
+ .feature-matchs table {
+     font-size: 13px;
+     margin: 0;
+     color: #333;
+}
+ .feature-matchs td img {
+     margin: 0 5px 0 0;
+}
+.team-btw-match ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.team-btw-match ul li {
+  float: left;
+  text-align: center;
+}
+.team-btw-match {
+  float: left;
+  width: 100%;
+  display: block;
+  justify-content: center;
+  padding: 10px 0 0;
+}
+.team-btw-match ul {
+  position: relative;
+  float: left;
+  width: 100%;
+}
+.team-btw-match ul li span {
+  float: left;
+  width: 100%;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.vs {
+  display: flex;
+  height: 100%;
+  align-items: center;
+}
+.team-btw-match li.vs span {
+  background: #000;
+  float: left;
+  color: #fff;
+  padding: 0 6px;
+  border-radius: 100%;
+  font-weight: 500;
+  font-size: 16px;
+}
+
+aside#sidebar .team-btw-match ul li:first-child {
+  float: left;
+}
+aside#sidebar .team-btw-match ul li span {
+  color: #222;
+  text-transform: capitalize;
+  font-weight: 600;
+  display: block;
+  font-size: 14px;
+}
+aside#sidebar .team-btw-match ul li {
+  width: 41%;
+  text-align: center;
+  float: right;
+}
+aside#sidebar .team-btw-match.style-2 ul li span {
+  color: #222;
+}
+aside#sidebar .macth-fixture ul {
+  padding: 15px 0;
+  overflow: hidden;
+  border-bottom: 1px solid #e1e1e1;
+}
+aside#sidebar .team-btw-match ul {
+  position: relative;
+  padding: 10px 0;
+  display: flex;
+}
+.team-btw-match ul:nth-child(2n+2) {
+  background: #f6f6f6;
+}
+.team-btw-match ul {
+  position: relative;
+  float: left;
+  width: 100%;
+  display: flex;
+  padding: 0 10px;
+}
+.team-btw-match ul li span {
+  font-size: 15px;
+}
+
+.matchs-vs li.vs {
+  margin: 50px 0 0;
+}
+.matchs-vs {
+  float: left;
+  width: 100%;
+  background: #d8302f;
+  color: #fff;
+  min-height: 220px;
+  padding: 90px 0;
+  justify-content: center;
+  display: flex;
+}
+.matchs-info {
+  float: left;
+  width: 100%;
+  background: #ffcb05;
+}
 
 /*# sourceMappingURL=adminlte.css.map */
 {

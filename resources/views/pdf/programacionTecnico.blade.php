@@ -151,10 +151,7 @@
                             <th>JORNADA</th>                       
                             <th>EQUIPO A</th>
                             <th>Vs</th>  
-                            <th>EQUIPO B</th> 
-                            <th>SEDE</th>
-                            <th>FECHA</th>                       
-                            <TH>HORA</TH>
+                            <th>EQUIPO B</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -164,9 +161,6 @@
                             <td>{{$pro->equipoA}}</td> 
                             <td>Vs</td>  
                             <td>{{$pro->equipoB}}</td>
-                            <td>{{$pro->nombre_sede}}</td>   
-                            <td>{{$pro->fecha}}</td>                    
-                            <td>{{$pro->hora}}</td>
                         </tr>
                         @endforeach
                     </tbody>

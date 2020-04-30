@@ -120,19 +120,14 @@ Route::group(['middleware' => ['Administrador']], function () {
     Route::post('/detalletorneo/registrar','TorneoDetalleController@store');
 
     Route::get('/propartido','ProPartidoController@index');
-    Route::get('/propartido/index1','ProPartidoController@index1');
     Route::get('/propartido/listarprotec/{idtorneo}', 'ProPartidoController@listarproTec');
     Route::post('/propartido/registrar','ProPartidoController@store');
     Route::post('/propartido/actualizar/{id}','ProPartidoController@update');
     Route::get('/propartido/programacionPdf/{idtorneo}', 'ProPartidoController@programacionPdf')->name('programacion_pdf');   
     Route::get('/propartido/programaciontecnicoPdf/{idtorneo}', 'ProPartidoController@programacionTecnicoPdf')->name('programacionTecnico_pdf');   
     Route::get('/propartido/verprogramacion/{idtorneo}', 'ProPartidoController@verProgramacion');
-    Route::get('/propartido/buscarida/{ida, idb, pa, pb}','ProPartidoController@BuscarIdA');
     Route::put('/propartido/actualizarestadistica','ProPartidoController@actualizarEstadistica');
-    Route::get('/propartido/buscaridb/{idtorneo}','ProPartidoController@BuscarIdB');
     Route::get('/propartido/selectPro','ProPartidoController@selectPro');
-    Route::get('/propartido/buscarestadistica/{id}','ProPartidoController@buscarEstadistica');
-    Route::get('/propartido/obtenerpunto','ProPartidoController@obtenerPunto');
 
     Route::get('/estadistica','EstadisticaController@index');
     Route::post('/estadistica/registrar','EstadisticaController@store');
