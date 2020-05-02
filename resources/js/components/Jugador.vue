@@ -35,7 +35,7 @@
         </li>
       </ul>
 
-    <form @submit.prevent="registrarPersona" enctype="multipart/form-data">
+    <form enctype="multipart/form-data">
       <div class="card">
         <div id="myTabContent" class="tab-content">
           <div class="tab-pane active in" id="new">
@@ -49,7 +49,6 @@
                         type="text"
                         class="form-control"
                         v-model="nombre"
-                        id="exampleInputNombre"
                         placeholder="Ingrese nombre su nombre" />
                         <span v-if="errors.nombre" class="badge badge-danger">{{errors.nombre[0]}}</span>
                     </div>
@@ -80,8 +79,6 @@
                     <div class="form-group">
                       <label>Direcci&oacute;n:</label>
                         <textarea
-                          id="direccion"
-                          name="direccion"
                           class="form-control"
                           v-model="direccion"
                           maxlength="250"></textarea>
@@ -120,7 +117,6 @@
                         <input
                           type="email"
                           class="form-control"
-                          id="exampleInputNombre"
                           v-model="email"
                           placeholder="nombre@dominio.com" />
                           <span v-if="errors.email" class="badge badge-danger">{{errors.email[0]}}</span>
@@ -136,7 +132,6 @@
                       <input
                         type="text"
                         class="form-control"
-                        id="exampleInputNombre"
                         v-model="estatura"
                         placeholder="Estatura en metros 1.75 mt"
                       />
@@ -144,8 +139,8 @@
                   </div>
                   <div class="col-md-6">
                     <div class="form-group">
-                      <label for="exampleInputFile">Foto</label>
-                      <input type="file" @change="obtenerImagen" id="exampleInputFile" />
+                      <label>Foto</label>
+                      <input type="file" @change="obtenerImagen" />
                       <span v-if="errors.foto" class="badge badge-danger">{{errors.foto[0]}}</span>
                     </div>
                     </div>
@@ -243,7 +238,7 @@
                   </button>
                   </div>
                 <div class="modal-body">
-                  <form action method="post" enctype="multipart/form-data" class="form-horizontal">
+                  <form method="post" enctype="multipart/form-data" class="form-horizontal">
                     <div class="form-group label-floating">
                       <label for="exampleInputEmail1">Nombre</label>
                       <input  type="text"  class="form-control"  v-model="nombre"  placeholder="Ingrese nombre su nombre"  />
@@ -279,8 +274,6 @@
                       <label for="exampleInputEmail1" class="col-sm-4 col-form-label">Direcci&oacute;n:</label>
                       <div class="col-sm-12">
                         <textarea
-                          id="direccion"
-                          name="direccion"
                           v-model="direccion"
                           class="form-control"
                           maxlength="250"></textarea>
@@ -314,11 +307,10 @@
                         type="text"
                         class="form-control"
                         v-model="estatura"
-                        id="exampleInputNombre"
                         placeholder="Ingrese su estatura" />
                     </div>
                     <div class="form-group">                        
-                      <label for="exampleInputFile">Foto</label> 
+                      <label>Foto</label> 
                       <div>
                       <img :src="'fotos/' + foto" alt="Foto de jugador" width="75" height="75"> 
                       </div>                

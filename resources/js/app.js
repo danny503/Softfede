@@ -1,6 +1,7 @@
 require('./bootstrap');
 
 window.Vue = require('vue');
+import router from './routes'
 
 Vue.component('equipo-component', require('./components/Equipo.vue').default);
 Vue.component('categoria', require('./components/Categoria.vue').default);
@@ -22,21 +23,17 @@ Vue.component('partidosprogramados', require('./components/PartidosProgramados.v
 Vue.component('programaciontecnico', require('./components/programacionTecnico.vue').default);
 Vue.component('tablaposicion', require('./components/TablaPosicion.vue').default);
 Vue.component('programacionfecha', require('./components/ProgramacionFecha.vue').default);
+Vue.component('navbar', require('./components/ComponentNavbar.vue').default);
+Vue.component('home', require('./components/Home.vue').default);
+Vue.component('about', require('./components/About.vue').default);
+Vue.component('show', require('./components/ShowContent.vue').default);
 
-//Vue.component('index', require('./views/index.vue').default);
-//Vue.component('login', require('./components/Login.vue').default);
-
-
-
-/**
- * Next, we will create a fresh Vue application instance and attach it to
- * the page. Then, you may begin adding components to this application
- * or customize the JavaScript scaffolding to fit your unique needs.
- */
 
 const app = new Vue({
     el: '#app',
+    router,
     data :{
-    	menu : 0
+        menu : 0,
+        navbar: 0
     }
 });

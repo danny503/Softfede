@@ -12,24 +12,23 @@
                 </select>
                 </div> 
               </div>          
-          </div>
-          
+          </div>          
           <div class="form-group">
-                <div class="col-lg-6">
-                  <br />
-                    <button type="button" @click="listarProTec(idtorneo)" class="btn btn-info btn-sm">
-                              <i class="fa fa-life-ring"></i>
-                      </button> <br />
-                      <button type="button" @click="pdfProPartido(idtorneo)" class="btn btn-info btn-sm">
-                          <i class="fa fa-file"></i>
-                    </button> 
+                <div class="col-lg-3">
+                  <ul class="ver">
+                    <li class="ver-modal">
+                        <a href="#!" class="ver" type="button" @click="listarProTec(idtorneo)"><i class="fa fa-eye"></i>Ver</a>
+                    </li>
+                     <li>
+                        <div class="cart-option">
+                          <a href="#!"><i class="fa fa-file" type="button" @click="pdfProPartido(idtorneo)"></i>PDF</a>
+                        </div>
+                    </li> 
+                  </ul>
               </div>         
-         </div>                                                     
+         </div>   
         </div>  
-    </section>    
-
-
-                 
+    </section>                    
         <section id="contant" class="contant">
               <div class="container">
                 <div class="row">
@@ -101,7 +100,7 @@ export default {
           //console.log(this.idtorneo);
           this.arrayProPartido = [];
           let me = this;
-            axios.get('/propartido/listarprotec/' + idtorneo).then(function(response) {
+            axios.get('/propartido/listarHome/' + idtorneo).then(function(response) {
                var respuesta= response.data;
                     me.arrayProPartido = respuesta.prootec;
         // console.log(me.arrayProPartido);
@@ -111,34 +110,9 @@ export default {
           console.log(error);
         });
     },    
-       verProgramacion(idtorneo){
-                    let me=this;
-                    console.log(me.arrayVerp);
-                   // axios.get('/propartido/verprogramacion/' + idtorneo).then(function (response) {
-                    //me.arrayVerp = response.data;
-
-               var arrayTorneoT=[];
-                var url= '/propartido/verprogramacion/' + idtorneo;
-
-                axios.get(url).then(function (response) {
-                    var respuesta= response.data;
-                    arrayTorneoT = respuesta.programacion;
-                    
-                    me.jornada = arrayTorneoT[0]['jornada'];
-                    me.equipo_a = arrayTorneoT[0]['equipoA'];
-                    me.equipo_b=arrayTorneoT[0]['equipoB'];
-                })
-                .catch(function (error) {
-                    console.log(error);
-                })
-                .finally(function () {
-                    // always executed
-                });
-
-            },
        selectTorneo(){
         let me=this;
-                var url = '/torneo/selectTorneo';
+                var url = '/torneo/torneoSelect';
                 axios.get(url).then(function (response) {
                    // consolo.log(response);
                     var respuesta= response.data;
@@ -153,10 +127,6 @@ export default {
               //window.open('/puntaje/pdf/'+ id ,'_blank');
               window.open('/propartido/programaciontecnicoPdf/' + idtorneo,'_blank');
             },
-    cerrarModal() {
-      this.modal = 0;
-      this.tituloModal = "";     
-    }
   },
      mounted() {
         //this.listarPartido();

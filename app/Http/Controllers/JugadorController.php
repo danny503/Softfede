@@ -141,12 +141,12 @@ class JugadorController extends Controller
     {
         if (!$request->ajax()) return redirect('/');
         $request->validate([
-            'nombre' => 'max:150|required|unique:personas'.$id,
-            'email' => 'required|email|unique:personas' .$id,
+            'nombre' => 'max:150|required|unique:personas'.$request->id,
+            'email' => 'required|email|unique:personas' .$request->id,
             'telefono'=> 'regex:([0-9])',
-            'foto' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+            'foto' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048'.$request->id
         ]);
-
+        $name = '';
         if($request->hasFile('foto')){
             $file = $request->file('foto');
             $name = time().$file->getClientOriginalName();

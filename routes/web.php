@@ -1,22 +1,15 @@
 <?php
 
-//Route::get('/','IndexController@index'); //CREAMOS LA RUTA DEL INDEX Y HACEMOS REFERENCIA AL CONTROLADOR Y SU METODO LLAMADO INDEX
-//Route::get('/home', 'HomeController@index')->name('home');
-Route::group(['middleware'=>['guest']],function(){
-    Route::get('/','Auth\LoginController@showLoginForm');
-    Route::post('/login', 'Auth\LoginController@login')->name('login');
-});
-/*Route::get('/', function () {
-    return view('welcome');
-});*/
-
 Route::get('/','IndexController@index'); 
-Route::get('reviews','IndexController@reviews');
+Route::get('/propartido/listarHome/{idtorneo}', 'ProPartidoController@listarHome');
+Route::get('/torneo/torneoSelect','TorneoController@torneoSelect');
+Route::get('/estadistica/home','EstadisticaController@home');
 Route::get('/user','UserController@index');
-    Route::post('/user/registrar','UserController@store');
-    Route::put('/user/actualizar','UserController@update');
-    Route::put('/user/activar','UserController@activar');
-    Route::put('/user/desactivar','UserController@desactivar'); 
+
+Route::get('/', function () {
+    return view('contenido/contenidoIndex');
+});
+
 Auth::routes();
 
 Route::group(['middleware'=>['auth']],function(){
@@ -25,8 +18,8 @@ Route::group(['middleware'=>['auth']],function(){
      
     Route::get('/main', function () {
         return view('contenido/contenido');
-    })->name('main');
- 
+    })->name('main');    
+
 Route::group(['middleware' => ['Tecnico']], function () {
     
     Route::get('/equipo','EquipoController@index');
@@ -74,9 +67,6 @@ Route::group(['middleware' => ['Administrador']], function () {
 
     Route::get('/rama','RamaController@index');
     Route::post('/rama/registrar','RamaController@store');
-    Route::put('/rama/actualizar','RamaController@update');
-    Route::put('/rama/activar','RamaController@activar');
-    Route::put('/rama/desactivar','RamaController@desactivar');
     Route::get('/rama/selectRama','RamaController@selectRama');
 
     Route::get('/categoria','CategoriaController@index');
@@ -84,14 +74,14 @@ Route::group(['middleware' => ['Administrador']], function () {
     Route::put('/categoria/actualizar','CategoriaController@update');
     Route::get('/categoria/selectCategoria','CategoriaController@selectCategoria');
 
-    Route::get('/puntaje','PuntajePartidoController@index');
-    Route::post('/puntaje/registrar','PuntajePartidoController@store');
-    Route::get('/puntaje/pdf/{id}', 'PuntajePartidoController@TopJugdorPdf')->name('puntaje');
+    // Route::get('/puntaje','PuntajePartidoController@index');
+    // Route::post('/puntaje/registrar','PuntajePartidoController@store');
+    // Route::get('/puntaje/pdf/{id}', 'PuntajePartidoController@TopJugdorPdf')->name('puntaje');
     
     Route::get('/rol','RolController@index');
     Route::get('/rol/selectRol','RolController@selectRol');
 
-    Route::get('/user','UserController@index');
+    Route::get('/user','UserController@index')->name('user');
     Route::post('/user/registrar','UserController@store');
     Route::put('/user/actualizar','UserController@update');
     Route::put('/user/activar','UserController@activar');
@@ -127,10 +117,8 @@ Route::group(['middleware' => ['Administrador']], function () {
     Route::get('/propartido/programaciontecnicoPdf/{idtorneo}', 'ProPartidoController@programacionTecnicoPdf')->name('programacionTecnico_pdf');   
     Route::get('/propartido/verprogramacion/{idtorneo}', 'ProPartidoController@verProgramacion');
     Route::put('/propartido/actualizarestadistica','ProPartidoController@actualizarEstadistica');
-    Route::get('/propartido/selectPro','ProPartidoController@selectPro');
 
-    Route::get('/estadistica','EstadisticaController@index');
-    Route::post('/estadistica/registrar','EstadisticaController@store');
+    Route::get('/estadistica','EstadisticaController@index');    
 
     Route::get('/arbitro','ArbitroController@index');
     Route::post('/arbitro/registrar','ArbitroController@store');

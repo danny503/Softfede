@@ -236,6 +236,23 @@ class ProPartidoController extends Controller
             'prootec' => $programacion
         ];
     }
+    public function listarHome(Request $request, $idtorneo){
+        //if (!$request->ajax()) return redirect('/'); 
+        $idtorneo = $request->idtorneo;        
+        $programacion = DB::table('programacions as a')
+        ->join('equipos as equipoa','a.equipo_a','=','equipoa.id')
+        ->join('equipos as equipob', 'a.equipo_b','=','equipob.id')        
+        ->join('torneos as c','a.idtorneo','=','c.id')
+        //->join('sedes as e','a.idsede','=','e.id')
+        ->select('a.id','a.jornada','equipoa.nombre as equipoA','equipoa.logo as logo1','equipob.logo as logo2','equipob.nombre as equipoB','c.nombre as torneo')       
+        ->where('c.id','=',$idtorneo)
+        ->orderBy('a.id','asc')
+        ->get();
+        return [
+           
+            'prootec' => $programacion
+        ];
+    }
     public function programacionTecnicoPdf(Request $request, $idtorneo){    
         //if (!$request->ajax()) return redirect('/'); 
         $protorneo = DB::table('programacions as a')
@@ -372,11 +389,6 @@ class ProPartidoController extends Controller
         /* UPDATE `programacions` SET `puntaje_a` = '15', 
         `puntaje_b` = '20' WHERE `programacions`.`id` = 4;*/
 
-    }
-    public function obtenerPunto(Request $request){
-       // if (!$request->ajax()) return redirect('/'); 
-        $puntaje = DB::table('programacions')->count();
-        return ['puntaje' => $puntaje];
-    }
+    }  
 
 }

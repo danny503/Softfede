@@ -28,5 +28,15 @@ class EstadisticaController extends Controller
         /*$estadistica = Estadistica::all();
         return $estadistica;*/
     }
-    
+    public function home(Request $request)
+    {
+        $estadisticas = DB::table('estadisticas as a')
+        ->join('equipos as b','a.equipo_id','=','b.id')
+        ->join('torneos as c','a.idtorneo','=','c.id')
+        ->select('b.nombre','b.logo', 'c.nombre as torneo', 'a.pj as pj','a.pg as pg','a.pp as pp','pts as pts')
+        ->where('a.idtorneo','=', $request->idtorneo)
+        ->groupBy('a.equipo_id')
+        ->orderByRaw('Pts DESC')->get();
+        return ['estadistica' => $estadisticas];
+    }
 }

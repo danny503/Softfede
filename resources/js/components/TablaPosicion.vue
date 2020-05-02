@@ -2,21 +2,27 @@
      <div class="content-wrapper">
         <!-- Content Header (Page header) -->
         <section class="content-header">
-          <div class="card-header"> 
+          <div class="card-header">
           <div class="form-group">                       
-              <div class="col-lg-6 col-sm-6">               
+              <div class="col-lg-8 col-sm-6">               
                 <div>
                    <label>Seleccione un Torneo</label>&nbsp;&nbsp;
                 <select class="form-control" v-model="idtorneo">
                   <option value="0" disabled>Seleccione</option>
                     <option v-for="torneo in arrayTorneo" :key="torneo.id" :value="torneo.id" v-text="torneo.nombre" v-on:change="listarEstadistica()" ></option>
-                </select>
-                <button type="button" @click="listarEstadistica()" class="btn btn-primary">
-                          <i class="fa fa-eye"></i>
-                  </button> 
+                </select>                
                 </div> 
               </div>          
-          </div>            
+          </div>  
+          <div class="form-group">
+            <div class="col-lg-3">
+              <ul class="ver">
+                  <li class="ver-modal">
+                      <a href="#!" class="ver" type="button" @click="listarEstadistica()"><i class="fa fa-eye"></i>Ver</a>
+                  </li> 
+                </ul>  
+            </div>  
+          </div>       
         </div>                     
         </section>
         <!-- Main content -->
@@ -78,7 +84,7 @@
             listarEstadistica(){
                 let me=this;
                 this.arrayEstadistica = [];
-                axios.get('/estadistica', {params: {idtorneo:this.idtorneo}}).then(function (response) {
+                axios.get('/estadistica/home', {params: {idtorneo:this.idtorneo}}).then(function (response) {
                     var respuesta = response.data;
                     me.arrayEstadistica = respuesta.estadistica;
                    // console.log(respuesta);
@@ -90,7 +96,7 @@
             },
           selectTorneo(){
             let me=this;
-                var url = '/torneo/selectTorneo';
+                var url = '/torneo/torneoSelect';
                 axios.get(url).then(function (response) {
                    // consolo.log(response);
                     var respuesta= response.data;

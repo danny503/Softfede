@@ -113,7 +113,7 @@
 					   <div class="col-lg-7 col-md-7 col-sm-12 col-xs-12"></div>
 					   <div class="col-lg-5 col-md-5 col-sm-12 col-xs-12">
 						  <div class="slider-contant" data-animation="animated fadeInRight">
-							 <h3>If you Don’t Practice<br>You <span class="color-yellow">Don’t Derserve</span><br>to win!</h3>
+							 <h3>If you Don’t Practice<br>You <span class="color-yellow">Don’t Derserve</span><br>to win!!!</h3>
 							 <p>If you use this site regularly and would like to help keep the site on the Internet,<br>
 								please consider donating a small sum to help pay..
 							 </p>

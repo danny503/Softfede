@@ -200,6 +200,29 @@
      margin: 0 5px 0 0;
      font-size:15px;
 }
+
+.ver li {
+    float: left;
+    margin: 0 0 0 10px;
+    font-weight: 500;
+}
+.ver li a {
+    padding: 9px 25px;
+    color: #fff;
+    font-size: 13px;
+    background: #d8302f;
+    border-radius: 50px;
+    float: left;
+}
+.ver li a:hover, .ver li a:focus {
+    background: #fff;
+    color: #333;
+}
+.ver li a i {
+    margin: 0 5px 0 0;
+    font-size:15px;
+}
+
  .header-bottom {
      float: left;
      width: 100%;

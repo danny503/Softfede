@@ -106,13 +106,6 @@ class TorneoController extends Controller
         where a.idtorneo = 1
         GROUP BY a.idequipo
         ORDER BY a.id desc*/
-         
-       /* $detalles = DetalleTorneo::join('equipos','detalle_torneos.idequipo','=','equipos.id')
-        ->join('ramas','equipos.idrama','=','ramas.id')
-        ->join('categorias','equipos.idcategoria','=','categorias.id')        
-        ->select('detalle_torneos.id','equipos.id as idequipo','equipos.nombre as equipo','ramas.nombre as rama','categorias.nombre as nombre_categoria')
-        ->where('detalle_torneos.idtorneo','=',$id)
-        ->orderBy('detalle_torneos.id', 'desc')->get();    */     
         return [
            
             'detalles' => $detalles
@@ -194,7 +187,15 @@ class TorneoController extends Controller
         ->where('estado','=','1')->get();
         return ['torneos' => $torneo];
 
-    }   
+    } 
+    public function torneoSelect(Request $request){
+        if (!$request->ajax()) return redirect('/');
+        $torneo = Torneo:://
+        select('id','nombre')
+        ->where('estado','=','1')->get();
+        return ['torneos' => $torneo];
+
+    }    
     public function insertarEquipo(Request $request){
         //$torneo = new Torneo();
         $inscripciones = $request->data;//Array de detalles
